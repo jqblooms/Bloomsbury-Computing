@@ -97,7 +97,7 @@ export const TYPE_RE = {
 // ---------------------------------------------------------------- lesson self-checks
 const plain = (s) => String(s).replace(/<svg[\s\S]*?<\/svg>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 const pieces = (t) => { const set = new Set([t]); t.split(/(?<=[.!?])\s+/).forEach((s) => { set.add(s); set.add(s.replace(/[.!?]$/, '')); }); t.split(/[,;:.!?()]/).forEach((s) => set.add(s.trim())); t.split(/\s+/).forEach((s) => set.add(s.replace(/^["']|["'.,!?:;]+$/g, ''))); return [...set].filter(Boolean); };
-export function checkLesson(steps, validators, { teach = [], walkLeaks = {} } = {}) {
+export function checkLesson(steps, validators, { teach = [], walkLeaks = {}, cited = [] } = {}) {
   // Feedback nudges never contain an accepted answer.
   for (const [k, parts] of Object.entries(validators)) for (const p of parts) {
     const rx = new RegExp(p.pattern.source, 'i'), w = p.feedback.split(/\s+/);
@@ -126,8 +126,11 @@ export function checkLesson(steps, validators, { teach = [], walkLeaks = {} } = 
     teach.forEach(([rx, from]) => { assert(at(from) >= 0, 'no slide ' + from); assert(!rx.test(text) || i >= at(from), `${s.id} uses ${rx} before ${from}`); });
   });
   const all = JSON.stringify(steps) + JSON.stringify(validators);
+  // Real exam questions (ids in cited) carry their citation; no other slide names a paper.
+  const uncited = JSON.stringify(steps.filter((s) => !cited.includes(s.id))) + JSON.stringify(validators);
+  cited.forEach((id) => assert(/Cambridge IGCSE 0478\/2\d, (March|June|November) 20\d\d, Question \d/.test(JSON.stringify(steps.find((s) => s.id === id))), 'citation on ' + id));
   assert(!/[\u2013\u2014]|&mdash;|&ndash;/.test(all), 'dash found');
-  assert(!/Cambridge|0478|0860/.test(all), 'citation found');
+  assert(!/Cambridge|0478|0860/.test(uncited), 'citation found');
   assert(!/mario|party/i.test(all), 'game mention');
 }
 

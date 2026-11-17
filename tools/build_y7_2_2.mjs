@@ -6,37 +6,19 @@
 // it can be used as a number, and + needs str() to join a number to text. Activities are Python Lab (PyLab/): io
 // part 1, io part 2, fix and iowrite. The Do Now Extension reuses the 2.1 plenary drill. Every program on a slide is
 // run in Python (Skulpt) here, and every check's answer comes from that run.
-import { createRequire } from 'node:module';
-import path from 'node:path';
 import { ROOT, assert, py, tps, facts, columns, paneTitle, note, hl, code, typedIn, screen, table, lessonKit, num, outRe, TYPE_RE, checkLesson, writeDrill, register, writeLesson } from './y7_text_kit.mjs';
 
-const FC = createRequire(import.meta.url)(path.join(ROOT, 'Drills', 'flowchart-core.js'));
 const ID = 'y7-2-2-input-output';
 const P = 'y722';
 const { validators, checkStep, embed, lab, mcStep, selfMarked } = lessonKit(P);
+// A multiple-choice step with its program on the left and the question on the right, so it fits without scrolling.
+let SIDE;
+function sideBySide(st, left) {
+  const box = `<div id="${st.containerId}"></div>`;
+  assert(st.content.endsWith(left + box), 'sideBySide ' + st.id);
+  st.content = st.content.slice(0, -(left + box).length) + columns(left, box);
+}
 
-// ---------------------------------------------------------------- flowcharts (as in build_y7_3_1.mjs)
-const THEME = '--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);' +
-  '--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400';
-function chart(flow, maxH = 300, hlBoxes = []) {
-  let i = -1;
-  const svg = FC.svg(flow, !!flow.numbered).replace(/<(rect|polygon) class="fc-[btd]"/g, (m) => { i++; return hlBoxes.includes(i) ? m + ' style="stroke:var(--warn);stroke-width:5;fill:rgba(253,214,99,.3)"' : m; });
-  return `<div class="lesson-fc" style="${THEME};display:flex;justify-content:center">` + svg.replace('<svg ', `<svg style="max-width:100%;max-height:${maxH}px;height:auto" `) + '</div>';
-}
-function choice(pre, question, tBoxes, fBoxes) {
-  const nodes = [{ id: 's', type: 'terminal', text: 'Start' }], edges = [];
-  let last = 's';
-  pre.forEach((b, i) => { nodes.push({ id: 'p' + i, type: b[0], text: b[1] }); edges.push({ from: last, to: 'p' + i, label: null }); last = 'p' + i; });
-  nodes.push({ id: 'd', type: 'decision', text: question }); edges.push({ from: last, to: 'd', label: null });
-  const pathOf = (boxes, tag, label) => { let prev = 'd'; boxes.forEach((b, i) => { const id = tag + i; nodes.push({ id, type: b[0], text: b[1] }); edges.push({ from: prev, to: id, label: i ? null : label }); prev = id; }); edges.push({ from: prev, to: 'e', label: null }); };
-  pathOf(tBoxes, 't', 'True');
-  nodes.push({ id: 'e', type: 'terminal', text: 'End' });
-  pathOf(fBoxes, 'f', 'False');
-  return { nodes, edges, numbered: true };
-}
-const say = (w) => ['io', `Say "${w}"`];
-const move = (n) => ['process', `Move ${n} steps`];
-const word = (w) => `^\\s*["'\\u201c]?\\s*(say\\s*:?\\s*)?["'\\u201c]?\\s*${w}\\s*["'\\u201d]?\\s*[.!]?\\s*$`;
 const FN = {
   int: '^\\s*(int(\\s*\\(\\s*\\))?|integer)\\s*\\.?\\s*$',
   float: '^\\s*(float(\\s*\\(\\s*\\))?|real)\\s*\\.?\\s*$',
@@ -45,14 +27,17 @@ const FN = {
 const ERR = '^\\s*(it\\s+)?(an?\\s+)?(stops(\\s+with\\s+an\\s+error)?|crash(es)?|error|value\\s*error|an\\s+error)\\s*\\.?\\s*$';
 
 const TPS = {
-  'do-now': ['Why does Python run the lines of a program from the top?', 'Each line can use what the lines above it stored. The order is part of the program.'],
-  'do-now-2': ['Why does a key decision need someone to press a key?', 'The flowchart asks the user a question with the key. What happens next depends on what the user does.'],
+  'do-now': ['How can you tell a value\'s data type just by looking at it? Try it with "Mia".', 'Look at what is in the value. "Mia" has quote marks and letters: it is text, so it is a String.'],
+  'do-now-2': ['Why does Python run the lines of a program from the top?', 'Each line can use what the lines above it stored. The order is part of the program.'],
+  'exam-io': ['Why do exam papers use their own words, not Python?', 'Students learn many different programming languages. Pseudocode is one way of writing programs that every student can read.'],
+  'exam-types': ['What data type fits the price of a drink, like 1.25? Why?', 'A Real, because a price can have a decimal point.'],
+  'exam-ipo': ['Think of the program that asks your age and shows the year you were born. Which part is the input? Which is the output? Which part works something out?', 'Input: the age you type in. Process: working out the year. Output: the year shown on the screen.'],
   'title': ['A quiz app asks your name and then says hello to you. How does the program know your name? Why can it not know it before you type?', 'You type it, and the program stores it. It only knows what you give it. Today we learn how.'],
   'output': ['Predict: what does each line show? Why is there a space after the colon in the second one?', 'Hi Mia, then Score: 7. + joins two Strings with no space added, so Hi needs its own space. A comma in print shows both things with one space between them.'],
   'input': ['Predict: the user types Mia. What is on the screen at the end? Why store input() in a variable?', 'What is your name? Mia, then Hello Mia. The variable keeps what the user typed, so later lines can use it.'],
   'input-check': ['Why does the order of the input() lines matter?', 'The first thing typed goes into the first input(), the second into the second. Swap the lines and the values swap too.'],
   'activity-1': ['Why does the question inside input() not show when you print the variable?', 'The question is only shown to the user. The variable stores only what the user typed.'],
-  'compare-input': ['What data type does input() give, even when the user types digits?', 'A String. It looks like a number, but Python stores it as text.'],
+  'compare-input': ['What two things do you need to know before you can say what + does?', 'The data type of the value on each side of +. Then use what + does with that data type.'],
   'convert': ['Why does Python not turn what you type into a number by itself?', 'Python cannot tell what you mean. "0812345678" is a phone number, not an amount. You choose the data type.'],
   'convert-check': ['What two questions help you choose for each value?', 'First: will the program do maths with it? Then: can it have a decimal point?'],
   'compare-error': ['Both programs do age + 1. How can one of them work and not the other?', 'Talk in pairs about the data type of age in each program. Then choose your answer.'],
@@ -70,7 +55,29 @@ const TPS = {
 
 const steps = [];
 
-// ---------------------------------------------------------------- Do Now 1 (2.1): variables and data types
+// ---------------------------------------------------------------- Do Now 1 (2.1): a real exam question, marked by Haiku
+// Cambridge IGCSE 0478/21, June 2024, Question 3, with its mark scheme. Haiku marks every check (aiModel).
+{
+  const Q = 'State what is meant by the data types integer and real. Give an example of each.';
+  const G = 'One mark for a correct statement about each data type (points 1 and 3). One mark for a correct example of data for each data type (points 2 and 4). Mark scheme example answer: Integer: a whole number [1], Example 27 [1]. Real: a number that contains a fractional part [1], Example 18.75 [1]. Each mark is independent. Accept int for integer and float for real. Simple, plain wording is fine.';
+  const WT = { title: 'Walk me through it: what a data type means', steps: [
+    { text: 'A similar question: state what is meant by the data type String. Give an example.', visual: note('String: ' + hl('?') + '<br>Example: ' + hl('?')) },
+    { text: 'First, think of some values that have this data type.', visual: code('pet = "Rex"\ncity = "Bangkok"\ncode = "B12"') },
+    { text: 'Ask: what do all these values have in common? They are text, in quote marks.', visual: code('pet = "Rex"\ncity = "Bangkok"\ncode = "B12"', [1, 2, 3]) + note('They are all ' + hl('text')) },
+    { text: 'Write what it means in a few words.', visual: note('String: ' + hl('text: letters, digits or symbols')) },
+    { text: 'Then give one value of that data type as the example.', visual: note('Example: ' + hl('"Rex"')) },
+    { text: 'Now do the same for integer, then for real: think of values, find what they share, then give one example.', visual: note('Two marks each: what it means, then an example.') },
+  ] };
+  steps.push(selfMarked('do-now', 'Do Now: Data Types (Exam Question)', 'Do Now: Data Types',
+    '', [
+      { id: 'dn-int-real', prompt: 'From 2.1. Cambridge IGCSE 0478/21, June 2024, Question 3.<br><strong>' + Q + '</strong>', marks: 4, aiModel: 'haiku', context: Q,
+        scheme: ['Integer: a whole number / a number with no fractional part', 'A correct example of an integer, such as 27', 'Real: a number that contains a fractional part / a decimal point', 'A correct example of a real, such as 18.75'], guidance: G,
+        modelAnswer: 'Integer: a whole number, such as 27. Real: a number with a decimal point, such as 18.75.' },
+    ]));
+  steps.at(-1).walkthrough = WT;
+}
+
+// ---------------------------------------------------------------- Do Now 2 (2.1): follow the variables
 {
   const C = 'points = 4\npoints = points * 3\nbonus = points / 2\nprint(points)';
   const r = await py(C + '\nprint(type(bonus).__name__)\nprint(type(points).__name__)\nprint(bonus)');
@@ -87,35 +94,11 @@ const steps = [];
     { text: 'Data type of half: no quote marks, and - with whole numbers gives a whole number. It is an Integer.', visual: code(W, [3]) + note('half: ' + hl('Integer')) },
     { text: 'Now do the same with your program: write down each value as you go.', visual: code(W) },
   ] };
-  steps.push(checkStep('do-now', 'Do Now: Follow the Variables', 'Do Now: Follow the Variables', 'From 2.1. Follow the program one line at a time.', [
+  steps.push(checkStep('do-now-2', 'Do Now: Follow the Variables', 'Do Now: Follow the Variables', 'From 2.1. Follow the program one line at a time.', [
     { label: 'What does the program print?', answer: num(r.out[0]), feedback: 'points starts at 4. Write down its value after each line.' },
     { line: true, label: 'What data type is bonus?', answer: TYPE_RE.float, feedback: 'Look at the sign the line uses to work out bonus.' },
     { label: 'What value does bonus hold?', answer: num(r.out[3]), feedback: 'Work out points / 2 with the value points holds. How does Python show the answer of /?' },
   ], code(C)));
-  steps.at(-1).walkthrough = WT;
-}
-
-// ---------------------------------------------------------------- Do Now 2 (3.1): a key decision
-{
-  const DN = choice([move(20)], 'Space pressed?', [say('Jump')], [say('Wait')]);
-  const a = FC.run(DN, { presses: [1] }), b = FC.run(DN, { presses: [0] });
-  assert(a.said.join() === 'Jump' && b.said.join() === 'Wait' && b.steps === 20, 'do-now 2');
-  const W = choice([move(30)], 'Up arrow pressed?', [say('Hop')], [say('Stay')]);
-  const wa = FC.run(W, { presses: [1] }), wb = FC.run(W, { presses: [0] });
-  assert(wa.said.join() === 'Hop' && wb.said.join() === 'Stay' && wb.steps === 30, 'walkthrough 2');
-  const WT = { title: 'Walk me through it: a key decision', steps: [
-    { text: 'This is a different flowchart. We try it twice: the Up arrow pressed, then not pressed.', visual: chart(W, 280) },
-    { text: 'Begin at <strong>Start</strong>. Box 2 moves 30 steps. It runs every time, before the decision.', visual: chart(W, 280, [1]) + note('Steps so far: ' + hl('30')) },
-    { text: 'The Up arrow is pressed: the decision is <strong>True</strong>. Follow True to Say "Hop".', visual: chart(W, 280, [2, 3]) + note('Pressed: ' + hl('Hop')) },
-    { text: 'The Up arrow is not pressed: the decision is <strong>False</strong>. Follow False to Say "Stay".', visual: chart(W, 280, [2, 5]) + note('Not pressed: ' + hl('Stay')) },
-    { text: 'Say boxes do not move the sprite. Only box 2 moves it, so it moves 30 steps either way.', visual: chart(W, 280, [1]) + note('Altogether: ' + hl('30 steps')) },
-    { text: 'Now do the same with your flowchart: run the boxes before the decision, then follow one arrow.', visual: chart(W, 280) },
-  ] };
-  steps.push(checkStep('do-now-2', 'Do Now: A Key Decision', 'Do Now: A Key Decision', 'From 3.1. Begin at Start.', [
-    { label: 'Space is pressed. What does the sprite say?', answer: word('jump'), feedback: 'Pressed means True. Follow that arrow.' },
-    { label: 'Space is not pressed. What does the sprite say?', answer: word('wait'), feedback: 'Not pressed means False. Follow that arrow.' },
-    { label: 'Space is not pressed. How many steps does the sprite move?', answer: '^\\s*20\\s*(steps?)?\\s*$', feedback: 'Find every Move box on the path you follow. Do Say boxes move the sprite?' },
-  ], chart(DN, 300)));
   steps.at(-1).walkthrough = WT;
 }
 
@@ -157,6 +140,15 @@ steps.push({ id: 'title', label: '2.2: Input and Output',
   ], code(C)));
 }
 
+// ---------------------------------------------------------------- exam question: INPUT and OUTPUT
+// Cambridge IGCSE 0478/23, November 2023, Question 3(a): two of its four rows (the other two are about files, not
+// taught in Year 7). Typed instead of drawing lines; the Python next to each keyword is shown on the slide.
+steps.push(checkStep('exam-io', 'Exam Question: INPUT and OUTPUT', 'Exam Question: INPUT and OUTPUT',
+  'Cambridge IGCSE 0478/23, November 2023, Question 3(a), two of its four rows.', [
+    { line: true, label: '<strong>displays data on a screen</strong>', answer: '^\\s*(output|print(\\s*\\(\\s*\\))?)\\s*\\.?\\s*$', feedback: 'Which one shows something to the user? Type the exam keyword.' },
+    { line: true, label: '<strong>enters data from a keyboard</strong>', answer: '^\\s*(input(\\s*\\(\\s*\\))?)\\s*\\.?\\s*$', feedback: 'Which one waits for the user to type? Type the exam keyword.' },
+  ], '<p style="margin:0 0 8px">Exam papers write programs in <strong>pseudocode</strong>. Write the pseudocode keyword for each description.</p>' + table(['Pseudocode keyword', 'In Python'], [['OUTPUT', 'print()'], ['INPUT', 'input()']])));
+
 steps.push(lab('activity-1', 'Activity 1: Predict with Input', 'Activity 1: Predict with Input',
   'Type what each program prints, from what the user types. Then run it in Python. A round with a mistake does not count.', 'activity=io&part=1'));
 
@@ -167,7 +159,8 @@ steps.push(lab('activity-1', 'Activity 1: Predict with Input', 'Activity 1: Pred
   steps.push(mcStep('compare-input', 'Predict: Adding What the User Types', 'Predict: Adding What the User Types', 'The user types <strong>4</strong> then <strong>5</strong>.', [
     { prompt: 'What does this program print?', options: ['45', '9', '4 5', 'Nothing: it stops'], correct: 0,
       explain: 'input() gives the String "4" and the String "5", so + joins them: 45. The next slide shows how to make + add them.' },
-  ], code(A)));
+  ], SIDE = code(A)));
+  sideBySide(steps.at(-1), SIDE);
 }
 
 {
@@ -192,6 +185,14 @@ steps.push(checkStep('convert-check', 'Your Turn: Which Function?', 'Your Turn: 
   { line: true, label: 'The number of pets the user has', answer: FN.int, feedback: 'Can you have half a pet? Will the program count or add them?' },
 ]));
 
+// ---------------------------------------------------------------- exam question: which data type
+// Cambridge IGCSE 0478/21, June 2026, Question 3: two of its three rows (the third, TRUE, is a Boolean, not taught).
+steps.push(checkStep('exam-types', 'Exam Question: Which Data Type?', 'Exam Question: Which Data Type?',
+  'Cambridge IGCSE 0478/21, June 2026, Question 3, two of its three rows. Complete the table by writing the most appropriate data type for each variable described.', [
+    { line: true, label: 'Data type for <strong>Age</strong>', answer: TYPE_RE.int, feedback: 'Will the program do maths with an age? Can an age in years have a decimal point?' },
+    { line: true, label: 'Data type for <strong>TelephoneNumber</strong>', answer: TYPE_RE.str, feedback: 'Look at the + and the space in the example data. Will the program ever do maths with a phone number?' },
+  ], table(['variable', 'description', 'example data'], [['Age', 'the age of the student', '16'], ['TelephoneNumber', 'the telephone number of the student', '+44 7846398573']])));
+
 {
   const A = 'age = input("Age? ")\nprint(age + 1)', B = 'age = int(input("Age? "))\nprint(age + 1)';
   assert((await py(A, ['12'])).error && (await py(B, ['12'])).out[0] === '13', 'compare-error');
@@ -199,7 +200,8 @@ steps.push(checkStep('convert-check', 'Your Turn: Which Function?', 'Your Turn: 
     { prompt: 'What happens in each program, and why?', options: ['A stops with an error and B prints 13: A adds 1 to a String', 'A prints 121 and B prints 13: A joins the 1 to the 12',
       'A prints 13 and B prints 13: Python can see the digits', 'A prints 13 and B stops with an error: int() cannot read 12'], correct: 0,
       explain: 'In A, age is the String "12". Python cannot add the number 1 to a String, so it stops with an error. In B, int() makes age the Integer 12, so age + 1 is 13.' },
-  ], columns(paneTitle('Program A') + code(A), paneTitle('Program B') + code(B))));
+  ], SIDE = paneTitle('Program A') + code(A) + paneTitle('Program B') + code(B)));
+  sideBySide(steps.at(-1), SIDE);
 }
 
 {
@@ -227,11 +229,27 @@ steps.push(lab('activity-3', 'Activity 3: Fix the Program', 'Activity 3: Fix the
 
 steps.push(selfMarked('explain', 'Explain: Why 34?', 'Explain: Why 34?',
   '<p class="lesson-lead">A program has <code>a = input()</code>, <code>b = input()</code> and <code>print(a + b)</code>. The user types 3 and 4. It prints 34.</p>', [
-    { id: 'why-34', prompt: 'Explain why it prints 34, and how to make it print 7. [2]', marks: 2,
+    { id: 'why-34', prompt: 'Explain why it prints 34, and how to make it print 7.', marks: 2, aiModel: 'haiku',
+      context: 'A Python program has a = input(), b = input() and print(a + b). The user types 3 and 4. It prints 34. Explain why it prints 34, and how to make it print 7.',
       scheme: ['input() gives a String / text, so + joins "3" and "4"', 'Use int() round input() / int(input()), so a and b are Integers and + adds them'],
       guidance: 'Award 1 mark for each point. Accept "they are text" for String. Accept float() for the fix. Do not accept "it is wrong" or "use numbers" alone.',
       modelAnswer: 'input() gives a String, so + joins "3" and "4" (1 mark). Use int(input()) so a and b are Integers, and + adds them (1 mark).' },
   ]));
+
+// ---------------------------------------------------------------- exam question: input, process and output
+// Cambridge IGCSE 0478/22, June 2025, Question 2. Typed letters instead of drawing lines. The mark scheme's lines are
+// drawn, not text: input is the height and length, process is the area calculated, output is the paint required.
+{
+  const D = ['the height of the fence<br>the length of the fence', 'The amount of paint required is 40 square metres.', 'the colour of the paint', 'The area of fence is calculated as 40 square metres.'];
+  steps.push(checkStep('exam-ipo', 'Exam Question: Input, Process and Output', 'Exam Question: Input, Process and Output',
+    'Cambridge IGCSE 0478/22, June 2025, Question 2. Type a letter instead of drawing a line.', [
+      { line: true, label: '<strong>input</strong>: which description?', answer: '^\\s*\\(?\\s*A\\s*\\)?\\s*\\.?\\s*$', feedback: 'What must the program know before it can work out the area?' },
+      { line: true, label: '<strong>process</strong>: which description?', answer: '^\\s*\\(?\\s*D\\s*\\)?\\s*\\.?\\s*$', feedback: 'Which one works something out?' },
+      { line: true, label: '<strong>output</strong>: which description?', answer: '^\\s*\\(?\\s*B\\s*\\)?\\s*\\.?\\s*$', feedback: 'Which one is the result the user is told?' },
+    ], '<p style="margin:0 0 8px">A fence measuring 2 metres in height and 20 metres in length needs painting. The area of the fence needs to be calculated so that enough paint for the job is purchased.</p>' +
+      '<p style="margin:0 0 8px">After the task is decomposed (split into smaller parts), there are three component parts: input, process and output. Not all descriptions will be used.</p>' +
+      table(['', 'Description'], D.map((d, i) => ['<strong>' + 'ABCD'[i] + '</strong>', d]))));
+}
 
 steps.push(lab('activity-4', 'Activity 4: Write the Program', 'Activity 4: Write the Program',
   'Write each program from its task. Check tests it with inputs you cannot see: three checks for each task.', 'activity=iowrite'));
@@ -262,14 +280,17 @@ for (const st of steps) if (TPS[st.id]) st.content = st.content.replace('</h2>',
 
 // ---------------------------------------------------------------- self-checks
 const V = (k, i, s) => new RegExp(validators[`${P}_${k}`.replace(/-/g, '_')][i].pattern.source, 'i').test(s);
-assert(V('do-now', 0, '12') && !V('do-now', 0, '4') && V('do-now', 1, 'Real') && V('do-now', 1, 'float') && !V('do-now', 1, 'Integer') && V('do-now', 2, '6.0') && !V('do-now', 2, '6'), 'do-now marks');
-assert(V('do-now-2', 0, 'Jump') && !V('do-now-2', 0, 'Wait') && V('do-now-2', 1, 'wait') && V('do-now-2', 2, '20') && V('do-now-2', 2, '20 steps') && !V('do-now-2', 2, '0'), 'do-now-2 marks');
+assert(V('do-now-2', 0, '12') && !V('do-now-2', 0, '4') && V('do-now-2', 1, 'Real') && V('do-now-2', 1, 'float') && !V('do-now-2', 1, 'Integer') && V('do-now-2', 2, '6.0') && !V('do-now-2', 2, '6'), 'do-now-2 marks');
+assert(V('exam-io', 0, 'OUTPUT') && V('exam-io', 0, 'print()') && !V('exam-io', 0, 'INPUT') && V('exam-io', 1, 'input') && !V('exam-io', 1, 'OUTPUT'), 'exam-io marks');
+assert(V('exam-types', 0, 'integer') && V('exam-types', 0, 'int') && !V('exam-types', 0, 'real') && V('exam-types', 1, 'string') && !V('exam-types', 1, 'integer'), 'exam-types marks');
+assert(V('exam-ipo', 0, 'A') && V('exam-ipo', 0, '(a)') && !V('exam-ipo', 0, 'B') && V('exam-ipo', 1, 'D') && !V('exam-ipo', 1, 'B') && V('exam-ipo', 2, 'b') && !V('exam-ipo', 2, 'D'), 'exam-ipo marks');
 assert(V('input-check', 0, 'tea and rice') && V('input-check', 0, '"tea and rice"') && !V('input-check', 0, 'rice and tea') && !V('input-check', 0, 'teaandrice') && V('input-check', 1, 'food') && !V('input-check', 1, 'drink') && V('input-check', 2, 'milk and soup'), 'input-check marks');
 assert(V('convert-check', 0, 'int') && V('convert-check', 0, 'int()') && !V('convert-check', 0, 'float') && V('convert-check', 1, 'float') && V('convert-check', 1, 'float()') && !V('convert-check', 1, 'int') && V('convert-check', 2, 'none') && V('convert-check', 2, 'nothing') && !V('convert-check', 2, 'str') && !V('convert-check', 2, 'int') && V('convert-check', 3, 'int'), 'convert-check marks');
 assert(V('practice', 0, 'Total: 10.0') && !V('practice', 0, 'Total: 10') && V('practice', 1, 'Integer') && V('practice', 2, 'Total: 6.0') && !V('practice', 2, 'Total: 6') && V('practice', 3, 'error') && V('practice', 3, 'It stops with an error') && V('practice', 3, 'it crashes') && !V('practice', 3, 'Total: 5.0'), 'practice marks');
 checkLesson(steps, validators, {
   teach: [[/\binput\b/i, 'input'], [/\boutputs?\b/i, 'output'], [/\bint\(/, 'convert'], [/\bfloat\(/, 'convert'], [/\bstr\(/, 'convert'], [/\berrors?\b/i, 'convert']],
-  walkLeaks: { 'do-now': /\b12\b|\bReal\b|float|6\.0/i, 'do-now-2': /\bJump\b|\bWait\b|\b20\b|Space/i },
+  walkLeaks: { 'do-now': /whole|fraction|decimal|\d\.\d|\b27\b/i, 'do-now-2': /\b12\b|\bReal\b|float|6\.0/i },
+  cited: ['do-now', 'exam-io', 'exam-types', 'exam-ipo'],
 });
 
 writeLesson(ID, '2.2: Input and Output', steps, validators);

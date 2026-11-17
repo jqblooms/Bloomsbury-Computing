@@ -111,7 +111,8 @@
             if (!r.vars.metres) return T.fail(what + '. metres was never stored', 'metres holds what the user typed, as a number', 0);
             if (r.vars.metres.type === 'STRING') return T.fail(what + '. metres was the String "' + r.vars.metres.value + '"', 'metres holds a number, so the program can do maths with it', T.lineOf(/^\s*metres\s*=/));
             if (dx(T, r) !== steps) return T.fail(what + '. The sprite moved ' + dx(T, r) + ' steps', 'It moves ' + t + ' x 100 = ' + steps + ' steps', T.lineOf(/move_steps/));
-            if (last(r) !== want) return T.fail(what + '. It printed: ' + (last(r) || 'nothing'), 'It prints: ' + want, T.lineOf(/print\(/));
+            // The brief says "the number the user typed": for 3, both 3.0 (str(metres)) and 3 (what was typed) are right.
+            if (last(r) !== want && last(r) !== 'You walked ' + t + ' metres') return T.fail(what + '. It printed: ' + (last(r) || 'nothing'), 'It prints: ' + want, T.lineOf(/print\(/));
             return next();
           });
         }
