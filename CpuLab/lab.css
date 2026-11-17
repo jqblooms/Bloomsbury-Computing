@@ -173,3 +173,29 @@ button, input { font: inherit; }
 .perf-fill { display: block; height: 22px; border-radius: 999px; background: var(--line-strong); color: var(--ink); font: 700 13px var(--font-mono); text-align: right; padding: 2px 8px; white-space: nowrap; }
 .perf-fill.win { background: var(--good-line); }
 @media (max-width: 640px) { .perf-facts, .perf-cpus { grid-template-columns: 1fr; } .perf-lane { grid-template-columns: 1fr; } }
+/* Machine Code (activity=isa): one small question per screen, large text, lots of space */
+.isa-screen { display: grid; gap: 8px; padding: 2px 4px; font-size: 1.1rem; }
+.isa-step { color: var(--muted); font-size: .95rem; }
+.isa-view { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 260px); gap: 28px; align-items: center; }
+.isa-view.solo { grid-template-columns: minmax(0, 1fr); }
+.isa-left { display: grid; gap: 8px; justify-items: start; }
+.isa-line { margin: 0; }
+.isa-q { margin: 2px 0 0; font-size: 1.3rem; font-weight: 700; }
+.isa-set { border: 2px solid var(--brand); border-radius: 12px; background: var(--surface-2); padding: 6px 14px 8px; }
+.isa-head { font-weight: 700; text-align: center; font-size: 1rem; }
+.isa-set table { width: 100%; border-collapse: collapse; }
+.isa-set td { padding: 0 8px; border-top: 1px solid var(--line); line-height: 1.35; font-size: 16px; }
+.isa-bits { font: 700 16px var(--font-mono); letter-spacing: 1px; }
+.isa-code { display: inline-flex; gap: 14px; font: 700 36px var(--font-mono); letter-spacing: 4px; }
+.isa-code.plain { font-size: 36px; }
+.isa-op, .isa-arg { display: inline-flex; flex-direction: column; align-items: center; border: 2px solid var(--brand); border-radius: 12px; padding: 4px 14px; background: var(--brand-soft); }
+.isa-arg { border-color: var(--warn); background: var(--surface); }
+.isa-op small, .isa-arg small { font: 600 13px var(--font-body); letter-spacing: 0; color: var(--muted); }
+.isa-pv { font: 600 14px var(--font-mono); letter-spacing: 10px; color: var(--muted); }
+.isa-picks button { font-size: 1.05rem; padding: 10px 18px; }
+.isa-picks button.isa-right { outline: 3px solid var(--good-line, var(--good)); }
+.isa-input { width: 160px; font: 700 22px var(--font-mono); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+.isa-tip { margin: 0; color: var(--muted); }
+.isa-msg { margin: 0; font-weight: 600; }
+.isa-msg.good { color: var(--good); } .isa-msg.bad { color: var(--bad); } .isa-msg.hint { color: var(--muted); }
+@media (max-width: 700px) { .isa-view { grid-template-columns: 1fr; } .isa-code { font-size: 30px; } }

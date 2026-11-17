@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instruction Set Animations</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    /* Instruction sets and machine code as 2D vector (SVG) animations, one idea per scene, stepped or played (Y10 3.1.6):
+       ?scene=binary  LOAD 6 becomes machine code: the instruction set gives LOAD a binary opcode, 6 becomes the operand
+       ?scene=decode  0010 0111 in the CIR: split into opcode and operand, looked up in the instruction set, executed (12 + 30)
+       ?scene=differ  one machine code program on two CPUs with different instruction sets
+       ?embed=1 sits it on a lesson slide (no tabs, transparent, reports its height).
+       The step engine is TwosAnim's: every motion is a CSS transition between step states driven by timers, so a hidden
+       frame never sticks, and Next finishes the step before. */
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    main { max-width: 1000px; margin: 0 auto; padding: 12px 16px; display: grid; gap: 10px; box-sizing: border-box; }
+    .embed, .embed body { background: transparent; }
+    .embed main { padding: 2px 4px 40px; gap: 8px; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .top h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tabs button, .bar button { font: inherit; font-weight: 700; padding: 7px 16px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .tabs button[aria-selected="true"] { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+    .stage { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 6px; }
+    #svg { width: 100%; height: auto; display: block; }
+    .cap { font-size: 22px; font-weight: 700; text-align: center; min-height: 2.5em; line-height: 1.25; display: flex; align-items: center; justify-content: center; padding: 0 8px; }
+    .cap b { color: var(--brand); }
+    .bar { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .bar button.primary { background: var(--brand); color: var(--on-brand); border-color: var(--brand); min-width: 7.5em; justify-content: center; }
+    .bar button:disabled { opacity: .45; cursor: default; }
+    .bar svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .count { color: var(--muted); font-size: 15px; min-width: 6.5em; text-align: center; }
+    .embed .top { display: none; }
+    @media (min-width: 700px) {
+      .embed main { grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: 1fr auto; align-items: center; column-gap: 14px; }
+      .embed .stage { grid-column: 1; grid-row: 1 / span 2; }
+      .embed .cap { grid-column: 2; grid-row: 1; align-self: end; font-size: 20px; justify-content: flex-start; text-align: left; min-height: 0; padding: 0; }
+      .embed .bar { grid-column: 2; grid-row: 2; align-self: start; justify-content: flex-start; }
+      .embed .bar button.primary { order: -1; flex-basis: 100%; }
+      .embed .count { text-align: left; }
+    }
+    /* the drawing */
+    #svg text { font-family: var(--font-mono); font-weight: 700; dominant-baseline: central; text-anchor: middle; }
+    #svg .mv { transition: transform .8s cubic-bezier(.4, 0, .2, 1), opacity .5s; }
+    #svg .fl { transform-box: fill-box; transform-origin: center; transition: transform .22s ease-in; }
+    #svg .fd { transition: opacity .5s; }
+    .instant #svg *, .instant #svg { transition: none !important; }
+    .box { fill: var(--surface-2); stroke: var(--line-strong); stroke-width: 1.5; }
+    .box.cpu { fill: none; stroke: var(--brand); stroke-width: 3; }
+    .box.unit { fill: var(--surface); }
+    .box.hl { stroke: var(--brand); stroke-width: 4; }
+    .box.glow { fill: var(--brand-soft); }
+    .box.badbox { stroke: var(--bad); stroke-width: 4; }
+    .name { fill: var(--muted); font-size: 18px; font-family: var(--font-body) !important; }
+    .name.big { fill: var(--ink); font-size: 22px; }
+    .t-code { fill: var(--ink); font-size: 24px; }
+    .t-small { fill: var(--ink); font-size: 18px; }
+    .t-word { fill: var(--ink); font-size: 18px; font-family: var(--font-body) !important; }
+    .t-left { text-anchor: start !important; }
+    .t-bad { fill: var(--bad) !important; }
+    .t-good { fill: var(--good) !important; }
+    .tok rect { fill: var(--brand-soft); stroke: var(--brand); stroke-width: 2; }
+    .tok text { fill: var(--brand-dark); font-size: 26px; }
+    .tok.alt rect { fill: var(--surface); stroke: var(--warn, var(--brand)); }
+    .lab { fill: var(--brand-dark); font-size: 17px; font-family: var(--font-body) !important; }
+    .arrow { stroke: var(--brand); stroke-width: 3; fill: none; }
+    @media (prefers-reduced-motion: reduce) { #svg .mv, #svg .fl, #svg .fd { transition-duration: .01s; } }
+  </style>
+</head>
+<body>
+<main id="main">
+  <div class="top"><h1>Instruction Set Animations</h1><div class="tabs" id="tabs" role="tablist"></div></div>
+  <div class="stage"><svg id="svg" viewBox="0 0 960 420" role="img" aria-label="Instruction set animation"></svg></div>
+  <div class="cap" id="cap" aria-live="polite"></div>
+  <div class="bar">
+    <button type="button" id="back" aria-label="Back one step"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Back</button>
+    <button type="button" id="play" class="primary"></button>
+    <button type="button" id="next" aria-label="Next step">Next<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button type="button" id="again"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>Start again</button>
+    <span class="count" id="count"></span>
+  </div>
+</main>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var params = new URLSearchParams(location.search);
+  var EMBED = params.get('embed') === '1';
+  if (EMBED) document.documentElement.classList.add('embed');
+  var svg = document.getElementById('svg'), capEl = document.getElementById('cap'), countEl = document.getElementById('count');
+  var playBtn = document.getElementById('play'), backBtn = document.getElementById('back'), nextBtn = document.getElementById('next');
+
+  // ------------------------------------------------------------ the two instruction sets (as CpuLab activity=isa)
+  var SET_A = [['0001', 'LOAD'], ['0010', 'ADD'], ['0011', 'SUB'], ['0100', 'STORE'], ['0101', 'OUTPUT']];
+  var SET_B = [['0001', 'OUTPUT'], ['0010', 'LOAD'], ['0011', 'ADD'], ['0100', 'STORE']];
+
+  // ------------------------------------------------------------ drawing helpers
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
+  function text(parent, x, y, s, cls) { var t = el('text', { x: x, y: y, 'class': cls || '' }, parent); t.textContent = s; return t; }
+  function at(g, x, y) { g.style.transform = 'translate(' + x + 'px,' + y + 'px)'; }
+  function show(g, on) { g.style.opacity = on ? 1 : 0; }
+  function cls(node, c, on) { var k = (node.getAttribute('class') || '').split(' ').filter(function (x) { return x && x !== c; }); if (on) k.push(c); node.setAttribute('class', k.join(' ')); }
+  function box(parent, x, y, w, h, c) { return el('rect', { x: x, y: y, width: w, height: h, rx: 10, 'class': 'box ' + (c || '') }, parent); }
+  function fade(parent) { var g = el('g', { 'class': 'fd' }, parent); show(g, 0); return g; }
+  // A token that moves (outer g) and flips when its text changes (inner g).
+  function token(s, w, alt) {
+    var g = el('g', { 'class': 'tok mv' + (alt ? ' alt' : '') }), f = el('g', { 'class': 'fl' }, g);
+    el('rect', { x: -w / 2, y: -22, width: w, height: 44, rx: 10 }, f); g.t = text(f, 0, 0, s); g.f = f; show(g, 0); return g;
+  }
+  function flipTo(g, s) { g.f.style.transform = 'scaleY(0)'; later(function () { g.t.textContent = s; g.f.style.transform = 'scaleY(1)'; }, 230); }
+  // An instruction set table: rows [[opcode, command]], top-left x, y. Returns the row rects.
+  function setTable(parent, rows, x, y, w, h) {
+    text(parent, x + 60, y - 16, 'Opcode', 'name'); text(parent, x + 60 + (w - 120) / 2 + 60, y - 16, 'Command', 'name');
+    return rows.map(function (r, i) {
+      var b = box(parent, x, y + i * h, w, h - 4, 'unit');
+      text(parent, x + 60, y + i * h + (h - 4) / 2, r[0], 't-small'); text(parent, x + 60 + (w - 120) / 2 + 60, y + i * h + (h - 4) / 2, r[1], 't-small');
+      return b;
+    });
+  }
+  function onlyRow(rows, k) { rows.forEach(function (b, i) { cls(b, 'hl', i === k); cls(b, 'glow', i === k); }); }
+
+  // ------------------------------------------------------------ step engine (as TwosAnim)
+  var scene = null, steps = [], cur = 0, playing = false, playTimer = null, instant = false, pend = [], counters = [];
+  function later(fn, ms) {
+    if (instant) { fn(); return; }
+    var p = { fn: fn, done: false };
+    p.id = setTimeout(function () { p.done = true; fn(); }, ms);
+    pend.push(p);
+  }
+  function countTo(t, from, to) {
+    if (instant || from === to) { t.textContent = String(to); return; }
+    var k = 0, n = 14, id = setInterval(function () { k++; t.textContent = String(Math.round(from + (to - from) * k / n)); if (k >= n) clearInterval(id); }, 35);
+    counters.push({ id: id, finish: function () { t.textContent = String(to); } });
+  }
+  function settle() { svg.getBoundingClientRect(); Array.prototype.forEach.call(svg.querySelectorAll('g'), function (g) { getComputedStyle(g).transform; }); }
+  function stopPend(flush) {
+    var list = pend; pend = [];
+    counters.forEach(function (c) { clearInterval(c.id); if (flush) c.finish(); }); counters = [];
+    if (!flush) { list.forEach(function (p) { clearTimeout(p.id); }); return; }
+    var was = instant; instant = true; document.documentElement.classList.add('instant');
+    list.forEach(function (p) { clearTimeout(p.id); if (!p.done) { p.done = true; p.fn(); } });
+    settle();
+    instant = was; if (!was) document.documentElement.classList.remove('instant');
+  }
+  function render(k, animate) {
+    k = Math.max(0, Math.min(steps.length - 1, k));
+    stopPend(animate && k > cur);
+    if (!animate || k < cur || k === 0) {
+      document.documentElement.classList.add('instant'); instant = true;
+      svg.innerHTML = ''; scene.setup();
+      for (var i = 0; i < k; i++) steps[i].run();
+      settle();
+      instant = false; document.documentElement.classList.remove('instant');
+    }
+    cur = k;
+    var s = steps[k];
+    capEl.innerHTML = '<span>' + s.cap + '</span>'; svg.setAttribute('aria-label', capEl.textContent);
+    s.run();
+    bar();
+  }
+  function bar() {
+    countEl.textContent = 'Step ' + (cur + 1) + ' of ' + steps.length;
+    backBtn.disabled = cur === 0; nextBtn.disabled = cur >= steps.length - 1;
+    var end = cur >= steps.length - 1;
+    playBtn.innerHTML = playing ? '<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>Pause' :
+      (end ? '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>Watch again' : '<svg viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z"/></svg>Play');
+  }
+  function tick() {
+    clearTimeout(playTimer);
+    if (!playing) return;
+    playTimer = setTimeout(function () {
+      if (!playing) return;
+      if (cur >= steps.length - 1) { playing = false; bar(); return; }
+      render(cur + 1, true); tick();
+    }, steps[cur].dur || 3000);
+  }
+  playBtn.addEventListener('click', function () {
+    if (playing) { playing = false; clearTimeout(playTimer); bar(); return; }
+    playing = true;
+    if (cur >= steps.length - 1) render(0, false);
+    bar(); tick();
+  });
+  nextBtn.addEventListener('click', function () { playing = false; clearTimeout(playTimer); render(cur + 1, true); });
+  backBtn.addEventListener('click', function () { playing = false; clearTimeout(playTimer); render(cur - 1, false); });
+  document.getElementById('again').addEventListener('click', function () { playing = false; clearTimeout(playTimer); render(0, false); });
+
+  // ------------------------------------------------------------ scene: LOAD 6 becomes machine code
+  function sceneBinary() {
+    var S = {};
+    var MX = 40, MY = 250, MW = 440, MH = 52; // memory rows: address 4 and 5
+    var CELL = MX + 150; // left edge of the contents column
+    return {
+      setup: function () {
+        text(svg, 260, 30, 'An instruction', 'name');
+        S.op = token('LOAD', 120); S.arg = token('6', 80);
+        at(S.op, 200, 80); at(S.arg, 330, 80); show(S.op, 1); show(S.arg, 1);
+        S.mean = text(svg, 260, 138, 'Copy the value at address 6 into the ACC', 't-word');
+        S.memG = fade(); text(S.memG, MX + 220, MY - 50, 'Memory: only 0s and 1s', 'name');
+        S.rows = [4, 5].map(function (a, i) {
+          var y = MY + i * (MH + 8);
+          box(S.memG, MX, y, 110, MH); text(S.memG, MX + 55, y + MH / 2, String(a), 't-small');
+          var c = box(S.memG, CELL, y, MW - 150, MH); return { c: c, y: y };
+        });
+        S.r5 = text(S.memG, CELL + (MW - 150) / 2, S.rows[1].y + MH / 2, '', 't-code');
+        S.tabG = fade(); text(S.tabG, 740, 30, 'The instruction set', 'name big');
+        S.tab = setTable(S.tabG, SET_A, 560, 80, 360, 52);
+        S.labs = fade(); S.labOp = text(S.labs, 0, 0, 'opcode', 'lab'); S.labArg = text(S.labs, 0, 0, 'operand', 'lab');
+      },
+      steps: [
+        { cap: 'A program instruction: <b>LOAD 6</b>.', run: function () {} },
+        { cap: 'It must be stored in memory. Memory can only store <b>0s and 1s</b>.', run: function () { show(S.memG, 1); cls(S.rows[0].c, 'hl', true); } },
+        { cap: 'The CPU has a list of every command it can process: its <b>instruction set</b>.', run: function () { show(S.tabG, 1); } },
+        { cap: 'Each command has its own binary code. LOAD is <b>0001</b>.', dur: 3400, run: function () { onlyRow(S.tab, 0); flipTo(S.op, '0001'); } },
+        { cap: 'The address 6 is written in binary: <b>0110</b>.', dur: 3400, run: function () { flipTo(S.arg, '0110'); } },
+        { cap: 'Together they go into memory: <b>0001 0110</b>.', dur: 3400, run: function () {
+          var y = S.rows[0].y + MH / 2; at(S.op, CELL + 85, y); at(S.arg, CELL + 205, y); onlyRow(S.tab, -1); cls(S.rows[0].c, 'hl', false); S.mean.style.opacity = 0.35;
+        } },
+        { cap: 'An instruction in binary, from the instruction set, is <b>machine code</b>.', run: function () { cls(S.rows[0].c, 'glow', true); } },
+        { cap: 'The first part says which command: the <b>opcode</b>. The second part says what to use: the <b>operand</b>.', dur: 4200, run: function () {
+          var y = S.rows[0].y - 14; S.labOp.setAttribute('x', CELL + 85); S.labOp.setAttribute('y', y); S.labArg.setAttribute('x', CELL + 205); S.labArg.setAttribute('y', y); show(S.labs, 1);
+        } },
+        { cap: 'The next instruction, ADD 7, is stored after it: <b>0010 0111</b>. A program is a list of these.', dur: 4000, run: function () { onlyRow(S.tab, 1); S.r5.textContent = '0010  0111'; cls(S.rows[1].c, 'glow', true); } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: decode 0010 0111 with the instruction set
+  function sceneDecode() {
+    var S = {};
+    var MEM = [[4, '0001 0110', 'LOAD 6'], [5, '0010 0111', 'ADD 7'], [6, '0000 1100', '12'], [7, '0001 1110', '30']];
+    return {
+      setup: function () {
+        box(svg, 14, 14, 640, 396, 'cpu'); text(svg, 334, 36, 'CPU', 'name big');
+        box(svg, 34, 56, 280, 84, 'unit'); text(svg, 70, 74, 'CIR', 'name');
+        box(svg, 34, 158, 280, 238, 'unit'); text(svg, 174, 176, 'Control unit (CU)', 'name');
+        S.tab = setTable(svg, SET_A, 46, 212, 256, 36);
+        S.alu = box(svg, 340, 56, 296, 120, 'unit'); text(svg, 488, 74, 'ALU', 'name');
+        S.aluSum = text(svg, 488, 128, '', 't-code');
+        S.acc = box(svg, 340, 200, 296, 84, 'unit'); text(svg, 488, 218, 'ACC', 'name'); S.accV = text(svg, 488, 252, '12', 't-code');
+        S.what = text(svg, 488, 330, '', 't-word');
+        text(svg, 806, 36, 'Memory', 'name big');
+        S.mem = MEM.map(function (m, i) {
+          var y = 60 + i * 64; box(svg, 676, y, 60, 54); text(svg, 706, y + 27, String(m[0]), 't-small');
+          var c = box(svg, 744, y, 200, 54); text(svg, 844, y + 18, m[1], 't-small'); text(svg, 844, y + 40, m[0] >= 6 ? '(' + m[2] + ')' : '', 'name');
+          return { c: c, y: y };
+        });
+        S.op = token('0010', 96); S.arg = token('0111', 96); at(S.op, 174, 106); at(S.arg, 174, 106); show(S.op, 1); show(S.arg, 1);
+        at(S.op, 124, 106); at(S.arg, 224, 106);
+        S.labs = fade(); text(S.labs, 124, 144, '', 'lab');
+        S.lOp = text(S.labs, 124, 75, 'opcode', 'lab'); S.lArg = text(S.labs, 224, 75, 'operand', 'lab');
+        S.val = token('30', 70, true); at(S.val, 844, S.mem[3].y + 27);
+      },
+      steps: [
+        { cap: 'The fetch has copied <b>0010 0111</b> into the CIR. The ACC holds 12.', run: function () { cls(S.mem[1].c, 'hl', true); } },
+        { cap: 'Decode: the CU splits it into the <b>opcode</b> 0010 and the <b>operand</b> 0111.', dur: 3600, run: function () {
+          cls(S.mem[1].c, 'hl', false); at(S.op, 104, 106); at(S.arg, 244, 106); show(S.labs, 1);
+        } },
+        { cap: 'The CU looks up the opcode 0010 in its <b>instruction set</b>.', dur: 3600, run: function () {
+          at(S.op, 104, 106); [0, 1].forEach(function (k) { later(function () { onlyRow(S.tab, k); }, 400 + k * 700); });
+        } },
+        { cap: '0010 is <b>ADD</b>: add the value at an address to the ACC.', dur: 3400, run: function () { onlyRow(S.tab, 1); S.what.textContent = 'ADD the value at address ?'; } },
+        { cap: 'The operand 0111 is <b>7</b> in denary: the address to use.', dur: 3400, run: function () { flipTo(S.arg, '7'); S.what.textContent = 'ADD the value at address 7'; cls(S.mem[3].c, 'hl', true); } },
+        { cap: 'Execute: the value at address 7, <b>30</b>, goes to the ALU.', dur: 3400, run: function () { show(S.val, 1); later(function () { at(S.val, 560, 128); }, 100); } },
+        { cap: 'The ALU adds: 12 + 30 = <b>42</b>. The ACC now holds 42.', dur: 3600, run: function () {
+          cls(S.mem[3].c, 'hl', false); S.aluSum.textContent = '12 + 30'; cls(S.alu, 'hl', true); show(S.val, 0);
+          later(function () { cls(S.acc, 'glow', true); countTo(S.accV, 12, 42); }, 500);
+        } },
+        { cap: 'One machine code instruction, one job: fetched, <b>decoded with the instruction set</b>, executed.', dur: 4000, run: function () { cls(S.alu, 'hl', false); onlyRow(S.tab, -1); } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: the same machine code on two CPUs
+  function sceneDiffer() {
+    var S = {};
+    var PROG = [['0001 0110', 'LOAD 6'], ['0010 0111', 'ADD 7'], ['0101 0000', 'OUTPUT']];
+    return {
+      setup: function () {
+        text(svg, 480, 22, 'A program made for CPU A (address 6 holds 12, address 7 holds 30)', 'name');
+        S.prog = PROG.map(function (p, i) { var b = box(svg, 330, 40 + i * 44, 300, 38); text(svg, 480, 59 + i * 44, p[0], 't-small'); return b; });
+        function cpu(x, name, set) {
+          var C = {};
+          box(svg, x, 186, 450, 230, 'cpu'); text(svg, x + 225, 204, name, 'name big');
+          C.tab = setTable(svg, set, x + 16, 246, 250, 32);
+          box(svg, x + 286, 230, 148, 70, 'unit'); text(svg, x + 360, 244, 'ACC', 'name'); C.acc = text(svg, x + 360, 274, '0', 't-code');
+          box(svg, x + 286, 312, 148, 90, 'unit'); text(svg, x + 360, 326, 'Output', 'name'); C.out = text(svg, x + 360, 356, '', 't-code'); C.say = text(svg, x + 360, 386, '', 'name');
+          return C;
+        }
+        S.A = cpu(10, 'CPU A', SET_A); S.B = cpu(500, 'CPU B', SET_B);
+      },
+      steps: [
+        { cap: 'A program made for <b>CPU A</b>, in machine code: three instructions.', run: function () {} },
+        { cap: 'CPU A looks up 0001 in its instruction set: <b>LOAD 6</b>. The ACC holds 12.', dur: 3400, run: function () { onlyRow(S.prog, 0); onlyRow(S.A.tab, 0); countTo(S.A.acc, 0, 12); } },
+        { cap: '0010 is <b>ADD 7</b>: 12 + 30 = 42.', dur: 3200, run: function () { onlyRow(S.prog, 1); onlyRow(S.A.tab, 1); countTo(S.A.acc, 12, 42); } },
+        { cap: '0101 is <b>OUTPUT</b>. CPU A outputs 42, as the program meant.', dur: 3400, run: function () { onlyRow(S.prog, 2); onlyRow(S.A.tab, 4); S.A.out.textContent = '42'; S.A.out.setAttribute('class', 't-code t-good'); } },
+        { cap: 'Now the same machine code on <b>CPU B</b>. Its instruction set is different.', dur: 3400, run: function () { onlyRow(S.prog, -1); onlyRow(S.A.tab, -1); } },
+        { cap: 'For CPU B, 0001 means <b>OUTPUT</b>. It outputs 0 straight away.', dur: 3600, run: function () { onlyRow(S.prog, 0); onlyRow(S.B.tab, 0); S.B.out.textContent = '0'; S.B.out.setAttribute('class', 't-code t-bad'); } },
+        { cap: 'For CPU B, 0010 means <b>LOAD</b>: it loads 30, not what the program meant.', dur: 3600, run: function () { onlyRow(S.prog, 1); onlyRow(S.B.tab, 1); countTo(S.B.acc, 0, 30); } },
+        { cap: '0101 is <b>not in CPU B\'s instruction set</b>. CPU B cannot process it.', dur: 3600, run: function () { onlyRow(S.prog, 2); onlyRow(S.B.tab, -1); cls(S.prog[2], 'badbox', true); S.B.say.textContent = 'not in its list'; S.B.say.setAttribute('class', 'name t-bad'); } },
+        { cap: 'Machine code only runs on a CPU with the <b>same instruction set</b>. For CPU B, the program must be made again.', dur: 4200, run: function () {} }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ choosing a scene
+  var SCENES = {
+    binary: { label: 'Machine code', make: sceneBinary, h: 380 },
+    decode: { label: 'Decode it', make: sceneDecode, h: 420 },
+    differ: { label: 'Two CPU types', make: sceneDiffer, h: 420 }
+  };
+  function start(key) {
+    var d = SCENES[key];
+    scene = d.make(); steps = scene.steps;
+    svg.setAttribute('viewBox', '0 0 960 ' + d.h);
+    playing = false; clearTimeout(playTimer); cur = 0;
+    Array.prototype.forEach.call(document.querySelectorAll('#tabs button'), function (b) { b.setAttribute('aria-selected', String(b.dataset.k === key)); });
+    render(0, false);
+  }
+  var tabs = document.getElementById('tabs');
+  Object.keys(SCENES).forEach(function (k) {
+    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.k = k; b.textContent = SCENES[k].label;
+    b.addEventListener('click', function () { start(k); }); tabs.appendChild(b);
+  });
+  start(SCENES[params.get('scene')] ? params.get('scene') : 'binary');
+
+  var main = document.getElementById('main');
+  function reportHeight() { if (window.parent === window) return; try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: Math.ceil(main.getBoundingClientRect().height) + 12 }, '*'); } catch (e) {} }
+  if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(main);
+  reportHeight();
+  window.__instrAnim = { steps: function () { return steps.length; }, go: function (k) { render(k, false); }, cur: function () { return cur; } };
+})();
+</script>
+</body>
+</html>

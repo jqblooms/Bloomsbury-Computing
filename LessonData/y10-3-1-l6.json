@@ -1,0 +1,464 @@
+{
+ "id": "y10-3-1-l6",
+ "label": "3.1.6: Instruction Sets",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: The MAR (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-316-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The MAR (1 of 2)</h2><p class=\"lesson-lead\">Recap of 3.1.2 to 3.1.4. Cambridge IGCSE 0478/12, November 2023, Question 3(b). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><p style=\"margin:0\">A user's computer has a central processing unit (CPU).</p><div id=\"y10-316-do-now\"></div>",
+   "items": [
+    {
+     "id": "mar-role",
+     "prompt": "(b) The CPU contains a memory address register (MAR). Describe the role of the MAR in the fetch-decode-execute cycle.",
+     "marks": 2,
+     "scheme": [
+      "It stores addresses ...",
+      "... of the next instruction or data to be fetched // of where data is to be written to"
+     ],
+     "guidance": "Two from the points, one mark each. Point 2 follows on from point 1.",
+     "modelAnswer": "It stores the address of the next instruction to be fetched."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: the role of a register",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> \"Describe the role of the accumulator (ACC) in the fetch-decode-execute cycle.\" It is worth 2 marks.",
+      "visual": "<div class=\"wt-note\">2 marks: 2 points that follow on</div>"
+     },
+     {
+      "text": "Point 1: what does the ACC <span class=\"wt-hl\">store</span>? It stores <span class=\"wt-hl\">a value</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">ACC: stores <span class=\"wt-hl\">a value</span></p>"
+     },
+     {
+      "text": "Point 2 says <span class=\"wt-hl\">which one</span>, or when. The ACC stores the <span class=\"wt-hl\">result of a calculation</span> made by the ALU.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">which value? <span class=\"wt-hl\">the result of a calculation</span></p>"
+     },
+     {
+      "text": "Now your question. What does the MAR store? Then say which one: the one for which instruction or data?",
+      "visual": "<div class=\"wt-note\">what it stores + which one</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Name the Component (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-316-do-now-2",
+   "validatorKey": "y10_316_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Name the Component (2 of 2)</h2><p class=\"lesson-lead\">Recap of 3.1.2 and 3.1.5. Cambridge IGCSE 0478/12, June 2025, Question 4(a) (adapted: two of the six rows). The computer has a central processing unit (CPU). Give the component for each description. <strong>What to do:</strong> type each answer, then press Check answers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-316-do-now-2-a\">(a) It controls the number of fetch-decode-execute (FDE) cycles that are performed per second. [1]</label><input id=\"y10-316-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Name the Component (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-316-do-now-2-b\">(b) It stores data immediately before it is transmitted to RAM and immediately after it is received from RAM. [1]</label><input id=\"y10-316-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Name the Component (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-316-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-316-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: name the component",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Two rows of a table. Row 1: \"It holds the instruction while it is decoded.\" Row 2: \"It carries out calculations.\"",
+      "visual": "<div class=\"wt-note\">read the description, find its key words</div>"
+     },
+     {
+      "text": "Row 1. The <span class=\"wt-hl\">key words</span> are \"holds the instruction\" and \"decoded\". Which register holds the current instruction?",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">key words: <span class=\"wt-hl\">holds the current instruction</span></p>"
+     },
+     {
+      "text": "It is the <span class=\"wt-hl\">current instruction register (CIR)</span>. The full name or the letters both earn the mark.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">Row 1: <span class=\"wt-hl\">CIR</span></p>"
+     },
+     {
+      "text": "Row 2. The key word is <span class=\"wt-hl\">calculations</span>. The part that does arithmetic and logic is the <span class=\"wt-hl\">ALU</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">Row 2: <span class=\"wt-hl\">ALU</span></p>"
+     },
+     {
+      "text": "Now your rows. Find the key words: what is counted \"per second\"? What sits between the CPU and RAM, \"before\" and \"after\"?",
+      "visual": "<div class=\"wt-note\">key words, then the part</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l5",
+   "embedContainerId": "y10-316-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on CPU performance. Pick the answer that earns the mark, then type it. Stuck? Switch on <strong>I need help</strong>. Go to the next slide when you are ready.</p><div id=\"y10-316-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Instruction Sets",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">Instruction Sets</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> the commands a CPU can carry out, how they are stored in memory, and <strong>why</strong> a program made for one CPU may not run on another.</li><li>One small memory all lesson: address 6 holds 12, address 7 holds 30.</li><li><strong>How this lesson works:</strong> on each slide, read the facts, <strong>predict</strong>, then read or watch why.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A game made for a games console will not run on a laptop, even when the files are copied across. Why might that be?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Collect ideas: the two computers are built differently inside. Today shows one big reason, inside the CPU.</p></div></details>"
+  },
+  {
+   "id": "why-list",
+   "label": "Why a CPU Has a Fixed List",
+   "type": "multiple-choice",
+   "containerId": "y10-316-why-list",
+   "content": "<h2 class=\"lesson-h2\">Why a CPU Has a Fixed List</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>The CPU from the last lessons can carry out only five commands: LOAD, ADD, SUB, STORE and OUTPUT.</li><li>Its CU and ALU have circuits for these commands, and no others.</li></ul><div id=\"y10-316-why-list\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: a program asks this CPU to MULTIPLY. What happens?",
+     "options": [
+      "It cannot process it: it is not one of its commands",
+      "The CU builds a new circuit for it",
+      "The ALU works out what MULTIPLY means"
+     ],
+     "correct": 0,
+     "explain": "A CPU can only process the commands it was built for. The list of all the commands a CPU can process is its <strong>instruction set</strong>. A multiplication must be made from commands it does have, such as ADD again and again."
+    }
+   ]
+  },
+  {
+   "id": "exam-isa",
+   "label": "Exam Question: What Is an Instruction Set?",
+   "type": "self-marked-response",
+   "containerId": "y10-316-exam-isa",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: What Is an Instruction Set?</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2024, Question 5(b). Instructions are processed by a central processing unit (CPU) in a computer. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-316-exam-isa\"></div>",
+   "items": [
+    {
+     "id": "isa-what",
+     "prompt": "(b) The CPU uses an instruction set to decode the instruction. State what is meant by an instruction set.",
+     "marks": 1,
+     "scheme": [
+      "A list of (machine code) commands that can be processed by the CPU"
+     ],
+     "guidance": "One mark. It must be a list of commands (or instructions) and say they can be processed (carried out, run) by the CPU. \"The instructions in a program\" earns no mark.",
+     "modelAnswer": "A list of the commands that can be processed by the CPU."
+    }
+   ]
+  },
+  {
+   "id": "why-binary",
+   "label": "Why Instructions Are Binary",
+   "type": "multiple-choice",
+   "containerId": "y10-316-why-binary",
+   "content": "<h2 class=\"lesson-h2\">Why Instructions Are Binary</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A program is stored in memory, just like data.</li><li>Memory can only store 0s and 1s.</li></ul><div id=\"y10-316-why-binary\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: how can the instruction LOAD 6 be stored in memory?",
+     "options": [
+      "As a binary code for LOAD, then 6 in binary",
+      "As the word LOAD, written on the chip",
+      "It is not stored: the CU remembers it"
+     ],
+     "correct": 0,
+     "explain": "The instruction set gives each command its own binary code. An instruction written in this binary is <strong>machine code</strong>. Watch it happen on the next slide."
+    }
+   ]
+  },
+  {
+   "id": "anim-binary",
+   "label": "Watch: LOAD 6 as Machine Code",
+   "type": "embedded-app",
+   "appId": "instr-anim",
+   "embedQuery": "scene=binary",
+   "embedContainerId": "y10-316-anim-binary",
+   "content": "<h2 class=\"lesson-h2\">Watch: LOAD 6 as Machine Code</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: why can memory not just store the word LOAD?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Memory is made of tiny switches that are on or off, 1 or 0. Everything stored has to be 0s and 1s.</p></div></details><p class=\"lesson-lead\">Press <strong>Play</strong>, or <strong>Next</strong> for one step at a time.</p><div id=\"y10-316-anim-binary\"></div>"
+  },
+  {
+   "id": "explain-binary",
+   "label": "Explain It: Machine Code",
+   "type": "self-marked-response",
+   "containerId": "y10-316-explain-binary",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Machine Code</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words. Press <strong>Check my answer</strong> to have it marked, improve it, then press <strong>Submit answer</strong>.</p><div id=\"y10-316-explain-binary\"></div>",
+   "items": [
+    {
+     "id": "explain-binary-q",
+     "aiModel": "haiku",
+     "context": "The animation showed the instruction LOAD 6. Memory can only store 0s and 1s. The instruction set gives LOAD the binary code 0001, and 6 becomes 0110, so LOAD 6 is stored as 0001 0110. An instruction in binary is machine code. The first part (opcode) says which command; the second part (operand) says what to use. In your own words, explain what machine code is, and why a program is stored in memory as machine code.",
+     "prompt": "In your own words, explain what machine code is, and why a program is stored in memory as machine code.",
+     "marks": 2,
+     "scheme": [
+      "Machine code is instructions in binary // 0s and 1s",
+      "Memory or the CPU can only store or process binary // 0s and 1s",
+      "Each command in the instruction set has its own binary code"
+     ],
+     "guidance": "Any two points, one mark each. Credit each point in the student's own words; no technical words are needed. \"It is a code\" alone earns nothing: it must say binary, or 0s and 1s.",
+     "modelAnswer": "Machine code is instructions in binary. Memory can only store 0s and 1s."
+    }
+   ]
+  },
+  {
+   "id": "note-machine-code",
+   "label": "Your Notes: Instruction Sets and Machine Code",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Instruction Sets and Machine Code</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain what an instruction set is.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> A list of all the commands that can be processed by a CPU.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY a CPU can only process commands in its instruction set.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Its CU and ALU have circuits for only those commands. Any other command cannot be processed.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain what machine code is, and WHY programs are stored as machine code.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Instructions in binary, using the codes in the instruction set. Memory can only store 0s and 1s.</p></div></details>"
+  },
+  {
+   "id": "exam-name",
+   "label": "Exam Question: Name the List",
+   "type": "short-answer-validation",
+   "validatorId": "y10-316-exam-name",
+   "validatorKey": "y10_316_exam_name",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Name the List</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2023, Question 3(c). A user's computer has a central processing unit (CPU). <strong>What to do:</strong> type your answer, then press Check answers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-316-exam-name-a\">(c) The CPU has a list of all the machine code commands it can process. State the name of this list of commands. [1]</label><input id=\"y10-316-exam-name-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-name-a\" aria-label=\"Exam Question: Name the List part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-316-exam-name-check\">Check answers</button><strong>Total: 1 marks</strong></div><div id=\"y10-316-exam-name-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "opcode",
+   "label": "Two Parts: Opcode and Operand",
+   "type": "multiple-choice",
+   "containerId": "y10-316-opcode",
+   "content": "<h2 class=\"lesson-h2\">Two Parts: Opcode and Operand</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>Each instruction is 8 bits.</li><li>This CPU's instruction set gives LOAD the code 0001 and ADD the code 0010.</li></ul><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:28px;letter-spacing:4px;margin:4px 0\">0010 0111</div></div><div id=\"y10-316-opcode\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: what does 0010 0111 tell the CPU to do?",
+     "options": [
+      "ADD the value at address 7",
+      "LOAD the value at address 2",
+      "ADD 2 and 7 together"
+     ],
+     "correct": 0,
+     "explain": "The first 4 bits, 0010, say which command: they are the <strong>opcode</strong> (ADD). The last 4 bits, 0111, say what to use: they are the <strong>operand</strong>, here the address 7 (4 + 2 + 1)."
+    }
+   ]
+  },
+  {
+   "id": "anim-decode",
+   "label": "Watch: Decoding 0010 0111",
+   "type": "embedded-app",
+   "appId": "instr-anim",
+   "embedQuery": "scene=decode",
+   "embedContainerId": "y10-316-anim-decode",
+   "content": "<h2 class=\"lesson-h2\">Watch: Decoding 0010 0111</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: the CU has only 0s and 1s. How could it work out what to do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: split it into parts, look the parts up, turn binary into a number. Watch to check.</p></div></details><p class=\"lesson-lead\">Press <strong>Play</strong>, or <strong>Next</strong> for one step at a time.</p><div id=\"y10-316-anim-decode\"></div>"
+  },
+  {
+   "id": "explain-decode",
+   "label": "Explain It: Decoding",
+   "type": "self-marked-response",
+   "containerId": "y10-316-explain-decode",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Decoding</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words. Press <strong>Check my answer</strong> to have it marked, improve it, then press <strong>Submit answer</strong>.</p><div id=\"y10-316-explain-decode\"></div>",
+   "items": [
+    {
+     "id": "explain-decode-q",
+     "aiModel": "haiku",
+     "context": "The animation showed 0010 0111 in the CIR. The CU split it into the opcode 0010 and the operand 0111. It looked up 0010 in the instruction set: ADD. The operand 0111 is address 7. Then the ALU added the value at address 7 (30) to the ACC (12), giving 42. In your own words, explain how the CU uses the instruction set to decode the instruction 0010 0111.",
+     "prompt": "In your own words, explain how the CU uses the instruction set to decode the instruction 0010 0111.",
+     "marks": 3,
+     "scheme": [
+      "The instruction is split into an opcode and an operand // 0010 and 0111",
+      "The CU looks up the opcode (0010) in the instruction set",
+      "It finds the command: 0010 means ADD",
+      "The operand 0111 gives what to use: the address 7"
+     ],
+     "guidance": "Any three points, one mark each. Credit each point in the student's own words. Point 3 needs the command (ADD) or that the opcode tells it which command; point 4 needs the operand to give the address or data.",
+     "modelAnswer": "It is split into the opcode 0010 and the operand 0111. The CU looks up 0010 in the instruction set: ADD. The operand gives address 7."
+    }
+   ]
+  },
+  {
+   "id": "check-decode",
+   "label": "Check: Decode It",
+   "type": "multiple-choice",
+   "containerId": "y10-316-check-decode",
+   "content": "<h2 class=\"lesson-h2\">Check: Decode It</h2><p class=\"lesson-lead\"><strong>What to do:</strong> use the instruction set on the left. Split each instruction into opcode and operand.</p><div style=\"display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.6fr);gap:16px;align-items:start\"><div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:4px 12px\"><b>The instruction set</b><table style=\"border-collapse:collapse;font-size:15px;margin:2px 0 0;width:100%\"><tr><th style=\"text-align:left;font-size:13px;color:var(--muted);padding:1px 6px\">Opcode</th><th style=\"text-align:left;font-size:13px;color:var(--muted);padding:1px 6px\">Command</th></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0001</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>LOAD</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0010</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>ADD</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0011</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>SUB</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0100</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>STORE</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0101</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>OUTPUT</b></td></tr></table></div></div><div id=\"y10-316-check-decode\"></div></div>",
+   "items": [
+    {
+     "prompt": "Decode 0001 1001.",
+     "options": [
+      "LOAD 9",
+      "LOAD 1",
+      "ADD 9"
+     ],
+     "correct": 0,
+     "explain": "Opcode 0001 is LOAD. Operand 1001 is 8 + 1 = 9. So LOAD 9: copy the value at address 9 into the ACC."
+    },
+    {
+     "prompt": "In 0011 0101, which part says which command to carry out?",
+     "options": [
+      "0101, the operand",
+      "0011, the opcode",
+      "Both parts together"
+     ],
+     "correct": 1,
+     "explain": "The opcode, 0011: SUB. The operand, 0101, gives the address 5."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Machine Code",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-316-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Machine Code</h2><p class=\"lesson-lead\"><strong>What to do:</strong> one question at a time. Any mistake and the round does not count. <strong>Done</strong> after level 2.</p><div id=\"y10-316-activity-1\"></div>",
+   "embedQuery": "activity=isa&level=1&upto=2"
+  },
+  {
+   "id": "exam-decode",
+   "label": "Exam Question: The Decode Stage",
+   "type": "self-marked-response",
+   "containerId": "y10-316-exam-decode",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Decode Stage</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2024, Question 5(b). A central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-316-exam-decode\"></div>",
+   "items": [
+    {
+     "id": "decode-stage",
+     "prompt": "(b) Describe what happens at the decode stage of the cycle.",
+     "marks": 3,
+     "scheme": [
+      "The CIR or CU receives the instruction from the MDR // the instruction is sent from the MDR to the CIR or CU",
+      "... using the data bus",
+      "The instruction is separated into opcode and operand",
+      "The control unit decodes the instruction",
+      "... using an instruction set"
+     ],
+     "guidance": "Any three from the points, one mark each. A point marked ... follows on from the point before it.",
+     "modelAnswer": "The instruction is separated into opcode and operand. The CU decodes it using an instruction set."
+    }
+   ]
+  },
+  {
+   "id": "note-decode",
+   "label": "Your Notes: Opcode, Operand and Decoding",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Opcode, Operand and Decoding</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain what the opcode and the operand are.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Opcode: the part of the instruction that says which command. Operand: the part that says what to use, such as an address.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY the CU needs the instruction set to decode an instruction.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The instruction is only 0s and 1s. The instruction set tells the CU which command each opcode means.</p></div></details>"
+  },
+  {
+   "id": "differ",
+   "label": "Compare: Two CPU Types",
+   "type": "multiple-choice",
+   "containerId": "y10-316-differ",
+   "content": "<h2 class=\"lesson-h2\">Compare: Two CPU Types</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two CPUs, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>A program is made for CPU A. Its first instruction is 0001 0110.</li></ul><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:4px 12px\"><b>CPU A</b><table style=\"border-collapse:collapse;font-size:15px;margin:2px 0 0;width:100%\"><tr><th style=\"text-align:left;font-size:13px;color:var(--muted);padding:1px 6px\">Opcode</th><th style=\"text-align:left;font-size:13px;color:var(--muted);padding:1px 6px\">Command</th></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0001</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>LOAD</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0010</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>ADD</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0011</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>SUB</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0100</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>STORE</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0101</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>OUTPUT</b></td></tr></table></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:4px 12px\"><b>CPU B</b><table style=\"border-collapse:collapse;font-size:15px;margin:2px 0 0;width:100%\"><tr><th style=\"text-align:left;font-size:13px;color:var(--muted);padding:1px 6px\">Opcode</th><th style=\"text-align:left;font-size:13px;color:var(--muted);padding:1px 6px\">Command</th></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0001</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>OUTPUT</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0010</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>LOAD</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0011</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>ADD</b></td></tr><tr><td style=\"font-family:var(--font-mono, monospace);padding:1px 6px;border-top:1px solid var(--line)\">0100</td><td style=\"padding:1px 6px;border-top:1px solid var(--line)\"><b>STORE</b></td></tr></table></div></div></div><div id=\"y10-316-differ\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: what does CPU B do with 0001 0110?",
+     "options": [
+      "LOAD 6, the same as CPU A",
+      "OUTPUT: not what the program meant",
+      "It changes its list to match CPU A"
+     ],
+     "correct": 1,
+     "explain": "CPU B decodes with its own instruction set, where 0001 means OUTPUT. The same machine code means a different command on a CPU with a different instruction set, so the program does not do its job."
+    }
+   ]
+  },
+  {
+   "id": "anim-differ",
+   "label": "Watch: One Program, Two CPUs",
+   "type": "embedded-app",
+   "appId": "instr-anim",
+   "embedQuery": "scene=differ",
+   "embedContainerId": "y10-316-anim-differ",
+   "content": "<h2 class=\"lesson-h2\">Watch: One Program, Two CPUs</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: what else could go wrong when CPU B runs all three instructions?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Make a guess for each instruction, then watch.</p></div></details><p class=\"lesson-lead\">Press <strong>Play</strong>, or <strong>Next</strong> for one step at a time.</p><div id=\"y10-316-anim-differ\"></div>"
+  },
+  {
+   "id": "explain-differ",
+   "label": "Explain It: Two CPU Types",
+   "type": "self-marked-response",
+   "containerId": "y10-316-explain-differ",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Two CPU Types</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words. Press <strong>Check my answer</strong> to have it marked, improve it, then press <strong>Submit answer</strong>.</p><div id=\"y10-316-explain-differ\"></div>",
+   "items": [
+    {
+     "id": "explain-differ-q",
+     "aiModel": "haiku",
+     "context": "The animation ran the machine code 0001 0110, 0010 0111, 0101 0000 (made for CPU A) on CPU A and on CPU B. CPU A decoded LOAD 6, ADD 7, OUTPUT and output 42. CPU B has a different instruction set: for it 0001 is OUTPUT (it output 0), 0010 is LOAD (it loaded 30), and 0101 is not in its instruction set, so it could not process it. In your own words, explain why a machine code program made for CPU A may not run correctly on CPU B.",
+     "prompt": "In your own words, explain why a machine code program made for CPU A may not run correctly on CPU B.",
+     "marks": 2,
+     "scheme": [
+      "CPU B has a different instruction set",
+      "The same opcode or binary means a different command on CPU B",
+      "Some opcodes are not in CPU B's instruction set, so it cannot process them",
+      "The program must be made again for CPU B's instruction set"
+     ],
+     "guidance": "Any two points, one mark each. Credit each point in the student's own words. \"CPU B is different\" or \"CPU B is slower\" earns nothing: it must be about the instruction set, the commands or the codes.",
+     "modelAnswer": "CPU B has a different instruction set, so the same opcode means a different command."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Run It on Two CPUs",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-316-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Run It on Two CPUs</h2><p class=\"lesson-lead\"><strong>What to do:</strong> one question at a time. Any mistake and the round does not count. <strong>Done</strong> after level 4.</p><div id=\"y10-316-activity-2\"></div>",
+   "embedQuery": "activity=isa&level=3&upto=4"
+  },
+  {
+   "id": "check-cpu",
+   "label": "Check: Which CPU Can Run It?",
+   "type": "multiple-choice",
+   "containerId": "y10-316-check-cpu",
+   "content": "<h2 class=\"lesson-h2\">Check: Which CPU Can Run It?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick an answer for each question. Ask: which instruction set was the machine code made for? Done when both are answered.</p><div id=\"y10-316-check-cpu\"></div>",
+   "items": [
+    {
+     "prompt": "A machine code program was made for a CPU with instruction set X. Which CPU can run it correctly?",
+     "options": [
+      "Any CPU with a faster clock",
+      "Any CPU with instruction set X",
+      "Any CPU with more cores"
+     ],
+     "correct": 1,
+     "explain": "Only a CPU with the same instruction set decodes every opcode to the same command. A faster clock or more cores does not change what the opcodes mean."
+    },
+    {
+     "prompt": "A program made for CPU A uses the opcode 0101. CPU B's instruction set has no 0101. What happens on CPU B?",
+     "options": [
+      "CPU B cannot process that instruction",
+      "CPU B runs it as OUTPUT",
+      "CPU B adds 0101 to its list"
+     ],
+     "correct": 0,
+     "explain": "CPU B can only process commands in its own instruction set, so it cannot process 0101."
+    }
+   ]
+  },
+  {
+   "id": "note-differ",
+   "label": "Your Notes: Different CPU Types",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Different CPU Types</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY machine code made for one CPU may not run on a CPU with a different instruction set.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The other CPU decodes with its own instruction set. The same opcode can mean a different command, or nothing, so the program does not do the same job.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain which CPUs can run a machine code program.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Only CPUs with the same instruction set as the one it was made for.</p></div></details>"
+  },
+  {
+   "id": "notes-check",
+   "label": "Notes Check: Your WHY Notes",
+   "content": "<h2 class=\"lesson-h2\">Notes Check: Your WHY Notes</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top). You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. Then go to the next slide.</p><ul class=\"lesson-facts\"><li><strong>What an instruction set is. WHY a CPU can only process its own commands. What machine code is, and WHY.</strong> Slide: Your Notes: Instruction Sets and Machine Code.</li><li><strong>Opcode and operand. WHY the CU needs the instruction set to decode.</strong> Slide: Your Notes: Opcode, Operand and Decoding.</li><li><strong>WHY machine code for one CPU may not run on another. Which CPUs can run it.</strong> Slide: Your Notes: Different CPU Types.</li></ul>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Instruction Sets Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l6",
+   "embedContainerId": "y10-316-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Instruction Sets Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.</p><div id=\"y10-316-plenary\"></div>"
+  },
+  {
+   "id": "exam-paper",
+   "label": "Practice Paper: Instruction Sets",
+   "type": "app-link",
+   "appId": "exampaper",
+   "appQuery": "paper=y10-3-1-l6-paper",
+   "buttonId": "y10-316-open-paper",
+   "content": "<h2 class=\"lesson-h2\">Practice Paper: Instruction Sets</h2><p class=\"lesson-lead\"><strong>What to do:</strong> Open the practice paper. Answer every question, then press Submit paper. You get all your marks at once. You can take it again to improve.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y10-316-open-paper\">Open the practice paper</button></p>"
+  }
+ ],
+ "validators": {
+  "y10_316_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?(system\\s+)?clock\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It sends out one pulse for each FDE cycle."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?(mdr|memory\\s+data\\s+register(\\s*\\(?mdr\\)?)?)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It is the register that sits between the CPU and RAM for data."
+   }
+  ],
+  "y10_316_exam_name": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?instruction\\s*sets?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Every CPU type has its own one."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
