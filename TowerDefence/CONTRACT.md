@@ -8,7 +8,7 @@ Folder: `TowerDefence/` (entry `TowerDefence/index.html`). Lesson slide embeds i
 Load the client (answers and mark schemes stay on the server):
 
 ```html
-<script src="../shared/exam-game-client.js?v=20261117b"></script>
+<script src="../shared/exam-game-client.js?v=20261118a"></script>
 ```
 
 All calls return Promises.
@@ -27,6 +27,13 @@ All calls return Promises.
   - `feedback`: plain English; on a part-marked answer it explains what earns the marks without the final answer.
   - The game pays half for a second-attempt mark (`attempt === 2`).
   - Marking takes a few seconds (AI). Show a "Marking..." state; never block the game loop on it.
+- `ExamGame.submitMany([{ qid, answer, attempt, image }])` -> `[result | { qid, error }]`
+  - A whole round in ONE request (op `submitMany`); the server sends the Haiku calls together (`UrlFetchApp.fetchAll`),
+    retries a failed one once, then uses the keyword fallback for that answer. Each result is a `submit` result plus
+    its `qid`, in the same order, or that answer's own `error`. Same rules per answer as `submit` (caps, second tries, half pay).
+  - Limits: 10 answers, each image at most 400000 base64 characters and 1200000 in all.
+  - A shell without the op answers "Unknown request."; the client then sends one `submit` per answer.
+  - Circuit Siege shows the whole round on one page and sends it with this (James 2026-11-18).
 - `ExamGame.isStub()` says whether the local stub is in use; `ExamGame.useStub(true)` forces it.
 - Errors reject with an `Error` whose message is safe to show ("Sign in to play", "No answer from the site...").
 

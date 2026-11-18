@@ -6,6 +6,9 @@
 //   ExamGame.warm(setId)                      -> starts the one history read for the set (also warms the relay)
 //   ExamGame.submit(qid, answer, attempt, image) -> Promise { marks, max, feedback, canRetry, attempt, full }
 //     image: optional pen working, a base64 PNG without the data: prefix ('' for none). AI marking only.
+//   ExamGame.submitMany([{ qid, answer, attempt, image }]) -> Promise [result | { qid, error }]
+//     a whole round in ONE request, marked in parallel on the server; each item is a submit result (plus qid) or
+//     its own error. A shell without the op gets the answers one request each instead.
 // Stub mode (no shell): ?examStub=1, ExamGame.useStub(true), or automatically when the page is not in a frame.
 // Three practice questions, marked by checking the final number only.
 (function () {
@@ -30,7 +33,7 @@
       pending[reqId] = { resolve: resolve, reject: reject, timer: setTimeout(function () {
         delete pending[reqId];
         reject(new Error('No answer from the site. Check you are signed in, then try again.'));
-      }, op === 'submit' ? 45000 : 20000) };
+      }, op === 'submitMany' ? 90000 : op === 'submit' ? 45000 : 20000) };
       try { window.parent.postMessage({ type: 'BC_EXAM_GAME_REQUEST', reqId: reqId, op: op, payload: payload || {} }, '*'); }
       catch (err) { delete pending[reqId]; reject(err); }
     });
@@ -46,6 +49,14 @@
   function lastBits(t) { var m = String(t).replace(/([01]{4})\s([01]{4})/g, '$1$2').match(/[01]{8}/g); return m ? m[m.length - 1] : ''; }
   function lastInt(t) { var m = String(t).replace(/−/g, '-').match(/-?\d+/g); return m ? Number(m[m.length - 1]) : NaN; }
   var STUB = {
+    submitMany: function (p) {
+      var items = Array.isArray(p.items) ? p.items : [];
+      if (!items.length) throw new Error('Write your working and answer first.');
+      return items.map(function (it) {
+        try { var res = STUB.submit(it || {}); res.qid = String((it || {}).qid || ''); return res; }
+        catch (e) { return { qid: String((it || {}).qid || ''), error: e.message }; }
+      });
+    },
     sets: function () { return [{ setId: 'twos-complement', title: 'Two\'s Complement (practice)', count: STUB_QS.length }]; },
     history: function () { return { seen: {}, score: {}, tries: {} }; },
     next: function (p) {
@@ -153,6 +164,18 @@
   }
 
   var qidSet = {};
+  // A mark updates the history copy here, so the next round's pick follows it.
+  function noteResult(p, res) {
+    var setId = qidSet[p.qid], h = setId && hist[setId];
+    if (!h || !res) return;
+    h.seen[p.qid] = 1;
+    if (p.attempt === 1) {
+      var max = Number(res.max) || 1;
+      h.score[p.qid] = Math.round((Number(res.marks) || 0) / max * 100) / 100;
+      h.tries[p.qid] = (Number(h.tries[p.qid]) || 0) + 1;
+    }
+    saveHist(setId);
+  }
 
   if (useFile) loadFile();   // starts at once, so the set list and the first round need no wait
 
@@ -195,18 +218,32 @@
     submit: function (qid, answer, attempt, image) {
       var p = { qid: String(qid || ''), answer: String(answer == null ? '' : answer), attempt: attempt === 2 ? 2 : 1 };
       if (typeof image === 'string' && image) { p.image = image; p.imageType = 'image/png'; }
-      return request('submit', p).then(function (res) {
-        var setId = qidSet[p.qid], h = setId && hist[setId];
-        if (h && res) {
-          h.seen[p.qid] = 1;
-          if (p.attempt === 1) {
-            var max = Number(res.max) || 1;
-            h.score[p.qid] = Math.round((Number(res.marks) || 0) / max * 100) / 100;
-            h.tries[p.qid] = (Number(h.tries[p.qid]) || 0) + 1;
-          }
-          saveHist(setId);
-        }
-        return res;
+      return request('submit', p).then(function (res) { noteResult(p, res); return res; });
+    },
+    // items: [{ qid, answer, attempt, image }]. One request for the whole round; each result is in the same order.
+    submitMany: function (items) {
+      var ps = (items || []).map(function (it) {
+        it = it || {};
+        var p = { qid: String(it.qid || ''), answer: String(it.answer == null ? '' : it.answer), attempt: it.attempt === 2 ? 2 : 1 };
+        if (typeof it.image === 'string' && it.image) { p.image = it.image; p.imageType = 'image/png'; }
+        return p;
+      });
+      if (!ps.length) return Promise.resolve([]);
+      var one = function (p) {
+        return request('submit', p).then(function (res) { noteResult(p, res); res.qid = p.qid; return res; },
+          function (e) { return { qid: p.qid, error: (e && e.message) || 'Something went wrong.' }; });
+      };
+      return request('submitMany', { items: ps }).then(function (list) {
+        list = Array.isArray(list) ? list : [];
+        return ps.map(function (p, i) {
+          var res = list[i] || { qid: p.qid, error: 'No mark came back for this question.' };
+          if (!res.error) noteResult(p, res);
+          return res;
+        });
+      }, function (e) {
+        // An older shell does not know the op: send the answers as single requests instead.
+        if (e && e.message === 'Unknown request.') return Promise.all(ps.map(one));
+        throw e;
       });
     },
     // Stub only: what the last submit sent ({ qid, answerChars, imageChars }).

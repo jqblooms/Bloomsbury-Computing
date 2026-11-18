@@ -540,26 +540,47 @@
   }, 33);
 
   // ---------------------------------------------------------------- exam rounds
-  // S.round = { n, qs, i, rate, pool, paid, cur: { attempt, first, fb, answer } }
+  // The whole round is one page (James 2026-11-18): every question with its own answer box and optional pen
+  // working, one Submit all (one request, marked in parallel), then each mark under its question. A wrong one can be
+  // tried again in place; the second tries go together in one request and pay half.
+  // S.round = { n, qs, rate, pool, paid, got, intro, items: [{ answer, doc, attempt, first, fb, open, err }] }
+  //   fb = { marks, max, feedback, canRetry, pay } once marked; open = a second try is being written.
   function farmIncome() {
     return S.towers.reduce(function (a, t) { return a + (t.type === 'farm' ? D.stats('farm', t.lv).income : 0); }, 0);
   }
+  function blankItem() { return { answer: '', doc: null, attempt: 1, first: null, fb: null, open: false, err: '' }; }
+  // A round saved by the one-question-at-a-time version (S.round.i and S.round.cur) becomes the one-page form.
+  function upgradeRound(r) {
+    if (!r.qs || r.items) return;
+    var i = r.i || 0, c = r.cur;
+    r.items = r.qs.map(function (q, j) {
+      if (j < i) return { answer: '', doc: null, attempt: 1, first: null, fb: { marks: null, max: q.marks, feedback: '', canRetry: false, pay: 0 }, open: false, err: '', counted: true };
+      var it = blankItem();
+      if (j === i && c) {
+        it.answer = c.answer || ''; it.doc = c.doc || null; it.attempt = c.attempt === 2 ? 2 : 1; it.first = c.first == null ? null : c.first;
+        it.fb = c.fb || null; it.open = it.attempt === 2 && !c.fb;
+      }
+      return it;
+    });
+    delete r.i; delete r.cur;
+  }
   function startRound(resuming) {
     S.phase = 'questions';
-    if (!resuming || !S.round) S.round = { n: S.wave, qs: null, i: 0, rate: 0, pool: 0, paid: 0, cur: null, intro: true };
+    if (!resuming || !S.round) S.round = { n: S.wave, qs: null, rate: 0, pool: 0, paid: 0, intro: true, items: null };
     save(); setHud(true); ctx = null;
     var r = S.round;
-    if (r.qs) { showQuestion(); return; }
+    if (r.qs) { upgradeRound(r); showRound(); return; }
     $('screen').innerHTML = '<div class="cs-card cs-q"><p class="cs-lead">Loading questions...</p></div>';
     call(function () { return api().next(setId, { count: 3, maxMarks: 4 }); }).then(function (list) {
       list = (list || []).filter(function (q) { return q && q.qid; });
       if (!list.length) throw new Error('No questions right now.');
       var total = list.reduce(function (a, q) { return a + (Number(q.marks) || 1); }, 0);
       r.qs = list.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1 }; });
+      r.items = r.qs.map(blankItem);
       r.pool = D.roundPool(r.n, S.diff, farmIncome());
       r.rate = r.pool / total;
       save();
-      showQuestion();
+      showRound();
     }).catch(function (e) {
       $('screen').innerHTML = '<div class="cs-card cs-q"><p class="cs-lead">' + esc(errText(e)) + '</p>' +
         '<div class="cs-start-go"><button class="bc-btn" id="retry">Try again</button><button class="bc-btn is-outline" id="skip">Back to the board (no coins)</button></div></div>';
@@ -569,11 +590,17 @@
   }
 
   // ---------------------------------------------------------------- pen working
-  // One drawing per question, in memory only: Try again shows it again, the next question starts blank.
-  // Strokes are kept in canvas units (PEN_W x PEN_H) and replayed for the screen and for the PNG.
+  // One drawing per question, in memory only (a reload starts them blank). Strokes are kept in canvas units
+  // (PEN_W x PEN_H) and replayed for the screen and for the PNG.
   var PEN_W = 800, PEN_H = 320, PEN_INK = 3, PEN_MARGIN = 16, PEN_MAX_SIDE = 800;
-  var pen = { key: '', strokes: [], locked: false };
-  var ansBox = null, ansSaveT = 0;   // the answer box (shared/answer-box.js): monospace text with an optional table
+  var pens = { key: '', list: [] };
+  var ansBoxes = [], ansSaveT = 0, sending = false;   // one answer box per question (shared/answer-box.js)
+
+  function penFor(i) {
+    var key = S.round.n + '|' + S.round.qs.map(function (q) { return q.qid; }).join(',');
+    if (pens.key !== key) pens = { key: key, list: [] };
+    return pens.list[i] || (pens.list[i] = { strokes: [], locked: false, shown: false });
+  }
 
   function penDraw(c, strokes) {
     c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#000'; c.fillStyle = '#000'; c.lineWidth = PEN_INK;
@@ -585,18 +612,15 @@
     });
   }
 
-  function penRedraw() {
-    var cv = $('pen'); if (!cv) return;
+  function penRedraw(cv, pen) {
     var c = cv.getContext('2d');
     c.setTransform(1, 0, 0, 1, 0, 0);
     c.fillStyle = '#fff'; c.fillRect(0, 0, PEN_W, PEN_H);
     penDraw(c, pen.strokes);
   }
 
-  function penMount(key) {
-    if (pen.key !== key) pen = { key: key, strokes: [], locked: false };
-    pen.locked = false;
-    var cv = $('pen'), live = null;
+  function penMount(cv, pen, undo, clear) {
+    var live = null;
     function at(e) {
       var b = cv.getBoundingClientRect();
       return [Math.round((e.clientX - b.left) * PEN_W / b.width * 10) / 10, Math.round((e.clientY - b.top) * PEN_H / b.height * 10) / 10];
@@ -605,7 +629,7 @@
       if (pen.locked || (e.pointerType === 'mouse' && e.button !== 0)) return;
       e.preventDefault();
       try { cv.setPointerCapture(e.pointerId); } catch (err) {}
-      live = [at(e)]; pen.strokes.push(live); penRedraw();
+      live = [at(e)]; pen.strokes.push(live); penRedraw(cv, pen);
     };
     cv.onpointermove = function (e) {
       if (!live) return;
@@ -617,15 +641,15 @@
       c.beginPath(); c.moveTo(last[0], last[1]); c.lineTo(p[0], p[1]); c.stroke();
     };
     cv.onpointerup = cv.onpointercancel = function () { live = null; };
-    $('penUndo').onclick = function () { if (!pen.locked) { pen.strokes.pop(); penRedraw(); } };
-    $('penClear').onclick = function () { if (!pen.locked) { pen.strokes = []; penRedraw(); } };
-    penRedraw();
+    if (undo) undo.onclick = function () { if (!pen.locked) { pen.strokes.pop(); penRedraw(cv, pen); } };
+    if (clear) clear.onclick = function () { if (!pen.locked) { pen.strokes = []; penRedraw(cv, pen); } };
+    penRedraw(cv, pen);
   }
 
   // The drawing as a base64 PNG (no data: prefix): cropped to the ink plus a margin, longest side at most
   // PEN_MAX_SIDE, black on white. '' when nothing is drawn.
-  function penImage() {
-    if (!pen.strokes.length) return '';
+  function penImage(pen) {
+    if (!pen || !pen.strokes.length) return '';
     var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
     pen.strokes.forEach(function (s) { s.forEach(function (p) {
       x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]);
@@ -644,8 +668,10 @@
   }
 
   function roundTotal() { return S.round.qs.reduce(function (a, q) { return a + q.marks; }, 0); }
+  // A question can be sent while it has no mark yet, or while its second try is open.
+  function canSend(it) { return !it.fb || it.open; }
 
-  function showQuestion() {
+  function showRound() {
     var r = S.round;
     if (r.intro) {
       var first = !load('seenRound', false);
@@ -653,91 +679,191 @@
         '<p class="cs-q-text">' + r.qs.length + ' questions, ' + roundTotal() + ' marks.\nFull marks pays ' + (r.pool || Math.round(r.rate * roundTotal())) + ' coins.</p>' +
         (first ? '<p class="cs-lead">Marks are the only way to earn coins. Spend them on towers before the next wave.</p>' : '') +
         '<div class="cs-start-go"><button class="bc-btn cs-big" id="go">Start</button></div></div>';
-      $('go').onclick = function () { r.intro = false; store('seenRound', true); save(); showQuestion(); };
+      $('go').onclick = function () { r.intro = false; store('seenRound', true); save(); showRound(); };
       $('go').focus();
       return;
     }
-    if (r.i >= r.qs.length) { endRound(); return; }
-    var q = r.qs[r.i];
-    if (!r.cur) r.cur = { attempt: 1, first: null, fb: null, answer: '' };
-    var cur = r.cur;
-    $('screen').innerHTML = '<div class="cs-card cs-q">' +
-      '<div class="cs-q-meta"><span>Question ' + (r.i + 1) + ' of ' + r.qs.length + '</span><span class="cs-pill">' + q.marks + (q.marks === 1 ? ' mark' : ' marks') + '</span>' +
-      (cur.attempt === 2 ? '<span class="cs-pill is-warn">Second try: half coins</span>' : '') + '</div>' +
-      '<div class="cs-q-text" id="qText"></div>' +
-      '<p class="cs-label">Show your working: draw it or type it.</p>' +
-      '<div class="cs-pen"><canvas id="pen" width="' + PEN_W + '" height="' + PEN_H + '" aria-label="Drawing box for your working"></canvas>' +
-      '<div class="cs-pen-tools"><button class="bc-btn is-outline" id="penUndo" type="button">Undo</button>' +
-      '<button class="bc-btn is-outline" id="penClear" type="button">Clear</button></div></div>' +
-      '<p class="cs-label">Your answer (you must type it):</p>' +
-      '<div id="ans" class="cs-ans"></div>' +
-      '<div class="cs-q-actions" id="qActs"><button class="bc-btn cs-big" id="submit">Submit</button></div>' +
-      '<div class="cs-fb" id="fb" hidden></div></div>';
-    $('qText').textContent = q.text;
-    ansBox = window.BCAnswerBox.mount($('ans'), { doc: cur.doc, text: cur.answer || '', rows: 4, maxLength: 800, label: 'Your answer',
-      placeholder: 'Type your final answer here. You can type working here too.',
-      onChange: function (text, doc) {
-        cur.answer = text; cur.doc = doc;
-        clearTimeout(ansSaveT); ansSaveT = setTimeout(save, 400);   // a reload keeps the typing and the table
-      } });
-    penMount(r.n + '|' + r.i + '|' + q.qid);
-    $('submit').onclick = submit;
-    if (cur.fb) showFeedback(cur.fb);
-    else setTimeout(function () { try { ansBox.focus(); } catch (e) {} }, 30);
+    var scrollY = window.scrollY, bodyY = document.body.scrollTop, firstShow = !$('roundForm');
+    var h = '<div class="cs-card cs-q" id="roundForm"><div class="cs-round-head"><h2>Exam round ' + r.n + '</h2>' +
+      '<span class="cs-pill">' + r.qs.length + ' questions, ' + roundTotal() + ' marks</span>' +
+      '<span class="cs-pill">Full marks pays ' + (r.pool || Math.round(r.rate * roundTotal())) + ' coins</span></div>';
+    r.qs.forEach(function (q, i) {
+      var it = r.items[i], edit = canSend(it);
+      h += '<section class="cs-qblock" id="qb' + i + '"><div class="cs-q-meta"><span class="cs-qnum">Question ' + (i + 1) + '</span>' +
+        '<span class="cs-pill">' + q.marks + (q.marks === 1 ? ' mark' : ' marks') + '</span>' +
+        (it.attempt === 2 && it.open ? '<span class="cs-pill is-warn">Second try: half coins</span>' : '') + '</div>' +
+        '<div class="cs-q-text" id="qText' + i + '"></div>';
+      if (edit) {
+        h += '<div class="cs-pen-toggle"><button class="bc-btn is-outline" type="button" id="penShow' + i + '">' + (penFor(i).shown ? 'Hide the drawing box' : 'Draw your working') + '</button></div>' +
+          '<div class="cs-pen" id="penWrap' + i + '"' + (penFor(i).shown ? '' : ' hidden') + '><canvas id="pen' + i + '" width="' + PEN_W + '" height="' + PEN_H + '" aria-label="Drawing box for your working, question ' + (i + 1) + '"></canvas>' +
+          '<div class="cs-pen-tools"><button class="bc-btn is-outline" id="penUndo' + i + '" type="button">Undo</button>' +
+          '<button class="bc-btn is-outline" id="penClear' + i + '" type="button">Clear</button></div></div>';
+      }
+      h += '<p class="cs-label">Your answer' + (edit ? ' (you must type it)' : '') + ':</p><div id="ans' + i + '" class="cs-ans"></div>' +
+        '<div class="cs-fb" id="fb' + i + '" hidden></div><p class="cs-q-err" id="err' + i + '" hidden></p></section>';
+    });
+    h += '<div class="cs-round-foot"><p class="cs-round-total" id="roundTotal" hidden></p><p class="cs-q-err" id="sendErr" hidden></p>' +
+      '<div class="cs-q-actions" id="roundActs"></div></div></div>';
+    $('screen').innerHTML = h;
+
+    ansBoxes = [];
+    r.qs.forEach(function (q, i) {
+      var it = r.items[i], edit = canSend(it);
+      $('qText' + i).textContent = q.text;
+      ansBoxes[i] = window.BCAnswerBox.mount($('ans' + i), { doc: it.doc, text: it.answer || '', rows: 3, maxLength: 800,
+        label: 'Your answer to question ' + (i + 1), readOnly: !edit || sending,
+        placeholder: 'Type your final answer here. You can type working here too.',
+        onChange: function (text, doc) {
+          it.answer = text; it.doc = doc;
+          clearTimeout(ansSaveT); ansSaveT = setTimeout(save, 400);   // a reload keeps the typing and the table
+          updateActs();
+        } });
+      if (!edit || sending) ansBoxes[i].setReadOnly(true);
+      if (edit) {
+        var pen = penFor(i);
+        pen.locked = sending;
+        penMount($('pen' + i), pen, $('penUndo' + i), $('penClear' + i));
+        $('penShow' + i).onclick = function () {
+          pen.shown = !pen.shown;
+          $('penWrap' + i).hidden = !pen.shown;
+          this.textContent = pen.shown ? 'Hide the drawing box' : 'Draw your working';
+        };
+      }
+      if (it.fb) showItemFeedback(i);
+      if (it.err) { $('err' + i).hidden = false; $('err' + i).textContent = it.err; }
+    });
+    updateActs();
+    if (firstShow) {
+      var firstOpen = r.items.map(canSend).indexOf(true);
+      if (firstOpen >= 0) setTimeout(function () { try { ansBoxes[firstOpen].focus(); } catch (e) {} }, 30);
+    } else { window.scrollTo(0, scrollY); document.body.scrollTop = bodyY; }
   }
 
-  function submit() {
-    var r = S.round, q = r.qs[r.i], cur = r.cur, btn2 = $('submit');
-    var text = ansBox ? ansBox.text() : '';
-    if (!text.trim()) { if (ansBox) ansBox.focus(); return; }
-    cur.answer = text; cur.doc = ansBox.doc();
-    btn2.disabled = true; btn2.textContent = 'Marking...'; ansBox.setReadOnly(true); pen.locked = true;
-    var attempt = cur.attempt, image = penImage();
-    call(function () { return api().submit(q.qid, cur.answer, attempt, image); }).then(function (res) {
-      if (S.round !== r || r.cur !== cur) return;
-      var max = Number(res.max) || q.marks, marks = Math.max(0, Math.min(max, Number(res.marks) || 0));
-      var pay;
-      if (attempt === 1) { cur.first = marks; pay = Math.round(marks * r.rate); }
-      else pay = Math.round(Math.max(0, marks - (cur.first || 0)) * r.rate * 0.5);
-      cur.fb = { marks: marks, max: max, feedback: res.feedback || '', canRetry: !!res.canRetry && attempt === 1 && marks < max, pay: pay };
-      if (pay) { S.cash += pay; r.paid += pay; }
+  function showItemFeedback(i) {
+    var r = S.round, it = r.items[i], fb = it.fb, box = $('fb' + i);
+    box.hidden = false;
+    if (fb.marks == null) { box.className = 'cs-fb'; box.innerHTML = '<p>Marked before the page reloaded.</p>'; return; }
+    box.className = 'cs-fb ' + (it.open ? 'is-old ' : '') + (fb.marks === fb.max ? 'is-good' : fb.marks ? 'is-part' : 'is-bad');
+    box.innerHTML = '<div class="cs-fb-head"><b>' + (it.open ? 'First try: ' : '') + fb.marks + ' of ' + fb.max + (fb.max === 1 ? ' mark' : ' marks') + '</b>' +
+      (fb.pay ? '<span class="cs-coin-pop">+' + fb.pay + ' coins</span>' : '') + '</div>' +
+      (fb.feedback ? '<p class="cs-fb-text"></p>' : '') +
+      (fb.canRetry && !it.open ? '<div class="cs-q-actions"><button class="bc-btn is-outline" type="button" id="again' + i + '">Try again</button></div>' : '');
+    if (fb.feedback) box.querySelector('.cs-fb-text').textContent = fb.feedback;
+    if ($('again' + i)) $('again' + i).onclick = function () { openRetry([i]); };
+  }
+
+  function openRetry(list) {
+    var r = S.round;
+    list.forEach(function (i) { var it = r.items[i]; if (it.fb && it.fb.canRetry && !it.open) { it.open = true; it.attempt = 2; it.err = ''; } });
+    save(); showRound();
+    var i0 = list[0];
+    setTimeout(function () {
+      var el = $('qb' + i0); if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start' });
+      try { ansBoxes[i0].focus(); } catch (e) {}
+    }, 30);
+  }
+
+  // The buttons under the round: Submit all while anything can be sent (enabled when each of those has an answer),
+  // Try again on the wrong ones, and Next wave once every question has a mark.
+  function updateActs() {
+    var r = S.round, acts = $('roundActs'); if (!acts) return;
+    var open = [], retry = [], unmarked = 0, stuck = 0;
+    r.items.forEach(function (it, i) {
+      if (canSend(it)) open.push(i);
+      if (!it.fb) { unmarked++; if (it.err) stuck++; }
+      if (it.fb && it.fb.canRetry && !it.open) retry.push(i);
+    });
+    var ready = open.length && open.every(function (i) { var t = ansBoxes[i] ? ansBoxes[i].text() : r.items[i].answer; return String(t || '').trim(); });
+    var h = '';
+    if (open.length) h += '<button class="bc-btn cs-big" id="submitAll"' + (ready && !sending ? '' : ' disabled') + '>' + (sending ? 'Marking...' : 'Submit all') + '</button>';
+    if (!open.length && retry.length) h += '<button class="bc-btn is-outline" id="againAll">Try again on the wrong ones</button>';
+    if (unmarked === stuck && !sending) h += '<button class="bc-btn' + (open.length ? ' is-outline' : ' cs-big') + '" id="nextWave">Next wave</button>';
+    acts.innerHTML = h;
+    if ($('submitAll')) $('submitAll').onclick = submitAll;
+    if ($('againAll')) $('againAll').onclick = function () { openRetry(retry); };
+    if ($('nextWave')) $('nextWave').onclick = finishRound;
+    var tot = $('roundTotal');
+    if (r.items.some(function (it) { return it.fb && it.fb.marks != null; })) {
+      tot.hidden = false;
+      tot.textContent = 'This round: +' + (r.paid || 0) + ' coins';
+    } else tot.hidden = true;
+  }
+
+  // Sends every open question in one request (ExamGame.submitMany; one request each if the client has no submitMany).
+  function sendAnswers(items) {
+    var a = api();
+    if (a.submitMany) return call(function () { return a.submitMany(items); });
+    return Promise.all(items.map(function (it) {
+      return call(function () { return a.submit(it.qid, it.answer, it.attempt, it.image); }).then(function (res) { return res; },
+        function (e) { return { qid: it.qid, error: errText(e) }; });
+    }));
+  }
+
+  function submitAll() {
+    var r = S.round, idx = [];
+    if (sending) return;
+    r.items.forEach(function (it, i) { if (canSend(it)) idx.push(i); });
+    if (!idx.length) return;
+    for (var k = 0; k < idx.length; k++) {
+      var t = ansBoxes[idx[k]] ? ansBoxes[idx[k]].text() : '';
+      if (!String(t).trim()) { try { ansBoxes[idx[k]].focus(); } catch (e) {} return; }
+    }
+    var payload = idx.map(function (i) {
+      var it = r.items[i];
+      it.answer = ansBoxes[i].text(); it.doc = ansBoxes[i].doc(); it.err = '';
+      return { qid: r.qs[i].qid, answer: it.answer, attempt: it.attempt, image: penImage(penFor(i)) };
+    });
+    save();
+    sending = true;
+    idx.forEach(function (i) { ansBoxes[i].setReadOnly(true); penFor(i).locked = true; if ($('err' + i)) $('err' + i).hidden = true; });
+    $('sendErr').hidden = true;
+    updateActs();
+    sendAnswers(payload).then(function (list) {
+      sending = false;
+      if (S.round !== r) return;
+      var paidNow = 0;
+      idx.forEach(function (i, k) {
+        var it = r.items[i], q = r.qs[i], res = list && list[k];
+        if (!res || res.error) {
+          it.err = (res && res.error) || 'No mark came back for this question. Submit it again.';
+          if (it.attempt === 2 && /no second try/i.test(it.err)) { it.open = false; if (it.fb) it.fb.canRetry = false; }
+          return;
+        }
+        var max = Number(res.max) || q.marks, marks = Math.max(0, Math.min(max, Number(res.marks) || 0)), pay;
+        if (it.attempt === 1) { it.first = marks; pay = Math.round(marks * r.rate); }
+        else pay = Math.round(Math.max(0, marks - (it.first || 0)) * r.rate * 0.5);
+        var before = it.attempt === 2 && it.fb ? it.fb.pay || 0 : 0;   // the question's coins from both tries
+        it.fb = { marks: marks, max: max, feedback: res.feedback || '', canRetry: !!res.canRetry && it.attempt === 1 && marks < max, pay: before + pay };
+        it.open = false;
+        if (pay) { S.cash += pay; r.paid += pay; paidNow += pay; }
+      });
       save();
-      if ($('submit')) { updateHud(); coinPop(pay); showFeedback(cur.fb); }
-    }).catch(function (e) {
-      if (!$('submit')) return;
-      btn2.disabled = false; btn2.textContent = 'Submit'; ansBox.setReadOnly(false); pen.locked = false;
-      var fb = $('fb'); fb.hidden = false; fb.className = 'cs-fb is-bad';
-      fb.innerHTML = '<p>' + esc(errText(e)) + '</p><div class="cs-q-actions"><button class="bc-btn is-text" id="skipQ">Skip this question</button></div>';
-      $('skipQ').onclick = function () {
-        S.stats.max += q.marks; r.i++; r.cur = null; save(); showQuestion();
-      };
+      if (!$('roundForm')) return;
+      updateHud(); coinPop(paidNow); showRound();
+    }, function (e) {
+      sending = false;
+      if (S.round !== r || !$('roundForm')) return;
+      showRound();
+      var el = $('sendErr'); el.hidden = false; el.textContent = errText(e);
+      var acts = $('roundActs');
+      var skip = document.createElement('button'); skip.className = 'bc-btn is-text'; skip.textContent = 'Skip this round';
+      skip.onclick = finishRound; acts.appendChild(skip);
     });
   }
 
-  function showFeedback(fb) {
-    var r = S.round, cur = r.cur;
-    if (ansBox) ansBox.setReadOnly(true);
-    pen.locked = true;
-    $('qActs').hidden = true;
-    var box = $('fb');
-    box.hidden = false;
-    box.className = 'cs-fb ' + (fb.marks === fb.max ? 'is-good' : fb.marks ? 'is-part' : 'is-bad');
-    box.innerHTML = '<div class="cs-fb-head"><b>' + fb.marks + ' of ' + fb.max + (fb.max === 1 ? ' mark' : ' marks') + '</b>' +
-      (fb.pay ? '<span class="cs-coin-pop">+' + fb.pay + ' coins</span>' : '') + '</div>' +
-      (fb.feedback ? '<p id="fbText"></p>' : '') +
-      '<div class="cs-q-actions">' + (fb.canRetry ? '<button class="bc-btn is-outline" id="again">Try again</button>' : '') +
-      '<button class="bc-btn cs-big" id="next">' + (r.i + 1 >= r.qs.length ? 'Back to the board' : 'Next') + '</button></div>';
-    if (fb.feedback) $('fbText').textContent = fb.feedback;
-    $('next').onclick = function () {
-      var q = r.qs[r.i], best = Math.max(cur.first || 0, fb.marks);
+  // Counts each question's best mark (a question with no mark counts as 0) and goes back to the board.
+  function finishRound() {
+    var r = S.round;
+    if (sending) return;
+    r.qs.forEach(function (q, i) {
+      var it = r.items[i];
+      if (it.counted) return;
+      var best = it.fb && it.fb.marks != null ? Math.max(it.first || 0, it.fb.marks) : 0;
       S.stats.marks += best; S.stats.max += q.marks; r.got = (r.got || 0) + best;
-      r.i++; r.cur = null; save();
-      showQuestion();
-    };
-    if ($('again')) $('again').onclick = function () {
-      cur.attempt = 2; cur.fb = null; save(); showQuestion();
-    };
-    $('next').focus();
+      it.counted = true;
+    });
+    save();
+    endRound();
   }
 
   function endRound() {
