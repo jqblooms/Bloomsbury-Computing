@@ -12,6 +12,10 @@
        ?scene=input    input() shows its question, waits, and stores what was typed as a String
        ?scene=convert  "3" + 1 stops with an error; int(), float() and str() change the data type
        ?scene=join     "Age: " + age needs str(); a comma in print also works
+       Y7 2.3 Programs Using Data Types:
+       ?scene=choose   a phone number through int() loses its first 0; kept as a String it is right
+       ?scene=mix      a Real times an Integer gives a Real; str() before + joins it to text
+       ?scene=names    print(Score) after score stops with an error; a typo makes a new variable
        ?embed=1 sits it on a lesson slide (no tabs, transparent, reports its height, posts BC_APP_RESULT).
        The step engine is InstrAnim's (from TwosAnim): every motion is a CSS transition between step states driven by
        timers, so a hidden frame never sticks, and Next finishes the step before. Play pauses when the page is hidden. */
@@ -78,6 +82,8 @@
     .box.glow { fill: var(--brand-soft); }
     .box.badbox { stroke: var(--bad); stroke-width: 4; }
     .box.mach { fill: var(--surface-3); stroke: var(--syn-function); stroke-width: 3; }
+    .box.ghost { fill: none; stroke-dasharray: 8 6; stroke-width: 2.5; }
+    .box.ghost.badbox { stroke: var(--bad); }
     .lineHl { fill: var(--brand-soft-strong); stroke: var(--brand); stroke-width: 1.5; }
     .wordHl { fill: none; stroke: var(--accent); stroke-width: 3; }
     .name { fill: var(--muted); font-size: 18px; font-family: var(--font-body) !important; }
@@ -164,13 +170,13 @@
     P.cx = function (col) { return x + 24 + col * CW; };
     return P;
   }
-  var TOKRE = /("[^"]*"|\b(?:print|input|int|float|str)\b|\d+(?:\.\d+)?|[+=,]|[A-Za-z_]\w*|\s+|[()])/g;
+  var TOKRE = /("[^"]*"|\b(?:print|input|int|float|str)\b|\d+(?:\.\d+)?|[+=,*\/-]|[A-Za-z_]\w*|\s+|[()])/g;
   function setLine(P, i, src) {
     var g = P.lines[i]; g.innerHTML = ''; g.src = src;
     var col = 0;
     (src.match(TOKRE) || []).forEach(function (t) {
       if (/^\s+$/.test(t)) { col += t.length; return; }
-      var c = t[0] === '"' ? 'c-str' : /^(print|input|int|float|str)$/.test(t) ? 'c-fn' : /^\d/.test(t) ? 'c-num' : /^[+=,]$/.test(t) ? 'c-op' : '';
+      var c = t[0] === '"' ? 'c-str' : /^(print|input|int|float|str)$/.test(t) ? 'c-fn' : /^\d/.test(t) ? 'c-num' : /^[+=,*\/-]$/.test(t) ? 'c-op' : '';
       var e = el('text', { x: P.cx(col), y: P.ly(i), 'class': 'c-line t-left ' + c, textLength: t.length * CW, lengthAdjust: 'spacingAndGlyphs' }, g);
       e.textContent = t; col += t.length;
     });
@@ -200,9 +206,10 @@
     later(function () { show(g, 0); S.rows[row].textContent += shown; if (err) S.rows[row].setAttribute('class', 'scr t-left err'); }, 850);
   }
   // A variable: a named box that holds a value.
-  function variable(x, y, name) {
-    var V = { x: x + 95, y: y + 32 };
-    V.b = box(svg, x, y, 190, 64); text(svg, x + 95, y - 16, name, 'name big');
+  function variable(x, y, name, w, parent, c) {
+    w = w || 190;
+    var V = { x: x + w / 2, y: y + 32 };
+    V.b = box(parent || svg, x, y, w, 64, c); V.l = text(parent || svg, x + w / 2, y - 16, name, 'name big');
     return V;
   }
   // A function machine: a value goes in at the top and comes out changed.
@@ -482,12 +489,144 @@
     };
   }
 
+  // ------------------------------------------------------------ scene: choose the data type from what the program does (Y7 2.3)
+  function sceneChoose() {
+    var S = {}, SRC = ['phone = int(input("Phone? "))', 'print(phone)'], IN = { x: 770, y: 214 };
+    return {
+      predict: { q: 'The user types <code>0812345678</code>. What will <code>print(phone)</code> show?', opts: ['0812345678', '812345678', 'stop with an error'], correct: 1, reveal: 4 },
+      setup: function () {
+        S.P = codePanel(20, 20, 540, 2); SRC.forEach(function (s, i) { setLine(S.P, i, s); });
+        S.scr = screen(600, 20, 340, 150, 2);
+        S.v = variable(100, 300, 'phone', 300);
+        S.m = machine(770, 300, 'int()'); show(S.m, 1);
+      },
+      steps: [
+        { cap: 'A program that stores a phone number.', run: function () {} },
+        { cap: 'input() shows its question. The user types <b>0812345678</b> and presses Enter.', dur: 3400, run: function () {
+          hlLine(S.P, 0); S.scr.rows[0].textContent = 'Phone? '; later(function () { S.scr.rows[0].textContent = 'Phone? 0812345678'; }, 700);
+        } },
+        { cap: 'input() gives the String <b>"0812345678"</b>. Every digit is kept, the 0 too.', dur: 3600, run: function () {
+          S.t = token('"0812345678"', 620 + 12 * CW, 60); tag(S.t, 'String'); later(function () { at(S.t, IN.x, IN.y); }, 200);
+        } },
+        { cap: 'int() turns it into an Integer. A whole number never starts with 0, so <b>the 0 is lost</b>.', dur: 4200, run: function () {
+          tag(S.t, ''); at(S.t, S.m.x, S.m.y); later(function () { flipTo(S.t, '812345678'); }, 850);
+          later(function () { tag(S.t, 'Integer'); at(S.t, S.v.x, S.v.y); }, 1400);
+        } },
+        { cap: 'print(phone) shows <b>812345678</b>. The phone number is now wrong.', dur: 3800, run: function () {
+          hlLine(S.P, 1); var c = token('812345678', S.v.x, S.v.y); later(function () { toScreen(S.scr, c, 1, '812345678', true); cls(S.v.b, 'badbox', true); }, 200);
+        } },
+        { cap: 'Nobody does maths with a phone number. So keep it a <b>String</b>: no int().', dur: 3800, run: function () {
+          show(S.t, 0); cls(S.v.b, 'badbox', false); show(S.m, 0); S.scr.clear(); flipLine(S.P, 0, 'phone = input("Phone? ")'); hlLine(S.P, 0);
+          later(function () { S.scr.rows[0].textContent = 'Phone? 0812345678'; }, 700);
+        } },
+        { cap: 'input() gives the String "0812345678". It goes into phone with <b>every digit</b>.', dur: 3600, run: function () {
+          S.t2 = token('"0812345678"', 620 + 12 * CW, 60); tag(S.t2, 'String'); later(function () { at(S.t2, S.v.x, S.v.y); cls(S.v.b, 'glow', true); }, 200);
+        } },
+        { cap: 'print(phone) shows <b>0812345678</b>: the right number.', dur: 3600, run: function () {
+          hlLine(S.P, 1); var c = token('"0812345678"', S.v.x, S.v.y); later(function () { toScreen(S.scr, c, 1, '0812345678'); }, 200);
+        } },
+        { cap: 'Choose from what the program does: <b>maths</b> or not, and a <b>decimal point</b> or not.', dur: 4400, run: function () { hlLine(S.P, -1); } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: two data types meet in one program (Y7 2.3)
+  function sceneMix() {
+    var S = {}, SRC = ['price = 2.5', 'count = 3', 'total = price * count', 'print("Total: " + str(total))'];
+    var L = { x: 720, y: 250 }, R = { x: 880, y: 250 }, MID = { x: 800, y: 250 };
+    return {
+      predict: { q: 'price is 2.5 and count is 3. What data type will <code>total</code> be?', opts: ['Integer', 'Real', 'String'], correct: 1, reveal: 4 },
+      setup: function () {
+        S.P = codePanel(20, 20, 540, 4); SRC.forEach(function (s, i) { setLine(S.P, i, s); });
+        S.scr = screen(600, 20, 340, 150, 2);
+        S.price = variable(40, 300, 'price'); S.count = variable(250, 300, 'count'); S.total = variable(460, 300, 'total');
+        S.op = fade(); S.opT = text(S.op, MID.x, MID.y, '*', 'op');
+        S.m = machine(MID.x, 300, 'str()');
+      },
+      steps: [
+        { cap: 'A program that uses two data types.', run: function () {} },
+        { cap: 'Line 1 stores 2.5 in price. It has a decimal point: a <b>Real</b>.', run: function () {
+          hlLine(S.P, 0); var p = codeAt(S.P, 0, '2.5'); S.a = token('2.5', p.x, p.y); later(function () { at(S.a, S.price.x, S.price.y); }, 300); later(function () { tag(S.a, 'Real'); }, 1100);
+        } },
+        { cap: 'Line 2 stores 3 in count. A whole number: an <b>Integer</b>.', run: function () {
+          hlLine(S.P, 1); var p = codeAt(S.P, 1, '3'); S.b = token('3', p.x, p.y); later(function () { at(S.b, S.count.x, S.count.y); }, 300); later(function () { tag(S.b, 'Integer'); }, 1100);
+        } },
+        { cap: 'Line 3 multiplies them. A copy of each value goes in.', dur: 3400, run: function () {
+          hlLine(S.P, 2); S.ca = token('2.5', S.price.x, S.price.y); S.cb = token('3', S.count.x, S.count.y);
+          later(function () { at(S.ca, L.x, L.y); at(S.cb, R.x, R.y); show(S.op, 1); }, 200);
+          later(function () { tag(S.ca, 'Real'); tag(S.cb, 'Integer'); }, 1000);
+        } },
+        { cap: 'A Real times an Integer gives a <b>Real</b>: 2.5 * 3 = <b>7.5</b>.', dur: 3800, run: function () {
+          tag(S.ca, ''); tag(S.cb, ''); at(S.ca, MID.x, MID.y); at(S.cb, MID.x, MID.y); show(S.op, 0);
+          later(function () { show(S.ca, 0); show(S.cb, 0); S.r = token('7.5', MID.x, MID.y); tag(S.r, 'Real'); }, 800);
+        } },
+        { cap: 'The answer is stored in total. total holds a Real.', run: function () {
+          tag(S.r, ''); at(S.r, S.total.x, S.total.y); later(function () { tag(S.r, 'Real'); }, 900);
+        } },
+        { cap: 'Line 4: + cannot join text and a Real. <b>str(total)</b> makes the String "7.5".', dur: 4200, run: function () {
+          hlLine(S.P, 3); show(S.m, 1); S.c = token('7.5', S.total.x, S.total.y);
+          later(function () { at(S.c, S.m.x, S.m.y); }, 200); later(function () { flipTo(S.c, '"7.5"'); }, 1050); later(function () { tag(S.c, 'String'); at(S.c, MID.x, 220); }, 1500);
+        } },
+        { cap: 'Now + joins two Strings. The screen shows <b>Total: 7.5</b>.', dur: 3600, run: function () {
+          tag(S.c, ''); show(S.m, 0); var t = token('"Total: 7.5"', MID.x, 220); show(S.c, 0); later(function () { toScreen(S.scr, t, 0, 'Total: 7.5'); }, 200);
+        } },
+        { cap: 'Know the data type of every value. Change it only where two data types meet.', dur: 4400, run: function () { hlLine(S.P, -1); } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: the same name every time (Y7 2.3)
+  function sceneNames() {
+    var S = {}, SRC = ['score = 5', 'score = score + 1', 'print(Score)'];
+    return {
+      predict: { q: 'Line 3 is <code>print(Score)</code>, with a capital S. What will it do?', opts: ['show 6', 'show 5', 'stop with an error'], correct: 2, reveal: 4 },
+      setup: function () {
+        S.P = codePanel(20, 20, 540, 3); SRC.forEach(function (s, i) { setLine(S.P, i, s); });
+        S.scr = screen(600, 20, 340, 150, 2);
+        S.v = variable(60, 270, 'score');
+        S.g = fade(); S.gv = variable(330, 270, 'Score', 190, S.g, 'ghost'); S.q = text(S.g, S.gv.x, S.gv.y, '?', 'op');
+        S.n = fade(); S.nv = variable(330, 270, 'scroe', 190, S.n);
+      },
+      steps: [
+        { cap: 'A program that changes a score, then shows it.', run: function () {} },
+        { cap: 'Line 1 stores 5 in a variable called <b>score</b>.', run: function () {
+          hlLine(S.P, 0); var p = codeAt(S.P, 0, '5'); S.t = token('5', p.x, p.y); later(function () { at(S.t, S.v.x, S.v.y); }, 300);
+        } },
+        { cap: 'Line 2 works out score + 1 = 6 and stores it back in <b>score</b>.', run: function () { hlLine(S.P, 1); flipTo(S.t, '6'); } },
+        { cap: 'Line 3 asks for <b>Score</b>, with a capital S. Python looks for a variable with exactly that name.', dur: 3800, run: function () {
+          hlLine(S.P, 2); markWord(S.P, 2, 'Score'); show(S.g, 1);
+        } },
+        { cap: 'There is no variable called Score. To Python, score and Score are <b>different names</b>. It stops with an error.', dur: 4600, run: function () {
+          cls(S.gv.b, 'badbox', true); S.scr.rows[0].textContent = 'Error: Score?'; S.scr.rows[0].setAttribute('class', 'scr t-left err');
+        } },
+        { cap: 'Fix it: use the same name every time. print(score) shows <b>6</b>.', dur: 3800, run: function () {
+          show(S.g, 0); markWord(S.P, 2, null); S.scr.clear(); flipLine(S.P, 2, 'print(score)');
+          later(function () { var c = token('6', S.v.x, S.v.y); toScreen(S.scr, c, 0, '6'); }, 500);
+        } },
+        { cap: 'A spelling slip can be worse. Now line 2 stores into <b>scroe</b>.', dur: 3800, run: function () {
+          S.scr.clear(); flipTo(S.t, '5'); flipLine(S.P, 1, 'scroe = score + 1'); hlLine(S.P, 1);
+          later(function () { markWord(S.P, 1, 'scroe'); }, 500);
+        } },
+        { cap: 'Python makes a <b>new variable</b> called scroe and puts 6 in it. score stays 5.', dur: 4200, run: function () {
+          show(S.n, 1); S.t6 = token('6', 330, 150); show(S.t6, 0); later(function () { show(S.t6, 1); at(S.t6, S.nv.x, S.nv.y); }, 300);
+        } },
+        { cap: 'print(score) shows <b>5</b>, not 6. There is no error to warn you.', dur: 4000, run: function () {
+          markWord(S.P, 1, null); hlLine(S.P, 2); var c = token('5', S.v.x, S.v.y); later(function () { toScreen(S.scr, c, 0, '5'); cls(S.v.b, 'badbox', true); }, 200);
+        } },
+        { cap: 'Spell each variable the <b>same way every time</b>, with the same capitals.', dur: 4400, run: function () { hlLine(S.P, -1); } }
+      ]
+    };
+  }
+
   // ------------------------------------------------------------ choosing a scene
   var SCENES = {
     print: { label: 'print', make: scenePrint },
     input: { label: 'input()', make: sceneInput },
     convert: { label: 'int(), float(), str()', make: sceneConvert },
-    join: { label: 'str() in output', make: sceneJoin, h: 440 }
+    join: { label: 'str() in output', make: sceneJoin, h: 440 },
+    choose: { label: 'Choose the data type', make: sceneChoose },
+    mix: { label: 'Two data types', make: sceneMix },
+    names: { label: 'The same name', make: sceneNames }
   };
   function start(k) {
     key = k; scene = SCENES[k].make(); svg.setAttribute('viewBox', '0 0 960 ' + (SCENES[k].h || 400)); steps = scene.steps; scene.pick = null; maxSeen = 0;

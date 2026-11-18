@@ -570,6 +570,122 @@
      "marks": 1
     }
    ]
+  },
+  {
+   "setId": "y7-data-types",
+   "title": "Programs Using Data Types",
+   "questions": [
+    {
+     "qid": "y7t-21j21-3a",
+     "text": "Cambridge IGCSE 0478/21, June 2021, Question 3 (one of its three parts)\nName and describe the most appropriate programming data type for this data.\nData: 37",
+     "marks": 2
+    },
+    {
+     "qid": "y7t-21j21-3b",
+     "text": "Cambridge IGCSE 0478/21, June 2021, Question 3 (one of its three parts)\nName and describe the most appropriate programming data type for this data.\nData: Cambridge2021",
+     "marks": 2
+    },
+    {
+     "qid": "y7t-21j21-3c",
+     "text": "Cambridge IGCSE 0478/21, June 2021, Question 3 (one of its three parts)\nName and describe the most appropriate programming data type for this data.\nData: 47.86",
+     "marks": 2
+    },
+    {
+     "qid": "y7t-21j22-2a",
+     "text": "Cambridge IGCSE 0478/21, June 2022, Question 2 (one row)\nIdentify the most appropriate data type for this description.\nany number\nType Integer, Real or String.",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-21j22-2b",
+     "text": "Cambridge IGCSE 0478/21, June 2022, Question 2 (one row)\nIdentify the most appropriate data type for this description.\nmultiple characters from the keyboard\nType Integer, Real or String.",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-21j26-3",
+     "text": "Cambridge IGCSE 0478/21, June 2026, Question 3 (two of its three rows)\nWrite the most appropriate data type for each variable. Type Integer, Real or String.\n(a) Age: the age of the student, example data 16 [1]\n(b) TelephoneNumber: the telephone number of the student, example data +44 7846398573 [1]",
+     "marks": 2
+    },
+    {
+     "qid": "y7t-23j26-2",
+     "text": "Cambridge IGCSE 0478/23, June 2026, Question 2\nTick one box to identify a programming data type used to store any combination of letters and numbers. Type one letter.\nA char\nB Boolean\nC string\nD real",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-int",
+     "text": "A program stores the number of students in a class, like 28. It adds new students to it.\nWhich data type should it use? Type Integer, Real or String.",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-real",
+     "text": "A program stores a runner's time in seconds, like 12.4\nWhich data type should it use? Type Integer, Real or String.",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-str",
+     "text": "A program stores a door code, like 0472. Nobody does maths with it.\nWhich data type should it use? Type Integer, Real or String.",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-phone",
+     "text": "phone = int(input(\"Phone? \"))\nprint(phone)\nThe user types 0812345678. What is printed?",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-phonewhy",
+     "text": "Give two reasons why a phone number like 0812345678 should be stored as a String, not an Integer. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y7t-own-times",
+     "text": "price = 2.5\ncount = 4\nprint(price * count)\nWhat is printed?",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-type",
+     "text": "a = 2.5\nb = 3\nx = a * b\nWhat data type is x? Type Integer, Real or String.",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-typeint",
+     "text": "a = 6\nb = 3\nx = a * b\nWhat data type is x? Type Integer, Real or String.",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-div",
+     "text": "mins = 90\nhours = mins / 60\nprint(hours)\nWhat is printed?",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-join",
+     "text": "price = 1.5\ncount = 3\ntotal = price * count\nprint(\"Total: \" + str(total))\nWhat is printed?",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-strwhy",
+     "text": "total is 4.5. Why does print(\"Total: \" + total) stop with an error? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-case",
+     "text": "score = 5\nscore = score + 1\nprint(Score)\nWhat happens when this program runs?",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-casewhy",
+     "text": "1  lives = 3\n2  lives = lives - 1\n3  print(Lives)\nThis program stops with an error on line 3. Explain why. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-typo",
+     "text": "coins = 10\ncoisn = coins + 5\nprint(coins)\nWhat is printed?",
+     "marks": 1
+    },
+    {
+     "qid": "y7t-own-typowhy",
+     "text": "coins = 10\ncoisn = coins + 5\nprint(coins)\n(a) Which variable holds 15 at the end? [1]\n(b) Explain why Python shows no error message. [1]",
+     "marks": 2
+    }
+   ]
   }
  ]
 }

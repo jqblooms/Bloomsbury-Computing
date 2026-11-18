@@ -1,0 +1,423 @@
+{
+ "id": "y7-2-3-programs",
+ "label": "2.3: Programs Using Data Types",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Data Types (Exam Question)",
+   "type": "short-answer-validation",
+   "validatorId": "y723-do-now",
+   "validatorKey": "y723_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a program need to know the data type of a value?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The data type decides what the program can do with the value, like maths or joining text.</p></div></details><p class=\"lesson-lead\">From 2.1. Cambridge IGCSE 0478/21, June 2022, Question 2, three of its five rows. Type the most appropriate data type for each description: Integer, Real or String.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y723-do-now-a\">(a) multiple characters from the keyboard [1]</label><input id=\"y723-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Data Types part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-do-now-b\">(b) only whole numbers [1]</label><input id=\"y723-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Data Types part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-do-now-c\">(c) any number [1]</label><input id=\"y723-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Data Types part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y723-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y723-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: a description and its data type",
+    "steps": [
+     {
+      "text": "Read one description. Then think of three values that fit it.",
+      "visual": "<div class=\"wt-note\">Description: <span class=\"wt-hl\">a temperature, like on a weather app</span></div>"
+     },
+     {
+      "text": "Write down some values that fit.",
+      "visual": "<div class=\"wt-note\">Values: <span class=\"wt-hl\">31.5, 28.0, 33.7</span></div>"
+     },
+     {
+      "text": "Look at the values. Do they have quote marks? Are they whole numbers, or can they have a decimal point?",
+      "visual": "<div class=\"wt-note\">31.5, 28.0, 33.7: no quote marks, and <span class=\"wt-hl\">a decimal point</span></div>"
+     },
+     {
+      "text": "Now ask: which data type from 2.1 holds values like these? Write its name.",
+      "visual": "<div class=\"wt-note\">Text in quote marks, whole numbers, or numbers with a decimal point?</div>"
+     },
+     {
+      "text": "Do the same for each description on the slide: think of values, look at them, then name the data type.",
+      "visual": "<div class=\"wt-note\">One data type for each row.</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Follow the Input",
+   "type": "short-answer-validation",
+   "validatorId": "y723-do-now-2",
+   "validatorKey": "y723_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Follow the Input</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the order of the input() lines important?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The first thing typed goes into the first input(). Swap the lines and the values swap too.</p></div></details><p class=\"lesson-lead\">From 2.2. Follow the program one line at a time.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">name = input(&quot;Name? &quot;)</div><div class=\"lesson-code-line\">age = int(input(&quot;Age? &quot;))</div><div class=\"lesson-code-line\">print(name + &quot; will be &quot; + str(age + 2))</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y723-do-now-2-a\">(a) The user types <strong>Ana</strong> then <strong>11</strong>. What does it print? [1]</label><input id=\"y723-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Follow the Input part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-do-now-2-b\">(b) What data type is age? [1]</label><input id=\"y723-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Follow the Input part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-do-now-2-c\">(c) The user types <strong>Ben</strong> then <strong>9</strong>. What does it print? [1]</label><input id=\"y723-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Follow the Input part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y723-do-now-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y723-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: follow the input",
+    "steps": [
+     {
+      "text": "This is a different program. The user types Pai, then 30.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = float(input(&quot;Temperature? &quot;))</div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 2))</div></div>"
+     },
+     {
+      "text": "Line 1: the first thing typed goes into city. city holds the String \"Pai\".",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\"><span class=\"wt-hl\">city = input(&quot;City? &quot;)</span></div><div class=\"lesson-code-line\">temp = float(input(&quot;Temperature? &quot;))</div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 2))</div></div><div class=\"wt-note\">city: <span class=\"wt-hl\">\"Pai\"</span></div>"
+     },
+     {
+      "text": "Line 2: float() turns \"30\" into a number with a decimal point. temp holds 30.0, a Real.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\"><span class=\"wt-hl\">temp = float(input(&quot;Temperature? &quot;))</span></div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 2))</div></div><div class=\"wt-note\">temp: <span class=\"wt-hl\">30.0</span>, a Real</div>"
+     },
+     {
+      "text": "Line 3: work out the brackets first. temp + 2 is 32.0. str() makes it the String \"32.0\".",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = float(input(&quot;Temperature? &quot;))</div><div class=\"lesson-code-line\"><span class=\"wt-hl\">print(city + &quot; is &quot; + str(temp + 2))</span></div></div><div class=\"wt-note\"><span class=\"wt-hl\">\"32.0\"</span></div>"
+     },
+     {
+      "text": "Then + joins the Strings from left to right, spaces and all.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = float(input(&quot;Temperature? &quot;))</div><div class=\"lesson-code-line\"><span class=\"wt-hl\">print(city + &quot; is &quot; + str(temp + 2))</span></div></div><div class=\"wt-note\">It prints <span class=\"wt-hl\">Pai is 32.0</span></div>"
+     },
+     {
+      "text": "Now do the same with your program: write down what each variable holds, line by line.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = float(input(&quot;Temperature? &quot;))</div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 2))</div></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y7-2-2-input-output",
+   "embedContainerId": "y723-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 2.2. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y723-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "2.3: Programs Using Data Types",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Text-based Programming</p><h2 class=\"lesson-h2\">2.3: Programs Using Data Types</h2><p>Year 7</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> watch, explain, and make notes on three ideas. Then use your notes in <strong>Circuit Siege</strong>.</li><li><strong>The big question:</strong> why does choosing the right data type, and the right name, matter?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A shop app stores your name, your phone number and the price of what you buy. Why might it store each one in a different way?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each value is used in a different way. Some are used for maths, some are only shown. Today we find out how to choose.</p></div></details>"
+  },
+  {
+   "id": "anim-choose",
+   "label": "Watch: Choose the Data Type",
+   "type": "embedded-app",
+   "appId": "py-io-anim",
+   "embedQuery": "scene=choose",
+   "embedContainerId": "y723-anim-choose",
+   "content": "<h2 class=\"lesson-h2\">Watch: Choose the Data Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: a phone number is made of digits. Does that make it a number? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Make a guess with your partner. Then watch to check.</p></div></details><div id=\"y723-anim-choose\"></div>"
+  },
+  {
+   "id": "explain-choose",
+   "label": "Explain It: Why a String?",
+   "type": "self-marked-response",
+   "containerId": "y723-explain-choose",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why a String?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Where else do you see digits that are not used for maths?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A bus number, a room number like 12B, a PIN code. Nobody adds them up.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y723-explain-choose\"></div>",
+   "items": [
+    {
+     "id": "explain-choose-q",
+     "aiModel": "haiku",
+     "context": "The animation ran phone = int(input(\"Phone? \")) and print(phone). The user typed 0812345678. int() turned it into the Integer 812345678: a whole number never starts with 0, so the 0 at the start was lost, and print showed the wrong number. With phone = input(\"Phone? \") and no int(), phone held the String \"0812345678\" and print showed every digit. Nobody does maths with a phone number. In your own words, explain why a phone number like 0812345678 should be stored as a String, not an Integer.",
+     "prompt": "In your own words, explain why a phone number like 0812345678 should be stored as a String, not an Integer.",
+     "marks": 2,
+     "scheme": [
+      "The program never does maths / adds or multiplies with a phone number",
+      "As an Integer the 0 at the start is lost (812345678) / a String keeps every digit / a number cannot start with 0"
+     ],
+     "guidance": "One mark for each point, in the student's own words. \"It has digits\" or \"it is long\" alone earns nothing. Accept \"it can have a + or spaces\" for the second point.",
+     "modelAnswer": "Nobody does maths with a phone number. As an Integer the 0 at the start is lost; a String keeps every digit."
+    }
+   ]
+  },
+  {
+   "id": "notes-choose",
+   "label": "Your Notes: Choosing a Data Type",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Choosing a Data Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write the two questions in your notes, and not only one example?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions work for any value. One example only helps with one value.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea. <strong>You will use these notes in Circuit Siege.</strong></p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: the two questions that choose a data type.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Will the program do maths with it? No: String. Yes: can it have a decimal point? Yes: Real. No: Integer.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: WHY a phone number is stored as a String.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> No maths is done with it, and as an Integer it would lose the 0 at the start.</p></div></details>"
+  },
+  {
+   "id": "choose-check",
+   "label": "Your Turn: Which Data Type?",
+   "type": "short-answer-validation",
+   "validatorId": "y723-choose-check",
+   "validatorKey": "y723_choose_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Which Data Type?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can two programs store the same value with different data types?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It depends on what each program does with the value. Ask the two questions for each program.</p></div></details><p class=\"lesson-lead\">Use the two questions from your notes. Type <strong>Integer</strong>, <strong>Real</strong> or <strong>String</strong> for each value.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y723-choose-check-a\">(a) The number of students in a class [1]</label><input id=\"y723-choose-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"choose-check-a\" aria-label=\"Your Turn: Which Data Type? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-choose-check-b\">(b) A runner's time in seconds, like 12.4 [1]</label><input id=\"y723-choose-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"choose-check-b\" aria-label=\"Your Turn: Which Data Type? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-choose-check-c\">(c) A door code, like 0472 [1]</label><input id=\"y723-choose-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"choose-check-c\" aria-label=\"Your Turn: Which Data Type? part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-choose-check-d\">(d) A house number with a letter, like 12B [1]</label><input id=\"y723-choose-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"choose-check-d\" aria-label=\"Your Turn: Which Data Type? part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y723-choose-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y723-choose-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "anim-mix",
+   "label": "Watch: Two Data Types in One Program",
+   "type": "embedded-app",
+   "appId": "py-io-anim",
+   "embedQuery": "scene=mix",
+   "embedContainerId": "y723-anim-mix",
+   "content": "<h2 class=\"lesson-h2\">Watch: Two Data Types in One Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: what might Python give when it multiplies a number with a decimal point by a whole number?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Make a guess with your partner. Then watch to check.</p></div></details><div id=\"y723-anim-mix\"></div>"
+  },
+  {
+   "id": "explain-mix",
+   "label": "Explain It: Why a Real, and Why str()?",
+   "type": "self-marked-response",
+   "containerId": "y723-explain-mix",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why a Real, and Why str()?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a shop till show prices with a decimal point?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Money has parts of a baht or a pound. A whole number cannot show them.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y723-explain-mix\"></div>",
+   "items": [
+    {
+     "id": "explain-mix-q",
+     "aiModel": "haiku",
+     "context": "The animation ran price = 2.5, count = 3, total = price * count and print(\"Total: \" + str(total)). price held the Real 2.5 and count the Integer 3. A Real times an Integer gives a Real, so total held 7.5, a Real. + cannot join the String \"Total: \" to a Real, so str(total) turned it into the String \"7.5\", and the screen showed Total: 7.5. price is 2.5 and count is 3. In your own words, explain why total = price * count is a Real, and why the print line needs str(total).",
+     "prompt": "price is 2.5 and count is 3. In your own words, explain why total = price * count is a Real, and why the print line needs str(total).",
+     "marks": 2,
+     "scheme": [
+      "A Real times an Integer gives a Real / the answer 7.5 has a decimal point",
+      "+ cannot join a String and a number, so str() turns total into a String"
+     ],
+     "guidance": "One mark for each point, in the student's own words. \"Because of str()\" alone earns nothing: it must say + joins only text, or that the number must become text.",
+     "modelAnswer": "A Real times an Integer gives a Real: 7.5. + can only join Strings, so str() makes total a String first."
+    }
+   ]
+  },
+  {
+   "id": "notes-mix",
+   "label": "Your Notes: Two Data Types Together",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Two Data Types Together</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it useful to know the data type of every variable in a program?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you can tell what each line will do, and where str() or int() is needed.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea. <strong>You will use these notes in Circuit Siege.</strong></p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: what data type you get when an Integer and a Real meet in a sum.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> A Real. One Real in the sum makes the answer a Real. / always gives a Real too.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: WHY str() is needed to join text and a number with +.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> + can only join two Strings, so str() turns the number into a String first.</p></div></details>"
+  },
+  {
+   "id": "mix-check",
+   "label": "Your Turn: Two Data Types",
+   "type": "short-answer-validation",
+   "validatorId": "y723-mix-check",
+   "validatorKey": "y723_mix_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Two Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you answer: how can you find the data type of a value that is worked out?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Look at the data types that go into the sum, and the sign that joins them.</p></div></details><p class=\"lesson-lead\">Follow the program. Use your notes.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">mins = 90</div><div class=\"lesson-code-line\">hours = mins / 60</div><div class=\"lesson-code-line\">print(hours)</div><div class=\"lesson-code-line\">print(&quot;Time: &quot; + str(mins) + &quot; mins&quot;)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y723-mix-check-a\">(a) What data type is hours? [1]</label><input id=\"y723-mix-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"mix-check-a\" aria-label=\"Your Turn: Two Data Types part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-mix-check-b\">(b) What does line 3 print? [1]</label><input id=\"y723-mix-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"mix-check-b\" aria-label=\"Your Turn: Two Data Types part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-mix-check-c\">(c) What does line 4 print? [1]</label><input id=\"y723-mix-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"mix-check-c\" aria-label=\"Your Turn: Two Data Types part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y723-mix-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y723-mix-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "anim-names",
+   "label": "Watch: The Same Name Every Time",
+   "type": "embedded-app",
+   "appId": "py-io-anim",
+   "embedQuery": "scene=names",
+   "embedContainerId": "y723-anim-names",
+   "content": "<h2 class=\"lesson-h2\">Watch: The Same Name Every Time</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: does Python care about capital letters in a name? Why might it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Make a guess with your partner. Then watch to check.</p></div></details><div id=\"y723-anim-names\"></div>"
+  },
+  {
+   "id": "explain-names",
+   "label": "Explain It: Why Did Score Stop It?",
+   "type": "self-marked-response",
+   "containerId": "y723-explain-names",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why Did Score Stop It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Where else must a name be typed exactly the same every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A password, an email address, a username. One wrong letter and it does not work.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y723-explain-names\"></div>",
+   "items": [
+    {
+     "id": "explain-names-q",
+     "aiModel": "haiku",
+     "context": "The animation ran score = 5, score = score + 1 and print(Score). score held 6. Line 3 asked for Score, with a capital S. Python sees score and Score as different names, and no variable called Score was ever stored, so the program stopped with an error. print(score) showed 6. Then a typo, scroe = score + 1, made a new variable called scroe holding 6, so print(score) showed 5 with no error. In your own words, explain why print(Score) stops with an error when the program stored the value in score.",
+     "prompt": "In your own words, explain why print(Score) stops with an error when the program stored the value in score.",
+     "marks": 2,
+     "scheme": [
+      "Python sees capitals as different / Score and score are different names",
+      "No variable called Score was ever stored / given a value, so Python cannot find it"
+     ],
+     "guidance": "One mark for each point, in the student's own words. \"It is spelt wrong\" alone earns nothing: it must say the capital makes it a different name, or that Score has no value.",
+     "modelAnswer": "Python sees Score and score as different names. Nothing was ever stored in Score, so it cannot be found."
+    }
+   ]
+  },
+  {
+   "id": "notes-names",
+   "label": "Your Notes: The Same Name Every Time",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: The Same Name Every Time</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a spelling slip that gives no message worse than one that does?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>With a message you know there is a problem. With no message, the wrong answer can go unnoticed.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea. <strong>You will use these notes in Circuit Siege.</strong></p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: WHY capital letters in a variable name matter.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Python sees score and Score as different names. Using a name that was never stored stops the program with an error.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: WHY a spelling slip can give a wrong answer with no error.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> A new spelling, like scroe = score + 1, makes a new variable. The real one keeps its old value.</p></div></details>"
+  },
+  {
+   "id": "names-check",
+   "label": "Your Turn: Find the Name Slip",
+   "type": "short-answer-validation",
+   "validatorId": "y723-names-check",
+   "validatorKey": "y723_names_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Find the Name Slip</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How can you check a program for this kind of slip before you run it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Read every variable name and compare it, letter by letter, with the line that first stored it.</p></div></details><p class=\"lesson-lead\">Read every name letter by letter.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program A</p><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">lives = 3</div><div class=\"lesson-code-line\">lives = lives - 1</div><div class=\"lesson-code-line\">print(Lives)</div></div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program B</p><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">coins = 10</div><div class=\"lesson-code-line\">coisn = coins + 5</div><div class=\"lesson-code-line\">print(coins)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y723-names-check-a\">(a) Program A: what happens? Type what it prints, or error. [1]</label><input id=\"y723-names-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"names-check-a\" aria-label=\"Your Turn: Find the Name Slip part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-names-check-b\">(b) Program B: what does it print? [1]</label><input id=\"y723-names-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"names-check-b\" aria-label=\"Your Turn: Find the Name Slip part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y723-names-check-c\">(c) Program B: which variable holds 15? [1]</label><input id=\"y723-names-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"names-check-c\" aria-label=\"Your Turn: Find the Name Slip part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y723-names-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y723-names-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "notes-check",
+   "label": "Notes Check: Ready for Circuit Siege",
+   "content": "<h2 class=\"lesson-h2\">Notes Check: Ready for Circuit Siege</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check your notes now, before the game?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The game asks about all three ideas. A missing note means a missing answer later.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. <strong>You will use these notes in Circuit Siege.</strong></p><ul class=\"lesson-facts\"><li><strong>The two questions that choose a data type. WHY a phone number is a String.</strong> Slide: Your Notes: Choosing a Data Type.</li><li><strong>An Integer and a Real together give a Real. WHY str() is needed with +.</strong> Slide: Your Notes: Two Data Types Together.</li><li><strong>WHY capitals matter in names. WHY a spelling slip can give a wrong answer with no error.</strong> Slide: Your Notes: The Same Name Every Time.</li></ul>"
+  },
+  {
+   "id": "pyscratch-1",
+   "label": "Activity: PyScratch Task 1",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y723-pyscratch-1",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 1 of 2</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read the error message before changing the code?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It says which line went wrong and what Python could not find.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> write the Python in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>. Task 1 of 2: fix the program.</p><div id=\"y723-pyscratch-1\"></div>",
+   "embedQuery": "task=y7-2-3-names"
+  },
+  {
+   "id": "pyscratch-2",
+   "label": "Activity: PyScratch Task 2",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y723-pyscratch-2",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 2 of 2</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the check try more than one price?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program can work for one value by luck. New values show it works every time.</p></div></details><p class=\"lesson-lead\">Task 2 of 2: write the whole program yourself.</p><div id=\"y723-pyscratch-2\"></div>",
+   "embedQuery": "task=y7-2-3-shop"
+  },
+  {
+   "id": "how-to-play",
+   "label": "Circuit Siege: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Circuit Siege: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the coins come only from correct answers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Towers cost coins. Knowing the work is what keeps your base safe.</p></div></details><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> (the pen icon at the top) beside the game.</li><li><strong>Build towers</strong> on the path and stop the bugs before they reach your base.</li><li><strong>Between waves</strong>, answer questions from today: choosing data types, two data types together, and names.</li><li><strong>Coins only come from correct answers.</strong> Check your notes before you answer.</li></ol>"
+  },
+  {
+   "id": "game",
+   "label": "Play: Circuit Siege",
+   "type": "embedded-app",
+   "appId": "tower-defence",
+   "embedContainerId": "y723-game",
+   "content": "<h2 class=\"lesson-h2\">Play: Circuit Siege</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><div id=\"y723-game\"></div>",
+   "embedQuery": "set=y7-data-types&goal=3"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Programs Using Data Types",
+   "type": "embedded-app",
+   "appId": "drill-y7-2-3-programs",
+   "embedContainerId": "y723-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Programs Using Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the questions use new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do it with any values, you really understand it.</p></div></details><p class=\"lesson-lead\">Choosing a data type, two data types together, and the same name every time. Get 3 right in a row on each card. Your progress is saved.</p><div id=\"y723-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y723_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Think of values that fit. Are they numbers, or are they text?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Think of values that fit, like 4 or 20. Can they have a decimal point?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Any number includes 2.5. Which data type can hold that?"
+   }
+  ],
+  "y723_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*Ana\\s+will\\s+be\\s+13\\s*[\"'\\u201d]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out age + 2 first. Then join the parts from left to right, with the spaces."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the function round input() on line 2."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*Ben\\s+will\\s+be\\s+11\\s*[\"'\\u201d]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put the new values into name and age, then follow line 3 again."
+   }
+  ],
+  "y723_choose_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Will the program count or add them? Can there be half a student?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the example. What is in it that a whole number does not have?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does anyone do maths with a code? What would happen to the first digit?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Can a number hold the letter B?"
+   }
+  ],
+  "y723_mix_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the sign on line 2. What does it always give?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\.5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out 90 / 60. How does Python show the answer of /?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*Time:\\s+90\\s+mins\\s*[\"'\\u201d]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "str(mins) is the String \"90\". Join the parts from left to right, with the spaces."
+   }
+  ],
+  "y723_names_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+)?(an?\\s+)?(stops(\\s+with\\s+an\\s+error)?|crash(es)?|error|name\\s*error|an\\s+error)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Compare the name on line 3 with the name stored on line 1, letter by letter."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*10\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which variable did line 2 store into? Did coins change?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+variable\\s+)?coisn\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 2 works out 15. Read the name on the left of = exactly."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
