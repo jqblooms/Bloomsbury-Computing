@@ -1,7 +1,7 @@
 // Exam Game client: exam questions and AI marking for any embedded game (first used by TowerDefence/).
 // The game never sees answers or mark schemes: every call goes to the shell by postMessage
 // (BC_EXAM_GAME_REQUEST -> BC_EXAM_GAME_RESULT), which runs ExamGame.gs as the signed-in student.
-//   ExamGame.sets()                           -> Promise [{ setId, title, count }]
+//   ExamGame.sets()                           -> Promise [{ setId, title, year, unit, count }]
 //   ExamGame.next(setId, { count, maxMarks }) -> Promise [{ qid, text, marks }]  (picked here from the questions file)
 //   ExamGame.warm(setId)                      -> starts the one history read for the set (also warms the relay)
 //   ExamGame.submit(qid, answer, attempt, image) -> Promise { marks, max, feedback, canRetry, attempt, full }
@@ -81,7 +81,7 @@
         catch (e) { return { qid: String((it || {}).qid || ''), error: e.message }; }
       });
     },
-    sets: function () { return [{ setId: 'twos-complement', title: 'Two\'s Complement (practice)', count: STUB_QS.length }]; },
+    sets: function () { return [{ setId: 'twos-complement', title: 'Two\'s Complement (practice)', year: 'Year 11', unit: '1 Data Representation', count: STUB_QS.length }]; },
     history: function () { return { seen: {}, score: {}, tries: {} }; },
     next: function (p) {
       var n = Math.max(1, Math.min(10, Number(p.count) || 1)), out = [];
@@ -119,7 +119,7 @@
   // sets and texts at once, so a round needs no server call. The student's history comes ONCE per set from the server
   // ('history'), with a copy kept in localStorage per set as the fallback; each submit result updates it. The pick
   // follows the server's rules (examGameNext_ in ExamGame.gs): no repeats until the pool is used up, then weakest first.
-  var QFILE_G = 'af41d423';
+  var QFILE_G = '4ec9ba80';
   var base = (function () {
     var s = document.currentScript && document.currentScript.src;
     return s ? s.replace(/[^\/]*$/, '') : '../shared/';
@@ -210,11 +210,81 @@
 
   if (useFile) loadFile();   // starts at once, so the set list and the first round need no wait
 
+  // ---------------------------------------------------------------- topic picker (shared by every game)
+  // Sets grouped by year (Year 7 to Year 11, then any set without a year) and, inside a year, by unit.
+  function groupSets(list) {
+    var years = {}, order = [];
+    (list || []).forEach(function (s) {
+      if (!s || !s.setId) return;
+      var y = String(s.year || '') || 'Other topics', u = String(s.unit || '');
+      if (!years[y]) { years[y] = { year: y, units: [], byUnit: {}, count: 0 }; order.push(y); }
+      var g = years[y];
+      if (!g.byUnit[u]) { g.byUnit[u] = { unit: u, sets: [] }; g.units.push(g.byUnit[u]); }
+      g.byUnit[u].sets.push(s); g.count++;
+    });
+    var num = function (y) { var m = /^Year (\d+)$/.exec(y); return m ? Number(m[1]) : 99; };
+    return order.sort(function (a, b) { return num(a) - num(b); }).map(function (y) {
+      return { year: y, count: years[y].count, units: years[y].units };
+    });
+  }
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+  }
+  var PICKER_COLLAPSE_OVER = 8;     // more topics than this: only the chosen topic's year starts open
+  var pickerOpen = {};              // years the student opened or closed by hand (this page load)
+  function pickerStyle() {
+    if (document.getElementById('egTopicStyle')) return;
+    var st = document.createElement('style');
+    st.id = 'egTopicStyle';
+    st.textContent =
+      '.eg-topics { display: grid; gap: 8px; max-width: 560px; margin: 0 auto; text-align: left; }' +
+      '.eg-year { border: 1px solid var(--line-strong); border-radius: var(--radius, 10px); background: var(--surface-2); }' +
+      '.eg-year > summary { display: flex; align-items: baseline; gap: 8px; padding: 8px 12px; cursor: pointer; list-style: none;' +
+      ' font: 700 15px var(--font-display, inherit); color: var(--ink); }' +
+      '.eg-year > summary::-webkit-details-marker { display: none; }' +
+      '.eg-year > summary::before { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);' +
+      ' transform: rotate(-45deg); align-self: center; transition: transform .15s; }' +
+      '.eg-year[open] > summary::before { transform: rotate(45deg); }' +
+      '.eg-year-count { font: 400 13px var(--font-body, inherit); color: var(--muted); }' +
+      '.eg-year-body { padding: 0 12px 10px; display: grid; gap: 6px; }' +
+      '.eg-unit-name { margin: 2px 0 4px; font-size: 12px; color: var(--muted); }' +
+      '.eg-year-body .eg-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start; }';
+    document.head.appendChild(st);
+    // A click on a year's heading (the toggle event also fires when a group is drawn open, so it cannot tell).
+    document.addEventListener('click', function (e) {
+      var sum = e.target && e.target.closest && e.target.closest('.eg-year > summary');
+      if (sum) pickerOpen[sum.parentNode.getAttribute('data-year')] = !sum.parentNode.open;
+    }, true);
+  }
+  // HTML for the grouped picker. Each topic is <button class="{pillClass}" data-set="..."> (is-on when chosen), so a
+  // game wires its clicks exactly as for a flat list. opts: { pillClass, rowClass }.
+  function topicPicker(list, chosen, opts) {
+    opts = opts || {};
+    pickerStyle();
+    var pill = opts.pillClass || 'bc-pill', row = (opts.rowClass ? opts.rowClass + ' ' : '') + 'eg-row';
+    var groups = groupSets(list), total = (list || []).length;
+    return '<div class="eg-topics">' + groups.map(function (g) {
+      var has = g.units.some(function (u) { return u.sets.some(function (s) { return s.setId === chosen; }); });
+      var open = has || total <= PICKER_COLLAPSE_OVER;
+      if (pickerOpen[g.year] != null && !has) open = pickerOpen[g.year];
+      return '<details class="eg-year" data-year="' + escHtml(g.year) + '"' + (open ? ' open' : '') + '>' +
+        '<summary>' + escHtml(g.year) + ' <span class="eg-year-count">' + g.count + (g.count === 1 ? ' topic' : ' topics') + '</span></summary>' +
+        '<div class="eg-year-body">' + g.units.map(function (u) {
+          return '<div class="eg-unit">' + (u.unit ? '<p class="eg-unit-name">' + escHtml(u.unit) + '</p>' : '') +
+            '<div class="' + row + '">' + u.sets.map(function (s) {
+              return '<button class="' + pill + (s.setId === chosen ? ' is-on' : '') + '" data-set="' + escHtml(s.setId) + '">' + escHtml(s.title || s.setId) + '</button>';
+            }).join('') + '</div></div>';
+        }).join('') + '</div></details>';
+    }).join('') + '</div>';
+  }
+
   window.ExamGame = {
+    groupSets: groupSets,
+    topicPicker: topicPicker,
     sets: function () {
       if (!useFile) return request('sets');
       return loadFile().then(function (d) {
-        return d.sets.map(function (s) { s.questions.forEach(function (q) { qidSet[q.qid] = s.setId; }); return { setId: s.setId, title: s.title, count: s.questions.length }; });
+        return d.sets.map(function (s) { s.questions.forEach(function (q) { qidSet[q.qid] = s.setId; }); return { setId: s.setId, title: s.title, year: s.year || '', unit: s.unit || '', count: s.questions.length }; });
       }, function () { return request('sets'); });
     },
     // Fetches the student's history for the set and warms the relay; call it at game start and while a wave runs.

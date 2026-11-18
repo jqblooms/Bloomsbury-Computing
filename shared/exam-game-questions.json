@@ -4,6 +4,8 @@
   {
    "setId": "twos-complement",
    "title": "Two's Complement",
+   "year": "Year 11",
+   "unit": "1 Data Representation",
    "questions": [
     {
      "qid": "tc-23j11-1c",
@@ -130,6 +132,8 @@
   {
    "setId": "logical-shifts",
    "title": "Logical Shifts",
+   "year": "Year 11",
+   "unit": "1 Data Representation",
    "questions": [
     {
      "qid": "ls-23j12-2bi",
@@ -236,6 +240,8 @@
   {
    "setId": "overflow",
    "title": "Overflow",
+   "year": "Year 11",
+   "unit": "1 Data Representation",
    "questions": [
     {
      "qid": "ov-23j11-1e",
@@ -347,6 +353,8 @@
   {
    "setId": "binary-addition",
    "title": "Binary Addition",
+   "year": "Year 11",
+   "unit": "1 Data Representation",
    "questions": [
     {
      "qid": "add-23j11-1d",
@@ -453,6 +461,8 @@
   {
    "setId": "y8-data-types",
    "title": "Data Types and Constants",
+   "year": "Year 8",
+   "unit": "Unit 2 Programming",
    "questions": [
     {
      "qid": "y8t-23j23-1",
@@ -574,6 +584,8 @@
   {
    "setId": "y7-data-types",
    "title": "Programs Using Data Types",
+   "year": "Year 7",
+   "unit": "Unit 2 Text-based Programming",
    "questions": [
     {
      "qid": "y7t-21j21-3a",
@@ -690,6 +702,8 @@
   {
    "setId": "y10-instruction-sets",
    "title": "Instruction Sets",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
    "questions": [
     {
      "qid": "y10i-23n12-3c",

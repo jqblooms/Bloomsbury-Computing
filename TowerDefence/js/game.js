@@ -134,9 +134,11 @@
     if (fixed) {
       h += '<p class="cs-label">Topic</p><div class="cs-choice-row"><span class="cs-pill is-on">' + esc(setTitle) + '</span></div>';
     } else {
-      h += '<p class="cs-label">Pick a topic</p><div class="cs-choice-row">' + sets.map(function (s) {
-        return '<button class="cs-pill' + (s.setId === setId ? ' is-on' : '') + '" data-set="' + esc(s.setId) + '">' + esc(s.title || s.setId) + '</button>';
-      }).join('') + '</div>';
+      // Grouped by year, then unit (shared/exam-game-client.js); a flat list if the client is the local stand-in.
+      h += '<p class="cs-label">Pick a topic</p>' + (api().topicPicker ? api().topicPicker(sets, setId, { pillClass: 'cs-pill' }) :
+        '<div class="cs-choice-row">' + sets.map(function (s) {
+          return '<button class="cs-pill' + (s.setId === setId ? ' is-on' : '') + '" data-set="' + esc(s.setId) + '">' + esc(s.title || s.setId) + '</button>';
+        }).join('') + '</div>');
     }
     if (saved) {
       h += '<div class="cs-start-go"><button class="bc-btn cs-big" id="cont">Continue: wave ' + Math.min(D.DIFF[saved.diff].rounds, saved.wave + 1) + ', ' + D.DIFF[saved.diff].name + '</button>' +

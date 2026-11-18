@@ -1,6 +1,7 @@
 // Builds shared/exam-game-questions.json: the Exam Game question texts, so a game (TowerDefence/) shows a round at once
 // instead of asking the server. Reads the shell's ExamGame.gs and ExamGameSet*.gs in a node vm, as its tests do.
-// ONLY { setId, title, questions: [{ qid, text, marks }] } is written: mark schemes, model answers, checks, points,
+// ONLY { setId, title, year, unit, questions: [{ qid, text, marks }] } is written (year and unit are set-level labels
+// for the topic pickers, and every set must have both): mark schemes, model answers, checks, points,
 // reveal and fallback stay on the server, and this script fails if any other field gets in.
 // It also writes the file's version into shared/exam-game-client.js (QFILE_G), so browsers load the new file.
 //
@@ -29,6 +30,8 @@ const listed = vm.runInContext('examGameSets_()', ctx);
 const sets = listed.map(({ setId }) => ({
   setId,
   title: String(all[setId].title),
+  year: String(all[setId].year || ''),
+  unit: String(all[setId].unit || ''),
   questions: all[setId].questions.map((q) => ({ qid: String(q.qid), text: String(q.text), marks: Number(q.marks) }))
 }));
 const data = { v: 1, sets };
@@ -38,7 +41,10 @@ const fail = (m) => { console.error('FAIL ' + m); process.exit(1); };
 if (Object.keys(data).join() !== 'v,sets') fail('top-level fields');
 const qids = new Set();
 for (const s of sets) {
-  if (Object.keys(s).join() !== 'setId,title,questions') fail(s.setId + ' set fields');
+  if (Object.keys(s).join() !== 'setId,title,year,unit,questions') fail(s.setId + ' set fields');
+  // Every set is grouped by year and unit in the games' topic pickers.
+  if (!/^Year (7|8|9|10|11)$/.test(s.year)) fail(s.setId + ' needs year: \'Year 7\' to \'Year 11\' (got "' + s.year + '")');
+  if (!s.unit) fail(s.setId + ' needs unit');
   if (!s.questions.length) fail(s.setId + ' has no questions');
   for (const q of s.questions) {
     if (Object.keys(q).join() !== 'qid,text,marks') fail(q.qid + ' fields');

@@ -105,9 +105,11 @@
     var h = '<div class="bb-card bb-start"><div class="bb-start-art"><canvas id="startArt" width="480" height="150"></canvas></div>' +
       '<h1>Data Bridge</h1>' +
       '<p class="bb-lead">Build a bridge so the data truck can cross from one server rack to the next. Answer exam questions to earn coins for the bridge.</p>' +
-      '<p class="bb-label">Pick a topic</p><div class="bb-choice-row">' + sets.map(function (s) {
-        return '<button class="bb-pill' + (s.setId === setId ? ' is-on' : '') + '" data-set="' + esc(s.setId) + '">' + esc(s.title || s.setId) + '</button>';
-      }).join('') + '</div>' +
+      // Grouped by year, then unit (shared/exam-game-client.js); a flat list if the client has no picker.
+      '<p class="bb-label">Pick a topic</p>' + (api().topicPicker ? api().topicPicker(sets, setId, { pillClass: 'bb-pill' }) :
+        '<div class="bb-choice-row">' + sets.map(function (s) {
+          return '<button class="bb-pill' + (s.setId === setId ? ' is-on' : '') + '" data-set="' + esc(s.setId) + '">' + esc(s.title || s.setId) + '</button>';
+        }).join('') + '</div>') +
       (wasOld ? '<p class="bb-label">Data Bridge has new levels, so your saved game starts again from round 1.</p>' : '') +
       (best ? '<p class="bb-label">Your best: crossed ' + best + ' of ' + ROUNDS + ' rounds</p>' : '');
     if (saved) {
