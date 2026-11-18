@@ -146,7 +146,7 @@ steps.push({ id: 'how-to-play', label: 'Data Bridge: Use Your Notes',
     '<ol class="lesson-facts" style="font-size:22px;line-height:1.6">' +
     '<li><strong>Open your notes</strong> with the pen icon at the top.</li>' +
     '<li><strong>Answer the questions</strong> to earn coins, then build a bridge to get the truck across.</li>' +
-    '<li><strong>If the bridge breaks</strong>, you start again at round 1.</li></ol>' });
+    '<li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>' });
 // The embed step copied from y8-2-3-conditions' Circuit Siege step, only the appId swapped.
 steps.push({ id: 'game', label: 'Play: Data Bridge', type: 'embedded-app', appId: 'bridge-builder', embedContainerId: `${P}-game`,
   content: '<h2 class="lesson-h2">Play: Data Bridge</h2>' + tps('Why keep your notes open while you play?', 'The questions use the same ideas. Your notes help you answer them right the first time.') + `<div id="${P}-game"></div>`,

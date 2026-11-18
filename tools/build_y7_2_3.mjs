@@ -220,7 +220,7 @@ steps.push({ id: 'how-to-play', label: 'Data Bridge: Use Your Notes',
     '<ol class="lesson-facts" style="font-size:22px;line-height:1.6">' +
     '<li><strong>Open your notes</strong> (the pen icon at the top) beside the game.</li>' +
     '<li><strong>Answer questions from today</strong> to earn coins: choosing data types, two data types together, and names.</li>' +
-    '<li><strong>Buy beams and build a bridge</strong> so the data truck can cross the gap. If the bridge breaks, you start again at round 1.</li>' +
+    '<li><strong>Buy beams and build a bridge</strong> so the data truck can cross the gap. If the bridge breaks, answer new questions to earn coins, then try the same level again.</li>' +
     '<li><strong>Coins only come from correct answers.</strong> Check your notes before you answer.</li></ol>' });
 steps.push(Object.assign(embed('game', 'Play: Data Bridge', 'bridge-builder', 'Play: Data Bridge', ''), { embedQuery: 'set=y7-data-types&goal=3' }));
 

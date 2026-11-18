@@ -15,8 +15,8 @@ Folder: `BridgeBuilder/` (entry `BridgeBuilder/index.html`). Shell registry id `
 
 - Questions and marking come from `shared/exam-game-client.js` exactly as in `TowerDefence/CONTRACT.md` (one-page round with `submitMany`, rids, Send again).
 - Each round: about 3 questions, at most 4 marks. The round pool (`LEVELS[n].pool` in `js/physics.js`) is split per mark; a second try pays half.
-- Build, then Send the truck. A crossing keeps the leftover coins. Any snapped beam, a fall or a stuck truck is game over: round 1, 0 coins.
-- A reload during the drive finishes that test at once (the physics is deterministic), so it cannot dodge a game over.
+- Build, then Send the truck. A crossing keeps the leftover coins. Any snapped beam, a fall or a stuck truck keeps the same round: the failed bridge's coins are spent, the leftover is kept (capped at that round's pool), then a fresh exam round for that round (normal pool) and a rebuild.
+- A reload during the drive finishes that test at once (the physics is deterministic), so it cannot dodge a failed round.
 - Timers only, never `requestAnimationFrame`; nothing runs while the page is hidden. Saves per topic under `bc-databridge-v1:`.
 
 ## Physics and tests
@@ -25,3 +25,11 @@ Folder: `BridgeBuilder/` (entry `BridgeBuilder/index.html`). Shell registry id `
 drives on Road beams only. Road beams also bend under a wheel (long road pieces need support). Run
 `node tools/test_bridge_builder.mjs` after changing materials, levels or pools.
 Testing hook: `window.__dataBridge.advance(frames)` runs the drive on when a hidden browser pane pauses the timer.
+
+## Building
+
+Press on a joint (a gold anchor or a point on the bridge), drag, release. The ghost beam shows its cost and length and turns red when it cannot go (too long, in the terrain, a duplicate, not enough coins); releasing there, or outside the board, cancels it with at most a one-line toast. Pointer events with pointer capture, so mouse, touch and pen work. Delete is a separate tool: tap a beam. In full screen the board keeps 16:9 and fits the window (backing store at devicePixelRatio).
+
+## Teacher mode
+
+Shift + D, E, V (within 2 s, never in a text field) unlocks it. Embedded, the page asks the shell (Exam Game op `whoami`, `isTeacherEmail_`); a student gets nothing at all. Standalone or `examStub=1` (nothing recorded) is always allowed. A Teacher mode bar: round picker (1 to 10, straight to building), coins box, +100, Full pool, Unlimited (cost shown, money check off), No game over (retry the same round without questions, bridge kept), Show test bridge (`js/solutions.js`, the bridges `tools/test_bridge_builder.mjs` proves), Exit. Questions are skipped. It plays on a separate in-memory state; the save, best, done and `BC_APP_RESULT` go through a guard that drops them while it is on (`js/teacher.js`, `node tools/test_bridge_teacher.mjs`).

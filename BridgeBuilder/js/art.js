@@ -690,7 +690,9 @@
   // a, b: world points. stress: null in build mode, 0..1 while the truck drives. alpha: ghost previews.
   function drawBeam(g, a, b, mat, stress, alpha) {
     kit(); patterns(g);
-    var ax = sx(a.x), ay = sy(a.y), bx = sx(b.x), by = sy(b.y);
+    var ax = sx(a.x), ay = sy(a.y), bx = sx(b.x), by = sy(b.y), t;
+    // Always draw from the left end, so the surface (road deck, kerbs, lanes, highlights) faces up whichever way it was built.
+    if (bx < ax || (bx === ax && by > ay)) { t = ax; ax = bx; bx = t; t = ay; ay = by; by = t; }
     g.save(); g.globalAlpha = alpha == null ? 1 : alpha;
     g.translate(ax, ay); g.rotate(Math.atan2(by - ay, bx - ax));
     beamLocal(g, Math.hypot(bx - ax, by - ay), mat, stress);

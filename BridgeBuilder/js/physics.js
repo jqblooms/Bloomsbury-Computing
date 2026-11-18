@@ -29,43 +29,43 @@
     return [[FAR, DEEP], [FAR, top], [edge, top]].concat(f, [[last, DEEP]]);
   }
   var LEVELS = [
-    { name: 'Short hop', theme: 0, truck: 1.5, pool: 100,
+    { name: 'Short hop', theme: 0, truck: 1.5, pool: 120,
       intro: 'a short gap. Join the two sides with Road, then hold it up from below.',
       ground: [cliffL(13, 0), cliffR(19, 0)],
       anchors: [[13, 0], [13, -2], [19, 0], [19, -2]], start: [1.5, 0], goal: [21, 0] },
-    { name: 'Wide gap', theme: 1, truck: 2.5, pool: 170,
+    { name: 'Wide gap', theme: 1, truck: 2.5, pool: 205,
       intro: 'a wider gap. One long road sags, so build triangles under it or over it.',
       ground: [cliffL(11, 0), cliffR(21, 0)],
       anchors: [[11, 0], [11, -3], [21, 0], [21, -3]], start: [1.5, 0], goal: [23, 0] },
-    { name: 'Uphill', theme: 2, truck: 2.5, pool: 150,
+    { name: 'Uphill', theme: 2, truck: 2.5, pool: 180,
       intro: 'the far side is higher. Build a road that climbs.',
       ground: [cliffL(12, 0), cliffR(20, 4)],
       anchors: [[12, 0], [12, -3], [20, 4], [20, 1]], start: [1.5, 0], goal: [22, 4] },
-    { name: 'Downhill', theme: 3, truck: 3, pool: 210,
+    { name: 'Downhill', theme: 3, truck: 3, pool: 250,
       intro: 'the far side is lower. Build a road that goes down.',
       ground: [[[BACK, DEEP], [BACK, 3], [6, 3], [10, 2], [10, DEEP]], cliffR(20, -3)],
       anchors: [[10, 2], [10, -1], [20, -3], [20, -5]], start: [1.5, 3], goal: [22, -3] },
-    { name: 'Rock in the middle', theme: 4, truck: 3, pool: 180,
+    { name: 'Rock in the middle', theme: 4, truck: 3, pool: 215,
       intro: 'a rock stands in the gap. Build onto it to split one long bridge into two short ones.',
       ground: [cliffL(9, 0), cliffR(23, 0), [[14, DEEP], [14, -6], [15, -2], [17, -2], [18, -6], [18, DEEP]]],
       anchors: [[9, 0], [9, -2], [23, 0], [23, -2], [15, -2], [17, -2]], start: [1.5, 0], goal: [25, 0] },
-    { name: 'Deep ledges', theme: 5, truck: 3.5, pool: 220,
+    { name: 'Deep ledges', theme: 5, truck: 3.5, pool: 265,
       intro: 'the anchors are deep in the gap. An arch underneath can push the road up.',
       ground: [cliffL(10, 0, [[10, -5], [12, -5]]), cliffR(22, 0, [[22, -5], [20, -5]])],
       anchors: [[10, 0], [12, -5], [22, 0], [20, -5]], start: [1.5, 0], goal: [24, 0] },
-    { name: 'Server roof', theme: 1, truck: 3.5, pool: 300,
+    { name: 'Server roof', theme: 1, truck: 3.5, pool: 360,
       intro: 'nothing to stand on below, but there are anchors in the roof. Hang the road, or build a truss on top.',
       ground: [cliffL(10, 0), cliffR(22, 0), [[BACK, 4], [11, 4], [11, 9], [BACK, 9]], [[FAR, 4], [21, 4], [21, 9], [FAR, 9]]],
       anchors: [[10, 0], [22, 0], [11, 4], [21, 4]], start: [1.5, 0], goal: [24, 0] },
-    { name: 'Island', theme: 2, truck: 4, pool: 220,
+    { name: 'Island', theme: 2, truck: 4, pool: 265,
       intro: 'an island in the middle. Build two bridges, one to the island and one off it.',
       ground: [cliffL(8, 0), cliffR(24, 0), [[13, DEEP], [13, -4], [14, 0], [18, 0], [19, -4], [19, DEEP]]],
       anchors: [[8, 0], [8, -2], [14, 0], [18, 0], [24, 0], [24, -2]], start: [1.5, 0], goal: [26, 0] },
-    { name: 'Long gap', theme: 3, truck: 4.5, pool: 470,
+    { name: 'Long gap', theme: 3, truck: 4.5, pool: 565,
       intro: 'a long gap with only one anchor on each side. You need a strong truss the whole way.',
       ground: [cliffL(8, 0), cliffR(24, 0)],
       anchors: [[8, 0], [24, 0]], start: [1.5, 0], goal: [26, 0] },
-    { name: 'Final climb', theme: 5, truck: 4, pool: 310,
+    { name: 'Final climb', theme: 5, truck: 4, pool: 370,
       intro: 'the last one: a long gap, a deep rock and a hill on the far side. Use everything you have learned.',
       ground: [cliffL(8, 0), [[FAR, DEEP], [FAR, 2], [26, 2], [22, 0], [22, DEEP]], [[15, DEEP], [15, -5], [16, -3], [18, -3], [19, -5], [19, DEEP]]],
       anchors: [[8, 0], [8, -2], [16, -3], [18, -3], [22, 0], [22, -2]], start: [1.5, 0], goal: [28, 2] }
@@ -293,7 +293,7 @@
     s.t += h;
   }
 
-  // One fixed step of 1/60 s. s.state: run, breaking (a beam snapped; game over shortly), won, broke, fell, stuck.
+  // One fixed step of 1/60 s. s.state: run, breaking (a beam snapped; the round is lost shortly), won, broke, fell, stuck.
   function step(s) {
     if (s.state === 'won' || s.state === 'broke' || s.state === 'fell' || s.state === 'stuck') return s.state;
     var h = 1 / FPS / SUB;
@@ -322,7 +322,9 @@
   }
 
   // ---------------------------------------------------------------- game progression (pure, so it can be tested)
-  // A crossing keeps the leftover coins and moves to the next round's exam; anything else is game over: round 1, 0 coins.
+  // A crossing keeps the leftover coins and moves to the next round's exam. Anything else keeps the same round: the
+  // failed bridge's coins are spent, the leftover is kept (at most this round's pool, so failing on purpose cannot
+  // pile up coins) and the student goes back to an exam round for that round, then rebuilds.
   function afterTest(game, state, spent) {
     if (state === 'won') {
       game.coins = Math.max(0, game.coins - spent);
@@ -333,7 +335,8 @@
       return game;
     }
     game.over = { round: game.round, why: state };
-    game.round = 1; game.coins = 0; game.phase = 'over'; game.design = null; game.exam = null;
+    game.coins = Math.min(Math.max(0, game.coins - spent), level(game.round).pool);
+    game.phase = 'exam'; game.design = null; game.exam = null;
     return game;
   }
 

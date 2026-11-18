@@ -1,6 +1,6 @@
 // Headless checks for Data Bridge (BridgeBuilder/js/physics.js): every round's layout is fair (anchors on the
 // terrain, the truck starts on the ground), a designed bridge crosses inside the full-marks pool and a flimsy one
-// fails, a single plank breaks, costs and build rules, and the game-over rule (back to round 1, 0 coins).
+// fails, a single plank breaks, costs and build rules, and the losing rule (same round, a fresh exam round).
 // Run: node tools/test_bridge_builder.mjs
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
@@ -13,52 +13,27 @@ const B = globalThis.BBPhys;
 let fails = 0, passes = 0;
 function ok(cond, msg) { if (cond) passes++; else { fails++; console.log('FAIL', msg); } }
 
-// Every round's own bridges, as [x1, y1, x2, y2, material] beams: sound (crosses within the full-marks pool) and
-// flimsy (a cheap or badly placed bridge that breaks or drops the truck).
-const R = 'road', W = 'wood', S = 'steel';
-function chain(pts, mat) { const o = []; for (let i = 1; i < pts.length; i++) o.push([...pts[i - 1], ...pts[i], mat]); return o; }
-// Warren truss on a road path: each road piece gets an apex at its middle, off by dy (rounded to the grid).
-function warren(pts, dy, diag, chord, roadMat = R) {
-  const o = chain(pts, roadMat), apex = [];
-  for (let i = 1; i < pts.length; i++) {
-    const a = pts[i - 1], b = pts[i], m = [(a[0] + b[0]) / 2, Math.round((a[1] + b[1]) / 2 + dy) || 0];
-    o.push([...a, ...m, typeof diag === 'function' ? diag(i, pts.length - 1) : diag], [...m, ...b, typeof diag === 'function' ? diag(i, pts.length - 1) : diag]);
-    if (apex.length) o.push([...apex[apex.length - 1], ...m, chord]);
-    apex.push(m);
-  }
-  return o;
-}
-function line(x0, y0, x1, y1, step) {
-  const pts = [], n = Math.round((x1 - x0) / step);
-  for (let i = 0; i <= n; i++) pts.push([x0 + i * step, y0 + (y1 - y0) * i / n]);
-  return pts;
-}
-const designs = {
-  1: { sound: warren(line(13, 0, 19, 0, 2), 2, W, W),
-       flimsy: chain(line(13, 0, 19, 0, 2), R) },
-  2: { sound: warren(line(11, 0, 21, 0, 2), 2, W, W),
-       flimsy: chain(line(11, 0, 21, 0, 2), R).concat([[11, -3, 13, 0, W], [21, -3, 19, 0, W]]) },
-  3: { sound: warren(line(12, 0, 20, 4, 2), -2, W, W).concat([[12, -3, 13, -1, W], [20, 1, 19, 1, W]]),
-       flimsy: chain(line(12, 0, 20, 4, 2), R) },
-  4: { sound: warren(line(10, 2, 20, -3, 2), -2, (i, n) => (i >= n - 1 ? S : W), W).concat([[10, -1, 11, 0, W], [20, -5, 19, -4, W]]),
-       flimsy: chain(line(10, 2, 20, -3, 2), R).concat([[10, -1, 12, 1, W]]) },
-  5: { sound: chain(line(9, 0, 23, 0, 2), R).concat([[9, -2, 11, 0, W], [15, -2, 13, 0, W], [15, -2, 15, 0, W], [17, -2, 17, 0, W], [17, -2, 19, 0, W], [23, -2, 21, 0, W],
-         [15, -2, 17, -2, W], [11, 0, 13, -2, W], [13, -2, 15, -2, W], [21, 0, 19, -2, W], [19, -2, 17, -2, W]]),
-       flimsy: warren(line(9, 0, 23, 0, 2), 2, W, W) },
-  6: { sound: chain(line(10, 0, 22, 0, 2), R).concat(chain([[12, -5], [14, -3], [16, -2], [18, -3], [20, -5]], W),
-         [[14, -3, 14, 0, W], [16, -2, 16, 0, W], [18, -3, 18, 0, W], [14, -3, 12, 0, W], [18, -3, 20, 0, W], [12, -5, 12, -1, W], [12, -1, 12, 0, W], [20, -5, 20, -1, W], [20, -1, 20, 0, W],
-          [10, 0, 12, -1, W], [22, 0, 20, -1, W]]),
-       flimsy: chain(line(10, 0, 22, 0, 2), R).concat([[12, -5, 12, -1, W], [12, -1, 12, 0, W], [20, -5, 20, -1, W], [20, -1, 20, 0, W]]) },
-  7: { sound: warren(line(10, 0, 22, 0, 2), 2, W, W).concat([[11, 4, 13, 2, W], [11, 4, 15, 2, S], [21, 4, 19, 2, W], [21, 4, 17, 2, S]]),
-       flimsy: warren(line(10, 0, 22, 0, 2), 2, W, W) },
-  8: { sound: warren(line(8, 0, 14, 0, 2), 2, W, W).concat(warren(line(18, 0, 24, 0, 2), 2, W, W), [[8, -2, 10, 0, W], [24, -2, 22, 0, W]]),
-       flimsy: chain(line(8, 0, 14, 0, 2), R).concat(chain(line(18, 0, 24, 0, 2), R), [[8, -2, 10, 0, W], [24, -2, 22, 0, W]]) },
-  9: { sound: warren(line(8, 0, 24, 0, 2), 3, (i, n) => (i <= 2 || i > n - 2 ? S : W), S),
-       flimsy: warren(line(8, 0, 24, 0, 2), 2, W, W) },
-  10: { sound: warren(line(8, 0, 16, 0, 2), -2, W, W).concat([[8, -2, 9, -2, W], [15, -2, 16, -3, W], [16, -3, 16, 0, S], [18, -3, 18, 0, S], [16, -3, 18, -3, W]],
-         warren(line(16, 0, 22, 0, 2), -2, W, W).slice(1), [[16, 0, 18, 0, R], [17, -2, 16, -3, W], [17, -2, 18, -3, W], [21, -2, 22, -2, W]]).filter(b => !(b[0] === 16 && b[1] === 0 && b[2] === 17)),
-       flimsy: chain(line(8, 0, 22, 0, 2), R).concat([[8, -2, 10, 0, W], [16, -3, 16, 0, W], [18, -3, 18, 0, W], [16, -3, 14, 0, W], [18, -3, 20, 0, W], [22, -2, 20, 0, W]]) }
+// Every round's own bridges, as [x1, y1, x2, y2, material] beams: sound (crosses within the full-marks pool, kept in
+// BridgeBuilder/js/solutions.js so teacher mode can show it) and flimsy (a cheap or badly placed bridge that breaks or
+// drops the truck).
+require(path.join(here, '..', 'BridgeBuilder', 'js', 'solutions.js'));
+const SOL = globalThis.BBSolutions;
+const R = 'road', W = 'wood';
+const { chain, warren, line } = SOL;
+const flimsy = {
+  1: chain(line(13, 0, 19, 0, 2), R),
+  2: chain(line(11, 0, 21, 0, 2), R).concat([[11, -3, 13, 0, W], [21, -3, 19, 0, W]]),
+  3: chain(line(12, 0, 20, 4, 2), R),
+  4: chain(line(10, 2, 20, -3, 2), R).concat([[10, -1, 12, 1, W]]),
+  5: warren(line(9, 0, 23, 0, 2), 2, W, W),
+  6: chain(line(10, 0, 22, 0, 2), R).concat([[12, -5, 12, -1, W], [12, -1, 12, 0, W], [20, -5, 20, -1, W], [20, -1, 20, 0, W]]),
+  7: warren(line(10, 0, 22, 0, 2), 2, W, W),
+  8: chain(line(8, 0, 14, 0, 2), R).concat(chain(line(18, 0, 24, 0, 2), R), [[8, -2, 10, 0, W], [24, -2, 22, 0, W]]),
+  9: warren(line(8, 0, 24, 0, 2), 2, W, W),
+  10: chain(line(8, 0, 22, 0, 2), R).concat([[8, -2, 10, 0, W], [16, -3, 16, 0, W], [18, -3, 18, 0, W], [16, -3, 14, 0, W], [18, -3, 20, 0, W], [22, -2, 20, 0, W]])
 };
+const designs = {};
+for (const n of Object.keys(SOL.sound)) designs[n] = { sound: SOL.sound[n], flimsy: flimsy[n] };
 
 function build(lv, list) {
   const d = B.emptyDesign(lv), probs = [];
@@ -177,17 +152,31 @@ for (let n = 1; n <= B.LEVELS.length; n++) {
   ok(d.nodes.length === before - 1 && d.beams.length === 1, 'removing a beam drops its loose end node');
 }
 
-// 8. Game flow: a crossing keeps the leftover coins; any failure is game over, back to round 1 with 0 coins.
+// 8. Game flow: a crossing keeps the leftover coins and moves on. A loss keeps the same round: the failed bridge's
+// coins are spent, the leftover is kept (at most that round's pool), and the next phase is a fresh exam round.
 {
-  let g = { round: 3, coins: 200, phase: 'test', best: 2 };
+  // the saved game is resumed only when this holds (game.js validSave)
+  const resumable = st => st.v === 2 && st.round >= 1 && st.round <= B.LEVELS.length && /^(exam|build|testing)$/.test(st.phase);
+  let g = { v: 2, round: 3, coins: 200, phase: 'testing', best: 2, design: {}, exam: {} };
   g = B.afterTest(g, 'won', 150);
   ok(g.round === 4 && g.coins === 50 && g.phase === 'exam', 'a crossing moves on and keeps the leftover');
+  g.coins = 120;
   g = B.afterTest(g, 'broke', 40);
-  ok(g.round === 1 && g.coins === 0 && g.phase === 'over' && g.over.round === 4, 'a break is game over: round 1, 0 coins');
-  g = { round: 6, coins: 90, phase: 'test' };
+  ok(g.round === 4 && g.coins === 80 && g.phase === 'exam' && g.over.round === 4 && g.over.why === 'broke', 'a break keeps round 4, spends the bridge, back to an exam round');
+  ok(g.design === null && g.exam === null, 'a loss clears the bridge and asks for a fresh exam round');
+  ok(resumable(g), 'the save after a loss resumes at that exam round');
+  ok(g.best === 3, 'a loss does not change the best');
+  g = { v: 2, round: 6, coins: 90, phase: 'testing' };
   g = B.afterTest(g, 'fell', 10);
-  ok(g.round === 1 && g.coins === 0 && g.phase === 'over', 'a fall is game over too');
-  g = { round: B.LEVELS.length, coins: 90, phase: 'test' };
+  ok(g.round === 6 && g.coins === 80 && g.phase === 'exam', 'a fall keeps the round too');
+  g = { v: 2, round: 2, coins: 5, phase: 'testing' };
+  g = B.afterTest(g, 'stuck', 30);
+  ok(g.round === 2 && g.coins === 0 && g.phase === 'exam', 'a stuck truck keeps the round; coins never go below 0');
+  // failing on purpose with an empty bridge cannot pile up coins: the leftover is capped at the round's pool
+  g = { v: 2, round: 1, coins: 5 * B.LEVELS[0].pool, phase: 'testing' };
+  g = B.afterTest(g, 'fell', 0);
+  ok(g.round === 1 && g.coins === B.LEVELS[0].pool, 'the leftover after a loss is capped at the round pool');
+  g = { round: B.LEVELS.length, coins: 90, phase: 'testing' };
   g = B.afterTest(g, 'won', 80);
   ok(g.phase === 'won', 'crossing the last round wins the game');
 }
