@@ -45,12 +45,13 @@
   var ui = { mat: 'road', sel: null, hover: null, undo: [], speed: 1, acc: 0, endShown: false };
 
   function newGame() {
-    S = { v: 1, round: 1, coins: 0, phase: 'exam', design: null, exam: null, best: load('best:' + setId, 0),
+    S = { v: 2, round: 1, coins: 0, phase: 'exam', design: null, exam: null, best: load('best:' + setId, 0),
       stats: { marks: 0, max: 0, rounds: 0, log: [] } };
     save();
   }
   function save() { if (S) store('game:' + setId, S); }
-  function validSave(s) { return s && s.v === 1 && s.round >= 1 && s.round <= ROUNDS && /^(exam|build|testing)$/.test(s.phase); }
+  // v2: each round has its own layout. A v1 save (every round the same two cliffs) is reset with a short message.
+  function validSave(s) { return s && s.v === 2 && s.round >= 1 && s.round <= ROUNDS && /^(exam|build|testing)$/.test(s.phase); }
 
   // ---------------------------------------------------------------- results for the lesson slide
   function postResult() {
@@ -97,7 +98,8 @@
     if (api().warm) api().warm(setId);
     var cur = sets.filter(function (s) { return s.setId === setId; })[0];
     setTitle = cur ? (cur.title || cur.setId) : setId;
-    var saved = load('game:' + setId, null);
+    var saved = load('game:' + setId, null), wasOld = !!(saved && saved.v === 1);
+    if (wasOld) store('game:' + setId, null);
     if (!validSave(saved)) saved = null;
     var best = load('best:' + setId, 0);
     var h = '<div class="bb-card bb-start"><div class="bb-start-art"><canvas id="startArt" width="480" height="150"></canvas></div>' +
@@ -106,6 +108,7 @@
       '<p class="bb-label">Pick a topic</p><div class="bb-choice-row">' + sets.map(function (s) {
         return '<button class="bb-pill' + (s.setId === setId ? ' is-on' : '') + '" data-set="' + esc(s.setId) + '">' + esc(s.title || s.setId) + '</button>';
       }).join('') + '</div>' +
+      (wasOld ? '<p class="bb-label">Data Bridge has new levels, so your saved game starts again from round 1.</p>' : '') +
       (best ? '<p class="bb-label">Your best: crossed ' + best + ' of ' + ROUNDS + ' rounds</p>' : '');
     if (saved) {
       h += '<div class="bb-start-go"><button class="bc-btn bb-big" id="cont">Continue: round ' + saved.round + '</button>' +
@@ -179,10 +182,11 @@
     drawTools();
     var t = load('tut', 0);
     if (t < TIPS.length) showTip(t);
-    else note('Round ' + S.round + ': a gap of ' + LV.gap + ' squares and a ' + LV.truck + ' tonne truck.' + (S.round > 1 ? ' Fewer anchors make it harder.' : ''));
+    else note(roundLine(LV) + ' The truck weighs ' + LV.truck + ' tonnes.');
     render();
   }
 
+  function roundLine(lv) { return 'Round ' + lv.n + ': ' + lv.intro; }
   var noteOn = false;
   function tipOk() {
     $('tip').hidden = true;
@@ -343,45 +347,70 @@
 
   // ---------------------------------------------------------------- art
   function rng(seed) { return function () { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }; }
+  // Scenery colours per round: [sky top, sky bottom, circuit traces, rack, rack outline, rack slots].
+  var THEMES = [
+    ['#0a1424', '#0d1f2e', '64, 196, 170', '#1b2330', '#5a6e88', '#232e3e'],
+    ['#120f26', '#1b1534', '150, 120, 255', '#211c33', '#7464a8', '#2b2542'],
+    ['#1a130a', '#24190e', '240, 170, 70', '#2a2219', '#8a7050', '#352b20'],
+    ['#08180f', '#0c2216', '90, 220, 120', '#18261d', '#4f7a5c', '#20322a'],
+    ['#07142a', '#0a1d3a', '90, 160, 255', '#17223a', '#5274a8', '#1f2c48'],
+    ['#1c0d16', '#26111d', '240, 110, 160', '#2a1a24', '#8a5a74', '#36222f']
+  ];
+  function polyPath(g, pts) {
+    g.beginPath();
+    pts.forEach(function (p, i) { var x = sx(p[0]), y = sy(p[1]); if (i) g.lineTo(x, y); else g.moveTo(x, y); });
+    g.closePath();
+  }
   function drawBackground(g, lv) {
+    var th = THEMES[(lv.theme || 0) % THEMES.length];
     var grd = g.createLinearGradient(0, 0, 0, H);
-    grd.addColorStop(0, '#0a1424'); grd.addColorStop(1, '#0d1f2e');
+    grd.addColorStop(0, th[0]); grd.addColorStop(1, th[1]);
     g.fillStyle = grd; g.fillRect(0, 0, W, H);
     // circuit traces
-    var r = rng(7 + lv.gap);
-    g.lineWidth = 2; g.strokeStyle = 'rgba(64, 196, 170, .13)'; g.fillStyle = 'rgba(64, 196, 170, .22)';
+    var r = rng(7 + lv.n * 13);
+    g.lineWidth = 2; g.strokeStyle = 'rgba(' + th[2] + ', .13)'; g.fillStyle = 'rgba(' + th[2] + ', .22)';
     for (var i = 0; i < 26; i++) {
-      var x = r() * W, y = r() * (sy(0) - 20), len = 40 + r() * 140;
+      var x = r() * W, y = r() * (H - 20), len = 40 + r() * 140;
       g.beginPath(); g.moveTo(x, y); g.lineTo(x + len, y); g.lineTo(x + len + 24, y + (r() < .5 ? 24 : -24)); g.stroke();
       g.beginPath(); g.arc(x, y, 3.5, 0, 7); g.fill();
     }
-    // the gap: a stream of bits falling away
-    var L = sx(lv.L), R = sx(lv.R);
-    var dg = g.createLinearGradient(0, sy(0), 0, H);
+    // below the road: a stream of bits falling away
+    var top = sy(Math.min(lv.start.y, lv.goal.y));
+    var dg = g.createLinearGradient(0, top, 0, H);
     dg.addColorStop(0, 'rgba(10, 30, 60, 0)'); dg.addColorStop(1, 'rgba(40, 120, 255, .25)');
-    g.fillStyle = dg; g.fillRect(L, sy(0), R - L, H - sy(0));
+    g.fillStyle = dg; g.fillRect(0, top, W, H - top);
     g.font = '12px monospace'; g.fillStyle = 'rgba(120, 180, 255, .18)';
-    for (var k = 0; k < 90; k++) g.fillText(r() < .5 ? '0' : '1', L + 6 + r() * (R - L - 12), sy(-1) + r() * (H - sy(-1)));
-    // the two server racks
-    rack(g, -4, sx(lv.L), r); rack(g, sx(lv.R), W + 4, r);
+    for (var k = 0; k < 120; k++) g.fillText(r() < .5 ? '0' : '1', 6 + r() * (W - 12), top + 20 + r() * (H - top - 20));
+    // the terrain: server racks cut to each shape
+    lv.ground.forEach(function (gr) { rack(g, gr.pts, th, r); });
+    // the goal: a green port on the far side
+    var gx = sx(lv.goal.x), gy = sy(lv.goal.y);
+    g.strokeStyle = '#3ddc84'; g.lineWidth = 3; g.beginPath(); g.moveTo(gx, gy); g.lineTo(gx, gy - 52); g.stroke();
+    g.fillStyle = '#3ddc84'; g.beginPath(); g.moveTo(gx, gy - 52); g.lineTo(gx + 24, gy - 44); g.lineTo(gx, gy - 36); g.closePath(); g.fill();
     // build grid dots
     g.fillStyle = 'rgba(255, 255, 255, .16)';
-    for (var gx = 0; gx <= Ph.WORLD_W; gx++) for (var gy = Ph.Y_MIN; gy <= Ph.Y_MAX; gy++) {
-      if (Ph.pointOk(lv, gx, gy) && !Ph.isAnchor(lv, gx, gy)) g.fillRect(sx(gx) - 1.5, sy(gy) - 1.5, 3, 3);
+    for (var gx2 = 0; gx2 <= Ph.WORLD_W; gx2++) for (var gy2 = Ph.Y_MIN; gy2 <= Ph.Y_MAX; gy2++) {
+      if (Ph.pointOk(lv, gx2, gy2) && !Ph.isAnchor(lv, gx2, gy2)) g.fillRect(sx(gx2) - 1.5, sy(gy2) - 1.5, 3, 3);
     }
   }
-  function rack(g, x0, x1, r) {
-    var top = sy(0);
-    g.fillStyle = '#1b2330'; g.fillRect(x0, top, x1 - x0, H - top);
-    g.strokeStyle = '#2e3a4c'; g.lineWidth = 2; g.strokeRect(x0 + 1, top + 1, x1 - x0 - 2, H - top + 4);
-    g.fillStyle = '#4b5b70'; g.fillRect(x0, top - 2, x1 - x0, 7);
-    for (var y = top + 12; y < H; y += 22) {
-      g.fillStyle = '#232e3e'; g.fillRect(x0 + 8, y, x1 - x0 - 16, 16);
-      g.fillStyle = '#121822';
+  function rack(g, pts, th, r) {
+    var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    pts.forEach(function (p) { x0 = Math.min(x0, sx(p[0])); x1 = Math.max(x1, sx(p[0])); y0 = Math.min(y0, sy(p[1])); y1 = Math.max(y1, sy(p[1])); });
+    x0 = Math.max(x0, -10); x1 = Math.min(x1, W + 10); y0 = Math.max(y0, -10); y1 = Math.min(y1, H + 10);
+    g.save();
+    polyPath(g, pts); g.fillStyle = th[3]; g.fill();
+    g.clip();
+    for (var y = y0 + 10; y < y1; y += 22) {
+      g.fillStyle = th[5]; g.fillRect(x0 + 8, y, x1 - x0 - 16, 16);
+      g.fillStyle = 'rgba(0, 0, 0, .35)';
       for (var v = x0 + 40; v < x1 - 14; v += 8) g.fillRect(v, y + 5, 4, 6);
-      g.fillStyle = r() < .7 ? '#3ddc84' : '#ffb74d'; g.fillRect(x0 + 14, y + 6, 4, 4);
-      g.fillStyle = r() < .5 ? '#3ddc84' : '#2a3443'; g.fillRect(x0 + 22, y + 6, 4, 4);
+      for (var lx = x0 + 14; lx < x1 - 20; lx += 160) {
+        g.fillStyle = r() < .7 ? '#3ddc84' : '#ffb74d'; g.fillRect(lx, y + 6, 4, 4);
+        g.fillStyle = r() < .5 ? '#3ddc84' : 'rgba(255, 255, 255, .08)'; g.fillRect(lx + 8, y + 6, 4, 4);
+      }
     }
+    g.restore();
+    polyPath(g, pts); g.strokeStyle = th[4]; g.lineWidth = 3; g.lineJoin = 'round'; g.stroke();
   }
   function stressCol(s) {
     s = Math.max(0, Math.min(1, s));
@@ -449,7 +478,7 @@
     }
     d.beams.forEach(function (bm) { drawBeam(g, d.nodes[bm.a], d.nodes[bm.b], bm.mat, null); });
     d.nodes.forEach(function (n) { drawNode(g, n.x, n.y, n.fixed, ui.sel && ui.sel.x === n.x && ui.sel.y === n.y); });
-    drawTruck(g, { x: 1.5, y: Ph.WHEEL_R }, { x: 1.5 + Ph.AXLE, y: Ph.WHEEL_R });
+    drawTruck(g, { x: LV.start.x, y: LV.start.y + Ph.WHEEL_R }, { x: LV.start.x + Ph.AXLE, y: LV.start.y + Ph.WHEEL_R });
     var hv = ui.hover;
     if (hv && ui.mat === 'delete') {
       var bi = beamAt(hv.px, hv.py);
@@ -537,6 +566,7 @@
     if (r.intro) {
       var first = !load('seenRound', false);
       $('screen').innerHTML = '<div class="bb-card bb-q bb-intro"><h2>Exam round ' + r.n + '</h2>' +
+        '<p class="bb-lead">' + esc(roundLine(Ph.level(r.n))) + '</p>' +
         '<p class="bb-q-text">' + r.qs.length + ' questions, ' + roundTotal() + ' marks.\nFull marks pays ' + r.pool + ' coins.</p>' +
         (S.coins ? '<p class="bb-lead">You also have ' + S.coins + ' coins saved.</p>' : '') +
         (first ? '<p class="bb-lead">Marks are the only way to earn coins. Then you spend them on your bridge.</p>' : '') +

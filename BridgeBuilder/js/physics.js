@@ -1,5 +1,5 @@
 // Data Bridge: levels, prices, the build rules and the truss physics. No DOM, so tools/test_bridge_builder.mjs
-// runs it in node. World units are metres, tonnes and kilonewtons, y points UP, the cliff tops are at y = 0.
+// runs it in node. World units are metres, tonnes and kilonewtons, y points UP; each round has its own terrain.
 // Physics: position based (XPBD) beams as stiff springs, many small substeps with one solve each, axial damping,
 // a fixed time step. A beam's force is EA * strain; it snaps when its smoothed force passes its strength.
 (function (root) {
@@ -15,34 +15,126 @@
   };
   var MAT_ORDER = ['road', 'wood', 'steel'];
 
-  // Each round: the gap, the anchors on each cliff (dx back from the edge, y), the truck's mass in tonnes and the
-  // coins a full-marks exam round pays. Later rounds: wider, fewer anchors, heavier trucks.
+  // Each round has its own terrain. ground: solid polygons ([x, y] corners; they run well past the board's edges
+  // and down to y = -40). anchors: gold points on the terrain. start: the rear wheel's spot on the ground; goal: the
+  // truck has crossed when both wheels pass goal.x on the far side. truck: tonnes; pool: coins for a full-marks
+  // exam round. theme: the scenery colours (see game.js). intro: the one line shown before building.
+  var DEEP = -40, BACK = -30, FAR = 62;
+  function cliffL(edge, top, face) {        // solid from the far left to the edge; face: corners down the wall
+    var f = face || [], last = f.length ? f[f.length - 1][0] : edge;
+    return [[BACK, DEEP], [BACK, top], [edge, top]].concat(f, [[last, DEEP]]);
+  }
+  function cliffR(edge, top, face) {
+    var f = face || [], last = f.length ? f[f.length - 1][0] : edge;
+    return [[FAR, DEEP], [FAR, top], [edge, top]].concat(f, [[last, DEEP]]);
+  }
   var LEVELS = [
-    { gap: 6,  truck: 1.5, pool: 100, anchors: [[0, 0], [0, -2], [0, -4]] },
-    { gap: 8,  truck: 2, pool: 130, anchors: [[0, 0], [0, -2], [0, -4]] },
-    { gap: 8,  truck: 2.5, pool: 140, anchors: [[0, 0], [0, -3]] },
-    { gap: 10, truck: 3, pool: 190, anchors: [[0, 0], [0, -3]] },
-    { gap: 10, truck: 3, pool: 200, anchors: [[0, 0], [0, -2]] },
-    { gap: 12, truck: 3.5, pool: 330, anchors: [[0, 0], [-2, 0]] },
-    { gap: 12, truck: 3.5, pool: 340, anchors: [[0, 0], [-3, 0]] },
-    { gap: 14, truck: 4, pool: 400, anchors: [[0, 0], [-2, 0]] },
-    { gap: 14, truck: 4, pool: 410, anchors: [[0, 0]] },
-    { gap: 16, truck: 4.5, pool: 460, anchors: [[0, 0]] }
+    { name: 'Short hop', theme: 0, truck: 1.5, pool: 100,
+      intro: 'a short gap. Join the two sides with Road, then hold it up from below.',
+      ground: [cliffL(13, 0), cliffR(19, 0)],
+      anchors: [[13, 0], [13, -2], [19, 0], [19, -2]], start: [1.5, 0], goal: [21, 0] },
+    { name: 'Wide gap', theme: 1, truck: 2.5, pool: 170,
+      intro: 'a wider gap. One long road sags, so build triangles under it or over it.',
+      ground: [cliffL(11, 0), cliffR(21, 0)],
+      anchors: [[11, 0], [11, -3], [21, 0], [21, -3]], start: [1.5, 0], goal: [23, 0] },
+    { name: 'Uphill', theme: 2, truck: 2.5, pool: 150,
+      intro: 'the far side is higher. Build a road that climbs.',
+      ground: [cliffL(12, 0), cliffR(20, 4)],
+      anchors: [[12, 0], [12, -3], [20, 4], [20, 1]], start: [1.5, 0], goal: [22, 4] },
+    { name: 'Downhill', theme: 3, truck: 3, pool: 210,
+      intro: 'the far side is lower. Build a road that goes down.',
+      ground: [[[BACK, DEEP], [BACK, 3], [6, 3], [10, 2], [10, DEEP]], cliffR(20, -3)],
+      anchors: [[10, 2], [10, -1], [20, -3], [20, -5]], start: [1.5, 3], goal: [22, -3] },
+    { name: 'Rock in the middle', theme: 4, truck: 3, pool: 180,
+      intro: 'a rock stands in the gap. Build onto it to split one long bridge into two short ones.',
+      ground: [cliffL(9, 0), cliffR(23, 0), [[14, DEEP], [14, -6], [15, -2], [17, -2], [18, -6], [18, DEEP]]],
+      anchors: [[9, 0], [9, -2], [23, 0], [23, -2], [15, -2], [17, -2]], start: [1.5, 0], goal: [25, 0] },
+    { name: 'Deep ledges', theme: 5, truck: 3.5, pool: 220,
+      intro: 'the anchors are deep in the gap. An arch underneath can push the road up.',
+      ground: [cliffL(10, 0, [[10, -5], [12, -5]]), cliffR(22, 0, [[22, -5], [20, -5]])],
+      anchors: [[10, 0], [12, -5], [22, 0], [20, -5]], start: [1.5, 0], goal: [24, 0] },
+    { name: 'Server roof', theme: 1, truck: 3.5, pool: 300,
+      intro: 'nothing to stand on below, but there are anchors in the roof. Hang the road, or build a truss on top.',
+      ground: [cliffL(10, 0), cliffR(22, 0), [[BACK, 4], [11, 4], [11, 9], [BACK, 9]], [[FAR, 4], [21, 4], [21, 9], [FAR, 9]]],
+      anchors: [[10, 0], [22, 0], [11, 4], [21, 4]], start: [1.5, 0], goal: [24, 0] },
+    { name: 'Island', theme: 2, truck: 4, pool: 220,
+      intro: 'an island in the middle. Build two bridges, one to the island and one off it.',
+      ground: [cliffL(8, 0), cliffR(24, 0), [[13, DEEP], [13, -4], [14, 0], [18, 0], [19, -4], [19, DEEP]]],
+      anchors: [[8, 0], [8, -2], [14, 0], [18, 0], [24, 0], [24, -2]], start: [1.5, 0], goal: [26, 0] },
+    { name: 'Long gap', theme: 3, truck: 4.5, pool: 470,
+      intro: 'a long gap with only one anchor on each side. You need a strong truss the whole way.',
+      ground: [cliffL(8, 0), cliffR(24, 0)],
+      anchors: [[8, 0], [24, 0]], start: [1.5, 0], goal: [26, 0] },
+    { name: 'Final climb', theme: 5, truck: 4, pool: 310,
+      intro: 'the last one: a long gap, a deep rock and a hill on the far side. Use everything you have learned.',
+      ground: [cliffL(8, 0), [[FAR, DEEP], [FAR, 2], [26, 2], [22, 0], [22, DEEP]], [[15, DEEP], [15, -5], [16, -3], [18, -3], [19, -5], [19, DEEP]]],
+      anchors: [[8, 0], [8, -2], [16, -3], [18, -3], [22, 0], [22, -2]], start: [1.5, 0], goal: [28, 2] }
   ];
 
+  function bbox(poly) {
+    var b = { x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9 };
+    poly.forEach(function (p) { b.x0 = Math.min(b.x0, p[0]); b.x1 = Math.max(b.x1, p[0]); b.y0 = Math.min(b.y0, p[1]); b.y1 = Math.max(b.y1, p[1]); });
+    return b;
+  }
+  // n: round number. custom: a level object for tests; the old { gap, anchors: [[dx back, y]] } form still works.
   function level(n, custom) {
     var d = custom || LEVELS[Math.max(0, Math.min(LEVELS.length - 1, n - 1))];
-    var L = MID - d.gap / 2, R = MID + d.gap / 2, anchors = [];
-    d.anchors.forEach(function (a) {
-      anchors.push({ x: L + a[0], y: a[1] });
-      anchors.push({ x: R - a[0], y: a[1] });
-    });
-    return { n: n, gap: d.gap, L: L, R: R, truck: d.truck, pool: d.pool || 0, anchors: anchors };
+    if (!d.ground) {   // the old two-cliff form: flat tops at y = 0, anchors mirrored
+      var l = MID - d.gap / 2, r = MID + d.gap / 2, an = [];
+      d.anchors.forEach(function (a) { an.push([l + a[0], a[1]]); an.push([r - a[0], a[1]]); });
+      d = { name: 'Test', theme: 0, truck: d.truck, pool: d.pool || 0, intro: '', ground: [cliffL(l, 0), cliffR(r, 0)],
+        anchors: an, start: [1.5, 0], goal: [r + 1.2, 0] };
+    }
+    var ground = d.ground.map(function (poly) { return { pts: poly, box: bbox(poly) }; });
+    var lowTop = Math.min.apply(null, ground.map(function (g) { return g.box.y1; }));
+    var anchors = d.anchors.map(function (a) { return { x: a[0], y: a[1] }; });
+    var near = anchors.filter(function (a) { return a.y === d.start[1] && a.x > d.start[0]; }).map(function (a) { return a.x; });
+    var far = anchors.filter(function (a) { return a.y === d.goal[1] && a.x < d.goal[0]; }).map(function (a) { return a.x; });
+    return { n: n, name: d.name, intro: d.intro, theme: d.theme || 0, truck: d.truck, pool: d.pool || 0, ground: ground, anchors: anchors,
+      start: { x: d.start[0], y: d.start[1] }, goal: { x: d.goal[0], y: d.goal[1] },
+      fallY: Math.min(-9, lowTop - 2),
+      // the first gap edge (the start side) and the last one, for art and simple tests
+      L: near.length ? Math.min.apply(null, near) : d.start[0] + 4, R: far.length ? Math.max.apply(null, far) : d.goal[0] - 2 };
+  }
+
+  // ---------------------------------------------------------------- terrain geometry
+  function insidePoly(pts, x, y) {
+    var c = false;
+    for (var i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+      var xi = pts[i][0], yi = pts[i][1], xj = pts[j][0], yj = pts[j][1];
+      if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  }
+  // The nearest point on the polygon's outline to (x, y), with the squared distance to it.
+  function nearestEdge(pts, x, y) {
+    var best = { x: 0, y: 0, d2: 1e18 };
+    for (var i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+      var ax = pts[j][0], ay = pts[j][1], ex = pts[i][0] - ax, ey = pts[i][1] - ay, ll = ex * ex + ey * ey;
+      var t = ll ? Math.max(0, Math.min(1, ((x - ax) * ex + (y - ay) * ey) / ll)) : 0;
+      var qx = ax + ex * t, qy = ay + ey * t, d2 = (x - qx) * (x - qx) + (y - qy) * (y - qy);
+      if (d2 < best.d2) best = { x: qx, y: qy, d2: d2 };
+    }
+    return best;
+  }
+  // Is (x, y) inside the terrain by more than margin? (margin 0: on the outline counts as outside)
+  function solidAt(lv, x, y, margin) {
+    for (var i = 0; i < lv.ground.length; i++) {
+      var g = lv.ground[i], b = g.box;
+      if (x < b.x0 || x > b.x1 || y < b.y0 || y > b.y1) continue;
+      if (insidePoly(g.pts, x, y) && nearestEdge(g.pts, x, y).d2 > margin * margin) return true;
+    }
+    return false;
+  }
+  // Is (x, y) on the outline of the terrain (within tol)?
+  function onGround(lv, x, y, tol) {
+    return lv.ground.some(function (g) { return nearestEdge(g.pts, x, y).d2 <= tol * tol; });
   }
 
   // ---------------------------------------------------------------- build rules
   function isAnchor(lv, x, y) { return lv.anchors.some(function (a) { return a.x === x && a.y === y; }); }
-  function inRock(lv, x, y) { return y < 0.001 && (x < lv.L + 0.001 || x > lv.R - 0.001); }
+  // Points on or inside the terrain cannot hold a new joint (anchors can).
+  function inRock(lv, x, y) { return solidAt(lv, x, y, 0) || onGround(lv, x, y, 0.001); }
   function pointOk(lv, x, y) {
     if (x < 0 || x > WORLD_W || y < Y_MIN || y > Y_MAX) return false;
     return isAnchor(lv, x, y) || !inRock(lv, x, y);
@@ -57,9 +149,9 @@
     if (a.x === b.x && a.y === b.y) return 'Pick a different point.';
     if (!pointOk(lv, a.x, a.y) || !pointOk(lv, b.x, b.y)) return 'You cannot build inside the server rack.';
     if (blen(a, b) > MAX_LEN + 1e-6) return 'Too long. A beam can be at most ' + MAX_LEN + ' squares long.';
-    for (var k = 1; k < 20; k++) {
-      var t = k / 20, x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
-      if (y < -0.05 && (x < lv.L - 0.05 || x > lv.R + 0.05)) return 'A beam cannot go through the server rack.';
+    for (var k = 1; k < 40; k++) {
+      var t = k / 40;
+      if (solidAt(lv, a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, 0.05)) return 'A beam cannot go through the server rack.';
     }
     var ia = findNode(d, a.x, a.y), ib = findNode(d, b.x, b.y);
     if (ia >= 0 && ib >= 0 && d.beams.some(function (bm) { return (bm.a === ia && bm.b === ib) || (bm.a === ib && bm.b === ia); })) return 'There is already a beam there.';
@@ -89,7 +181,7 @@
 
   // ---------------------------------------------------------------- simulation
   // A road piece also bends under a wheel: moment = force * t(1 - t) * length. Long road pieces need support.
-  var ROAD_BEND = 14;
+  var ROAD_BEND = 14, IMPACT = 2;
   var WHEEL_R = 0.45, AXLE = 2.4, DRIVE = 3.2, TRACTION = 7, START_AT = 1.2;
 
   function makeSim(lv, d) {
@@ -100,9 +192,9 @@
       return { a: bm.a, b: bm.b, mat: bm.mat, rest: L, ea: M.ea, str: M.strength, f: 0, fs: 0, load: 0, ms: 0, stress: 0, broken: false };
     });
     P.forEach(function (p) { p.w = p.fixed ? 0 : 1 / p.m; });
-    var x0 = 1.5, wm = lv.truck / 2;
-    var w0 = { x: x0, y: WHEEL_R, px: x0, py: WHEEL_R, vx: 0, vy: 0, m: wm, w: 1 / wm, wheel: true, contact: null };
-    var w1 = { x: x0 + AXLE, y: WHEEL_R, px: x0 + AXLE, py: WHEEL_R, vx: 0, vy: 0, m: wm, w: 1 / wm, wheel: true, contact: null };
+    var x0 = lv.start.x, y0 = lv.start.y + WHEEL_R, wm = lv.truck / 2;
+    var w0 = { x: x0, y: y0, px: x0, py: y0, vx: 0, vy: 0, m: wm, w: 1 / wm, wheel: true, contact: null };
+    var w1 = { x: x0 + AXLE, y: y0, px: x0 + AXLE, py: y0, vx: 0, vy: 0, m: wm, w: 1 / wm, wheel: true, contact: null };
     P.push(w0, w1);
     return { lv: lv, P: P, B: B, wheels: [P.length - 2, P.length - 1], t: 0, state: 'run', breakAt: -1, firstBreak: -1, maxStress: 0 };
   }
@@ -117,17 +209,20 @@
     b.x += nx * dl * b.w; b.y += ny * dl * b.w;
   }
 
-  // The wheel against the cliff tops (rectangles) and the unbroken road beams.
+  // The wheel against the terrain polygons and the unbroken road beams.
   function contactWheel(s, wi) {
     var p = s.P[wi], lv = s.lv, best = null;
     p.contact = null;
-    [[-20, lv.L], [lv.R, WORLD_W + 20]].forEach(function (r) {
-      var cx = Math.max(r[0], Math.min(r[1], p.x)), cy = Math.max(-40, Math.min(0, p.y));
-      var dx = p.x - cx, dy = p.y - cy, dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < WHEEL_R && dist > 1e-9) {
-        var pen = WHEEL_R - dist; p.x += dx / dist * pen; p.y += dy / dist * pen;
-        best = { nx: dx / dist, ny: dy / dist };
-      }
+    lv.ground.forEach(function (gr) {
+      var b = gr.box;
+      if (p.x < b.x0 - WHEEL_R || p.x > b.x1 + WHEEL_R || p.y < b.y0 - WHEEL_R || p.y > b.y1 + WHEEL_R) return;
+      var q = nearestEdge(gr.pts, p.x, p.y), dist = Math.sqrt(q.d2), inside = insidePoly(gr.pts, p.x, p.y);
+      if (!inside && (dist >= WHEEL_R || dist < 1e-9)) return;
+      var nx = (p.x - q.x) / (dist || 1), ny = (p.y - q.y) / (dist || 1);
+      if (inside) { nx = -nx; ny = -ny; }
+      var pen = inside ? WHEEL_R + dist : WHEEL_R - dist;
+      p.x += nx * pen; p.y += ny * pen;
+      if (!best || ny > best.ny) best = { nx: nx, ny: ny };
     });
     for (var i = 0; i < s.B.length; i++) {
       var bm = s.B[i];
@@ -144,7 +239,8 @@
       var nx = dx / dist, ny = dy / dist, C = dist - WHEEL_R;
       var wa = a.w * (1 - t) * (1 - t), wb = b.w * t * t, wsum = p.w + wa + wb;
       var lam = -C / wsum;
-      bm.load += Math.abs(lam) / s.h2 * t * (1 - t) * bm.rest;
+      // the bending load: the contact force, capped so the jolt where a slope starts acts like a tyre, not a hammer
+      bm.load += Math.min(Math.abs(lam) / s.h2, IMPACT * p.m * G) * t * (1 - t) * bm.rest;
       p.x += nx * lam * p.w; p.y += ny * lam * p.w;
       a.x -= nx * lam * a.w * (1 - t); a.y -= ny * lam * a.w * (1 - t);
       b.x -= nx * lam * b.w * t; b.y -= ny * lam * b.w * t;
@@ -211,9 +307,10 @@
       }
     }
     var w0 = s.P[s.wheels[0]], w1 = s.P[s.wheels[1]];
-    if (s.breakAt >= 0) { s.state = 'breaking'; if (s.t - s.breakAt > 2.2 || Math.min(w0.y, w1.y) < -9) s.state = 'broke'; return s.state; }
-    if (Math.min(w0.y, w1.y) < -9) s.state = 'fell';
-    else if (Math.min(w0.x, w1.x) > s.lv.R + 1.2 && Math.min(w0.y, w1.y) > -0.3) s.state = 'won';
+    var lv = s.lv, low = Math.min(w0.y, w1.y);
+    if (s.breakAt >= 0) { s.state = 'breaking'; if (s.t - s.breakAt > 2.2 || low < lv.fallY) s.state = 'broke'; return s.state; }
+    if (low < lv.fallY) s.state = 'fell';
+    else if (Math.min(w0.x, w1.x) > lv.goal.x && low > lv.goal.y - 0.3) s.state = 'won';
     else if (s.t > 45) s.state = 'stuck';
     return s.state;
   }
@@ -243,7 +340,7 @@
   root.BBPhys = {
     WORLD_W: WORLD_W, Y_MIN: Y_MIN, Y_MAX: Y_MAX, MAX_LEN: MAX_LEN, MATS: MATS, MAT_ORDER: MAT_ORDER, LEVELS: LEVELS,
     WHEEL_R: WHEEL_R, AXLE: AXLE, FPS: FPS,
-    level: level, pointOk: pointOk, isAnchor: isAnchor, beamProblem: beamProblem, beamCost: beamCost, designCost: designCost,
+    level: level, solidAt: solidAt, onGround: onGround, pointOk: pointOk, isAnchor: isAnchor, beamProblem: beamProblem, beamCost: beamCost, designCost: designCost,
     blen: blen, findNode: findNode, emptyDesign: emptyDesign, addBeam: addBeam, removeBeam: removeBeam,
     makeSim: makeSim, step: step, run: run, afterTest: afterTest
   };
