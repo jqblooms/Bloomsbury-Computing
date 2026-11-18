@@ -1,11 +1,11 @@
 {
  "id": "y10-3-1-l6b",
- "label": "3.1.6: Instruction Sets (Notes and Bridge Builder)",
+ "label": "3.1.6: Instruction Sets (Notes and Data Bridge)",
  "steps": [
   {
    "id": "title",
    "label": "Instruction Sets",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">Instruction Sets</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> about 20 minutes of notes. Then use your notes in <strong>Bridge Builder</strong>.</li><li>The big question: <strong>why</strong> can a program made for one CPU fail on another CPU?</li><li>One small memory all lesson: address 6 holds 12, address 7 holds 30.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A game made for a games console will not run on a laptop, even when the files are copied across. Why might that be?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Collect ideas: the two computers are built differently inside. Today shows one big reason, inside the CPU.</p></div></details>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">Instruction Sets</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> about 20 minutes of notes. Then use your notes in <strong>Data Bridge</strong>.</li><li>The big question: <strong>why</strong> can a program made for one CPU fail on another CPU?</li><li>One small memory all lesson: address 6 holds 12, address 7 holds 30.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A game made for a games console will not run on a laptop, even when the files are copied across. Why might that be?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Collect ideas: the two computers are built differently inside. Today shows one big reason, inside the CPU.</p></div></details>"
   },
   {
    "id": "why-list",
@@ -15,7 +15,7 @@
   {
    "id": "notes-set",
    "label": "Your Notes: The Instruction Set",
-   "content": "<h2 class=\"lesson-h2\">Your Notes: The Instruction Set</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Bridge Builder.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Instruction set</b><br>A list of all the commands that can be processed by a CPU.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY a CPU can only process its own commands</b><br>Its CU and ALU have circuits for only those commands. Any other command cannot be processed.</div>"
+   "content": "<h2 class=\"lesson-h2\">Your Notes: The Instruction Set</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Instruction set</b><br>A list of all the commands that can be processed by a CPU.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY a CPU can only process its own commands</b><br>Its CU and ALU have circuits for only those commands. Any other command cannot be processed.</div>"
   },
   {
    "id": "why-binary",
@@ -34,7 +34,7 @@
   {
    "id": "notes-machine-code",
    "label": "Your Notes: Machine Code",
-   "content": "<h2 class=\"lesson-h2\">Your Notes: Machine Code</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Bridge Builder.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Machine code</b><br>Instructions in binary, using the codes in the instruction set.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY programs are stored as machine code</b><br>Memory can only store 0s and 1s.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Example</b><br>LOAD 6 is stored as 0001 0110.</div>"
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Machine Code</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Machine code</b><br>Instructions in binary, using the codes in the instruction set.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY programs are stored as machine code</b><br>Memory can only store 0s and 1s.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Example</b><br>LOAD 6 is stored as 0001 0110.</div>"
   },
   {
    "id": "opcode",
@@ -58,7 +58,7 @@
   {
    "id": "notes-decode",
    "label": "Your Notes: Opcode, Operand and Decoding",
-   "content": "<h2 class=\"lesson-h2\">Your Notes: Opcode, Operand and Decoding</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Bridge Builder.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Opcode and operand</b><br>Opcode: the part that says which command. Operand: the part that says what to use, such as an address.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>How to decode</b><br>Split into opcode and operand. Look up the opcode in the instruction set. Convert the operand to a number. Example: 0010 0111 is ADD 7.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY the CU needs the instruction set</b><br>The instruction is only 0s and 1s. The instruction set tells the CU which command each opcode means.</div>"
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Opcode, Operand and Decoding</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Opcode and operand</b><br>Opcode: the part that says which command. Operand: the part that says what to use, such as an address.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>How to decode</b><br>Split into opcode and operand. Look up the opcode in the instruction set. Convert the operand to a number. Example: 0010 0111 is ADD 7.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY the CU needs the instruction set</b><br>The instruction is only 0s and 1s. The instruction set tells the CU which command each opcode means.</div>"
   },
   {
    "id": "differ",
@@ -77,25 +77,25 @@
   {
    "id": "notes-differ",
    "label": "Your Notes: Different CPU Types",
-   "content": "<h2 class=\"lesson-h2\">Your Notes: Different CPU Types</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Bridge Builder.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY machine code for one CPU may not run on another</b><br>The other CPU decodes with its own instruction set. The same opcode can mean a different command, or nothing.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Which CPUs can run a machine code program</b><br>Only CPUs with the same instruction set as the one it was made for.</div>"
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Different CPU Types</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the note below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>WHY machine code for one CPU may not run on another</b><br>The other CPU decodes with its own instruction set. The same opcode can mean a different command, or nothing.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 14px;margin:8px 0;font-size:20px\"><b>Which CPUs can run a machine code program</b><br>Only CPUs with the same instruction set as the one it was made for.</div>"
   },
   {
    "id": "notes-ready",
-   "label": "Your Notes: Ready for Bridge Builder",
-   "content": "<h2 class=\"lesson-h2\">Your Notes: Ready for Bridge Builder</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). You should have these four headings. Missing one? Go back to its slide and write it. <strong>You will use these notes in Bridge Builder.</strong></p><ul class=\"lesson-facts\"><li><strong>The Instruction Set</strong>: what it is, and WHY a CPU can only process its own commands.</li><li><strong>Machine Code</strong>: what it is, and WHY programs are stored in binary.</li><li><strong>Opcode, Operand and Decoding</strong>: the two parts, how to decode, and WHY the CU needs the instruction set.</li><li><strong>Different CPU Types</strong>: WHY machine code for one CPU may not run on another.</li></ul>"
+   "label": "Your Notes: Ready for Data Bridge",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Ready for Data Bridge</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). You should have these four headings. Missing one? Go back to its slide and write it. <strong>You will use these notes in Data Bridge.</strong></p><ul class=\"lesson-facts\"><li><strong>The Instruction Set</strong>: what it is, and WHY a CPU can only process its own commands.</li><li><strong>Machine Code</strong>: what it is, and WHY programs are stored in binary.</li><li><strong>Opcode, Operand and Decoding</strong>: the two parts, how to decode, and WHY the CU needs the instruction set.</li><li><strong>Different CPU Types</strong>: WHY machine code for one CPU may not run on another.</li></ul>"
   },
   {
    "id": "how-to-play",
-   "label": "Bridge Builder: Use Your Notes",
-   "content": "<h2 class=\"lesson-h2\">Bridge Builder: Use Your Notes</h2><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the questions</strong> to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, you start again at round 1.</li></ol>"
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the questions</strong> to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, you start again at round 1.</li></ol>"
   },
   {
    "id": "game",
-   "label": "Play: Bridge Builder",
+   "label": "Play: Data Bridge",
    "type": "embedded-app",
    "appId": "bridge-builder",
    "embedContainerId": "y10-316b-game",
-   "content": "<h2 class=\"lesson-h2\">Play: Bridge Builder</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><div id=\"y10-316b-game\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><div id=\"y10-316b-game\"></div>",
    "embedQuery": "set=y10-instruction-sets&goal=3"
   }
  ],

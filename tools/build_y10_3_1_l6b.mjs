@@ -1,8 +1,8 @@
-// Builds LessonData/y10-3-1-l6b.json: Year 10, 3.1.6: Instruction Sets (Notes and Bridge Builder).
+// Builds LessonData/y10-3-1-l6b.json: Year 10, 3.1.6: Instruction Sets (Notes and Data Bridge).
 //   node tools/build_y10_3_1_l6b.mjs
 // An alternate 3.1.6 lesson beside y10-3-1-l6 (that lesson and its builder are unchanged). James, 2026-11-18:
 // about 20 minutes of note-taking with NO interactive activities (no drills, PyScratch, click activities, Explain Its or
-// predictions to answer), then Bridge Builder (pages BridgeBuilder/, registry bridge-builder, set y10-instruction-sets),
+// predictions to answer), then Data Bridge (pages BridgeBuilder/, registry bridge-builder, set y10-instruction-sets),
 // where students earn coins from exam questions to buy bridge parts.
 // The teaching and examples are y10-3-1-l6's: the five commands, LOAD 6 = 0001 0110, 0010 0111 = ADD 7 (6 holds 12,
 // 7 holds 30), CPU A and CPU B. Teaching slides are static diagrams and side-by-side examples, plus the three InstrAnim
@@ -10,7 +10,7 @@
 // About 20 minutes of notes:
 //   title 1, why-list 1.5, notes-set 1.5, why-binary 1.5, anim-binary 1.5, notes-machine-code 1.5, opcode 1.5,
 //   anim-decode 1.5, decode 1.5, notes-decode 1.5, differ 1.5, anim-differ 1.5, notes-differ 1.5, notes-ready 0.5
-// Then: Bridge Builder: Use Your Notes, Play: Bridge Builder.
+// Then: Data Bridge: Use Your Notes, Play: Data Bridge.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -39,7 +39,7 @@ const setTable = (title, rows, head = ['Opcode', 'Command']) => `<div style="bor
   `<table style="border-collapse:collapse;font-size:16px;margin:2px 0 0;width:100%"><tr><th style="text-align:left;font-size:13px;color:var(--muted);padding:1px 6px">${head[0]}</th><th style="text-align:left;font-size:13px;color:var(--muted);padding:1px 6px">${head[1]}</th></tr>` +
   rows.map(([o, c]) => `<tr><td style="${MONO};padding:1px 6px;border-top:1px solid var(--line)">${o}</td><td style="padding:1px 6px;border-top:1px solid var(--line)"><b>${c}</b></td></tr>`).join('') + '</table></div>';
 
-const GAME = '<strong>You will use these notes in Bridge Builder.</strong>';
+const GAME = '<strong>You will use these notes in Data Bridge.</strong>';
 const NOTES = [];
 // A Your Notes slide: exactly what to write, shown in full (no hidden model note, no checking step).
 function noteSlide(id, label, notes) {
@@ -63,7 +63,7 @@ const steps = [];
 // ---------------------------------------------------------------- title (1 min)
 steps.push({ id: 'title', label: 'Instruction Sets',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">3.1 Computer Architecture</p><h2 class="lesson-h2">Instruction Sets</h2><p>Year 10</p></div>' +
-    facts(['<strong>Today:</strong> about 20 minutes of notes. Then use your notes in <strong>Bridge Builder</strong>.',
+    facts(['<strong>Today:</strong> about 20 minutes of notes. Then use your notes in <strong>Data Bridge</strong>.',
       'The big question: <strong>why</strong> can a program made for one CPU fail on another CPU?',
       'One small memory all lesson: address 6 holds 12, address 7 holds 30.']) +
     tps('A game made for a games console will not run on a laptop, even when the files are copied across. Why might that be?', 'Collect ideas: the two computers are built differently inside. Today shows one big reason, inside the CPU.') });
@@ -133,23 +133,23 @@ steps.push(noteSlide('notes-differ', 'Your Notes: Different CPU Types', [
   ['WHY machine code for one CPU may not run on another', 'The other CPU decodes with its own instruction set. The same opcode can mean a different command, or nothing.'],
   ['Which CPUs can run a machine code program', 'Only CPUs with the same instruction set as the one it was made for.']]));
 
-// ---------------------------------------------------------------- notes ready (0.5 min), then Bridge Builder
-steps.push({ id: 'notes-ready', label: 'Your Notes: Ready for Bridge Builder',
-  content: '<h2 class="lesson-h2">Your Notes: Ready for Bridge Builder</h2>' +
+// ---------------------------------------------------------------- notes ready (0.5 min), then Data Bridge
+steps.push({ id: 'notes-ready', label: 'Your Notes: Ready for Data Bridge',
+  content: '<h2 class="lesson-h2">Your Notes: Ready for Data Bridge</h2>' +
     todo('open your notes (the pen icon at the top). You should have these four headings. Missing one? Go back to its slide and write it. ' + GAME) +
     facts(['<strong>The Instruction Set</strong>: what it is, and WHY a CPU can only process its own commands.',
       '<strong>Machine Code</strong>: what it is, and WHY programs are stored in binary.',
       '<strong>Opcode, Operand and Decoding</strong>: the two parts, how to decode, and WHY the CU needs the instruction set.',
       '<strong>Different CPU Types</strong>: WHY machine code for one CPU may not run on another.']) });
-steps.push({ id: 'how-to-play', label: 'Bridge Builder: Use Your Notes',
-  content: '<h2 class="lesson-h2">Bridge Builder: Use Your Notes</h2>' +
+steps.push({ id: 'how-to-play', label: 'Data Bridge: Use Your Notes',
+  content: '<h2 class="lesson-h2">Data Bridge: Use Your Notes</h2>' +
     '<ol class="lesson-facts" style="font-size:22px;line-height:1.6">' +
     '<li><strong>Open your notes</strong> with the pen icon at the top.</li>' +
     '<li><strong>Answer the questions</strong> to earn coins, then build a bridge to get the truck across.</li>' +
     '<li><strong>If the bridge breaks</strong>, you start again at round 1.</li></ol>' });
 // The embed step copied from y8-2-3-conditions' Circuit Siege step, only the appId swapped.
-steps.push({ id: 'game', label: 'Play: Bridge Builder', type: 'embedded-app', appId: 'bridge-builder', embedContainerId: `${P}-game`,
-  content: '<h2 class="lesson-h2">Play: Bridge Builder</h2>' + tps('Why keep your notes open while you play?', 'The questions use the same ideas. Your notes help you answer them right the first time.') + `<div id="${P}-game"></div>`,
+steps.push({ id: 'game', label: 'Play: Data Bridge', type: 'embedded-app', appId: 'bridge-builder', embedContainerId: `${P}-game`,
+  content: '<h2 class="lesson-h2">Play: Data Bridge</h2>' + tps('Why keep your notes open while you play?', 'The questions use the same ideas. Your notes help you answer them right the first time.') + `<div id="${P}-game"></div>`,
   embedQuery: 'set=y10-instruction-sets&goal=3' });
 
 // ---------------------------------------------------------------- self-checks
@@ -172,13 +172,13 @@ for (const [term, at] of Object.entries(firstTaught)) {
 }
 assert(!/machine code|opcode|operand/i.test(seen(steps[0])), 'title uses a term from this lesson');
 assert(!/\bdecimal\b|assembly|mnemonic|low-level|high-level|translat|compiler|interpreter/i.test(all), 'term outside this lesson');
-// After each idea, a Your Notes slide that says the notes are for Bridge Builder.
+// After each idea, a Your Notes slide that says the notes are for Data Bridge.
 const noteIds = steps.filter((s) => s.id.startsWith('notes-')).map((s) => s.id);
 assert(noteIds.join() === 'notes-set,notes-machine-code,notes-decode,notes-differ,notes-ready', 'notes slides ' + noteIds);
-noteIds.forEach((id) => assert(steps.find((s) => s.id === id).content.includes('You will use these notes in Bridge Builder.'), id + ' game line'));
+noteIds.forEach((id) => assert(steps.find((s) => s.id === id).content.includes('You will use these notes in Data Bridge.'), id + ' game line'));
 Object.keys(ANIMS).forEach((id) => { const i = steps.findIndex((s) => s.id === id); assert(i > 0 && ['notes-machine-code', 'decode', 'notes-differ'].includes(steps[i + 1].id), id + ' is followed by its notes or worked examples'); });
 assert(NOTES.length === 10 && NOTES.every((n) => n.head && n.text), 'notes');
-// The game: Bridge Builder with the y10 instruction sets set; the how-to slide has three lines.
+// The game: Data Bridge with the y10 instruction sets set; the how-to slide has three lines.
 const game = steps.at(-1);
 assert(game.appId === 'bridge-builder' && game.embedQuery === 'set=y10-instruction-sets&goal=3' && steps.at(-2).id === 'how-to-play', 'game slides');
 assert((steps.at(-2).content.match(/<li>/g) || []).length === 3, 'three lines on how to play');
@@ -190,7 +190,7 @@ const MINUTES = { title: 1, 'why-list': 1.5, 'notes-set': 1.5, 'why-binary': 1.5
 const total = Object.values(MINUTES).reduce((a, b) => a + b, 0);
 assert(steps.slice(0, -2).every((s) => MINUTES[s.id]) && total >= 18 && total <= 22, 'timing ' + total);
 
-const lesson = { id: ID, label: '3.1.6: Instruction Sets (Notes and Bridge Builder)', steps, validators: {}, pseudocodeValidators: {} };
+const lesson = { id: ID, label: '3.1.6: Instruction Sets (Notes and Data Bridge)', steps, validators: {}, pseudocodeValidators: {} };
 fs.writeFileSync(path.join(ROOT, 'LessonData', ID + '.json'), JSON.stringify(lesson, null, 1) + '\n');
 
 // ---------------------------------------------------------------- register: straight after y10-3-1-l6 in the 3.1 unit
