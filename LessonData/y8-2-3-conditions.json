@@ -106,13 +106,13 @@
   },
   {
    "id": "predict-edge",
-   "label": "Predict: Which Branch Runs?",
+   "label": "Predict: Which Branch Runs? (1 of 2)",
    "type": "multiple-choice",
    "containerId": "y823-predict-edge",
-   "content": "<h2 class=\"lesson-h2\">Predict: Which Branch Runs?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why put the typed value into the IF line before you choose?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The IF line is where the program decides. Your answer depends on what that line gives.</p></div></details><p class=\"lesson-lead\">Read each program. Choose the output. The answer shows after you choose.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Mark &gt; 50 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &lt;= 90 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"OK\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Too fast\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div></div><div id=\"y823-predict-edge\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Predict: Which Branch Runs? (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why put the typed value into the IF line before you choose?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The IF line is where the program decides. Your answer depends on what that line gives.</p></div></details><p class=\"lesson-lead\">Read the program. Choose the output. The answer shows after you choose.</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Mark &gt; 50 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div id=\"y823-predict-edge\"></div>",
    "items": [
     {
-     "prompt": "Program A: 50 is typed in. What is output?",
+     "prompt": "50 is typed in. What is output?",
      "options": [
       "Pass",
       "Fail",
@@ -121,9 +121,18 @@
      ],
      "correct": 1,
      "explain": "50 > 50 is FALSE: 50 is not more than itself. So the ELSE branch runs."
-    },
+    }
+   ]
+  },
+  {
+   "id": "predict-edge-2",
+   "label": "Predict: Which Branch Runs? (2 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y823-predict-edge-2",
+   "content": "<h2 class=\"lesson-h2\">Predict: Which Branch Runs? (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the symbol matter as much as the number in an IF line?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two IF lines with the same number but different symbols can choose different branches.</p></div></details><p class=\"lesson-lead\">Read the program. Choose the output. The answer shows after you choose.</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &lt;= 90 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"OK\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Too fast\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div id=\"y823-predict-edge-2\"></div>",
+   "items": [
     {
-     "prompt": "Program B: 90 is typed in. What is output?",
+     "prompt": "90 is typed in. What is output?",
      "options": [
       "OK",
       "Too fast",

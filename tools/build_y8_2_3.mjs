@@ -31,6 +31,7 @@ const TPS = {
   'do-now-2': ['Why is the team size a constant and not a variable?', 'It is set once and the program never needs to change it while it runs.'],
   'operators-check': ['Why write the value of Coins into each condition before you decide?', 'Then you compare two numbers you can see, and nothing is kept only in your head.'],
   'predict-edge': ['Why put the typed value into the IF line before you choose?', 'The IF line is where the program decides. Your answer depends on what that line gives.'],
+  'predict-edge-2': ['Why does the symbol matter as much as the number in an IF line?', 'Two IF lines with the same number but different symbols can choose different branches.'],
   'order-check': ['Why read the rule above the program before you trace it?', 'The rule says what should happen. The trace shows what does happen. You need both to spot a mistake.'],
   'activity-1': ['Why predict first, then check?', 'A wrong prediction shows you which rule to look at again.'],
   'pyscratch-1': ['Why type in more than one value when you test your fix?', 'A fix for one value can break another. Each value tries a different part of the program.'],
@@ -146,12 +147,14 @@ steps.push({ id: 'compare-edge', label: 'Compare: > and >=',
 const EA = ['DECLARE Mark : INTEGER', 'INPUT Mark', 'IF Mark > 50 THEN', '    OUTPUT "Pass"', 'ELSE', '    OUTPUT "Fail"', 'ENDIF'];
 const EB = ['DECLARE Speed : INTEGER', 'INPUT Speed', 'IF Speed <= 90 THEN', '    OUTPUT "OK"', 'ELSE', '    OUTPUT "Too fast"', 'ENDIF'];
 assert(outs(EA, [50])[0] === 'Fail' && outs(EB, [90])[0] === 'OK', 'predict-edge');
-steps.push(mcStep('predict-edge', 'Predict: Which Branch Runs?', 'Predict: Which Branch Runs?', 'Read each program. Choose the output. The answer shows after you choose.', [
-  { prompt: 'Program A: 50 is typed in. What is output?', options: ['Pass', 'Fail', 'Pass, then Fail', 'Nothing'], correct: 1,
+steps.push(mcStep('predict-edge', 'Predict: Which Branch Runs? (1 of 2)', 'Predict: Which Branch Runs? (1 of 2)', 'Read the program. Choose the output. The answer shows after you choose.', [
+  { prompt: '50 is typed in. What is output?', options: ['Pass', 'Fail', 'Pass, then Fail', 'Nothing'], correct: 1,
     explain: '50 > 50 is FALSE: 50 is not more than itself. So the ELSE branch runs.' },
-  { prompt: 'Program B: 90 is typed in. What is output?', options: ['OK', 'Too fast', 'OK, then Too fast', 'Nothing'], correct: 0,
+], code(EA, true, [], true)));
+steps.push(mcStep('predict-edge-2', 'Predict: Which Branch Runs? (2 of 2)', 'Predict: Which Branch Runs? (2 of 2)', 'Read the program. Choose the output. The answer shows after you choose.', [
+  { prompt: '90 is typed in. What is output?', options: ['OK', 'Too fast', 'OK, then Too fast', 'Nothing'], correct: 0,
     explain: '90 <= 90 is TRUE: <= lets in "equal to". So the THEN branch runs.' },
-], columns(caption('A') + code(EA, true), caption('B') + code(EB, true))));
+], code(EB, true, [], true)));
 
 // ---------------------------------------------------------------- an IF inside an IF
 const MEDAL = ['DECLARE Score : INTEGER', 'INPUT Score', 'IF Score >= 80 THEN', '    OUTPUT "Gold"', 'ELSE', '    IF Score >= 50 THEN', '        OUTPUT "Silver"', '    ELSE', '        OUTPUT "Bronze"', '    ENDIF', 'ENDIF'];
