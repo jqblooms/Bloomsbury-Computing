@@ -121,7 +121,8 @@
           "title": "Programming, Logic and Testing",
           "lessons": [
             "y8-2-1-libraries",
-            "y8-2-2-data-types"
+            "y8-2-2-data-types",
+            "y8-2-3-conditions"
           ]
         },
         {
