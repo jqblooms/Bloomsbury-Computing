@@ -39,10 +39,29 @@ const TPS = {
   'activity-2': ['Why does the drill type in new values every time?', 'A program must work for any value it is given, not just one.'],
   'why-constant': ['What makes an explanation worth 2 marks?', 'A point, then what it means for the program, joined with so.'],
   'practice': ['Why can the wrong data type stop a program that has no other mistakes?', 'Each variable only lets in its own kind of value. One wrong type means one value is refused.'],
+  'sort-jobs': ['Why choose the data type before the program runs?', 'DECLARE comes first, so the program knows what kind of value to let in from the start.'],
+  'predict-run': ['Why predict before you run a program?', 'You must say what you think first. Then a surprise shows you which rule to look at again.'],
+  'how-to-play': ['Why do the questions come between the waves?', 'You need coins for towers, and right answers earn them. Thinking well keeps your base safe.'],
+  'game': ['Why read the whole program before you answer?', 'One line at the top, like a DECLARE or a CONSTANT, changes what every later line can do.'],
   'plenary': ['Why practise with new values every time?', 'If you can choose the type for any value, you really know the four types.'],
 };
 
 const steps = [];
+function clickMatch(id, label, lead, pairs) {
+  const cid = `${P}-${id}`;
+  return { id, label, type: 'click-match', containerId: cid, items: pairs.map((p) => ({ id: p[0], left: p[1], right: p[2] })),
+    content: `<h2 class="lesson-h2">${label}</h2>` + `<p class="lesson-lead">${lead}</p>` +
+      `<div class="icontrol-match" id="${cid}"><svg class="icontrol-match-svg" aria-hidden="true"><defs><marker id="icontrol-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker></defs></svg>` +
+      `<div class="icontrol-match-col click-match-left"></div><div class="icontrol-match-col click-match-right"></div></div><div class="icontrol-match-status" id="${cid}-status" role="status" aria-live="polite"></div>` };
+}
+// Explain It: AI-marked by Haiku only (aiModel "haiku"), as Y11 1.9 and Y10 3.1.
+function explainIt(id, label, about, part, whyQ) {
+  const cid = `${P}-${id}`;
+  return { id, label, type: 'self-marked-response', containerId: cid,
+    content: `<h2 class="lesson-h2">${label}</h2>` + tps(whyQ[0], `<p>${whyQ[1]}</p>`) +
+      '<p class="lesson-lead">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p>' + `<div id="${cid}"></div>`,
+    items: [Object.assign({ id: `${id}-q`, aiModel: 'haiku', context: about + ' ' + part.prompt }, part)] };
+}
 
 // ---------------------------------------------------------------- Do Now 1 (2.1): library functions
 const DN1 = ['DECLARE Days : INTEGER', 'INPUT Days', 'OUTPUT DIV(Days, 7)', 'OUTPUT MOD(Days, 7)', 'OUTPUT ROUND(Days / 7, 1)'];
@@ -136,6 +155,21 @@ steps.push({ id: 'string', label: 'Compare: "13" and 13',
     columns(caption('A') + code(SA), caption('B') + code(SB)) +
     facts(['<strong>STRING:</strong> text in quotes, like "Hat Yai" or "13".', 'A STRING is kept as characters. You cannot do sums with it.']) });
 
+const PA = ['DECLARE Price : REAL', 'Price <- 7.5', 'OUTPUT Price * 2'];
+const PB = ['DECLARE Lives : INTEGER', 'Lives <- "3"', 'OUTPUT Lives + 1'];
+assert(outs(PA)[0] === '15' && runError(PB) && runError(PB).line === 2, 'predict-run');
+steps.push(mcStep('predict-run', 'Predict: Will It Run?', 'Predict: Will It Run?', 'Read each program. Choose what happens. The answer shows after you choose.', [
+  { prompt: 'Program A: what happens?', options: ['It outputs 15', 'It stops on line 2', 'It outputs 14', 'It stops on line 3'], correct: 0,
+    explain: 'Price is a REAL, so it can hold 7.5. Then 7.5 x 2 = 15.' },
+  { prompt: 'Program B: what happens?', options: ['It outputs 4', 'It outputs 31', 'It stops on line 2', 'It stops on line 3'], correct: 2,
+    explain: '"3" is in quotes, so it is a STRING. Lives is an INTEGER, so line 2 stops the program.' },
+], columns(caption('A') + code(PA, true), caption('B') + code(PB, true))));
+steps.push(explainIt('explain-string', 'Explain It: Why Did It Stop?', 'Year 8 pseudocode lesson on data types (INTEGER, REAL, STRING, BOOLEAN). The program is: DECLARE Lives : INTEGER, then Lives <- "3".', {
+  prompt: 'Lives is declared as an INTEGER. Explain why the line Lives <- "3" stops the program.', marks: 2,
+  modelAnswer: '"3" is in quotes, so it is a STRING (1). An INTEGER can only hold whole numbers, so the value is refused (1).',
+  scheme: ['"3" is in quotes / is a STRING / is text', 'An INTEGER only holds whole numbers / the data type does not match / so the value is refused'] },
+  ['Why do quotes matter so much to a computer?', 'Quotes tell the computer the value is text, so it keeps it as characters, not as an amount.']));
+
 const BOOL = ['DECLARE Mark : INTEGER', 'DECLARE Passed : BOOLEAN', 'INPUT Mark', 'IF Mark >= 50 THEN', '    Passed <- TRUE', 'ELSE', '    Passed <- FALSE', 'ENDIF', 'OUTPUT Passed'];
 const ERR_B = runError(['DECLARE Passed : BOOLEAN', 'Passed <- "Yes"']);
 assert(outs(BOOL, [62])[0] === 'TRUE' && outs(BOOL, [41])[0] === 'FALSE' && ERR_B, 'boolean');
@@ -145,6 +179,13 @@ steps.push({ id: 'boolean', label: 'BOOLEAN: Only TRUE or FALSE',
       '<p>A BOOLEAN can only be TRUE or FALSE. With a STRING, a typing slip like "Ture" could get in, and an IF that checks for "TRUE" would miss it.</p>', 'Show the worked answer') +
     '<p class="lesson-lead"><strong>BOOLEAN:</strong> a value that can only be TRUE or FALSE, like Found in a linear search.</p>' +
     columns(code(BOOL), facts(['62 is typed in: the output is TRUE.', 'Passed &lt;- "Yes" stops the program: "Yes" is not TRUE or FALSE.', 'Use BOOLEAN for a yes or no question: paid, locked, found.'])) });
+
+steps.push(clickMatch('sort-jobs', 'Activity: Match the Job to the Data Type', 'Click a job on the left, then click its data type on the right.', [
+  ['m-goals', 'The number of goals in a match', 'INTEGER'],
+  ['m-temp', 'The temperature, like 31.5', 'REAL'],
+  ['m-phone', 'A phone number, like 081 234 5678', 'STRING'],
+  ['m-locked', 'Whether a door is locked', 'BOOLEAN'],
+]));
 
 steps.push(checkStep('types-check', 'Your Turn: Name the Data Type', 'Your Turn: Name the Data Type', 'Type INTEGER, REAL, STRING or BOOLEAN for each value.', [
   { label: '4.5', answer: TYPE_RE.REAL, feedback: 'Is it a number? Does it have a decimal part?' },
@@ -199,7 +240,7 @@ steps.push(pst('pyscratch-2', 'y8-2-2-constant', 2, 'Task 2 of 3: change a progr
 steps.push(pst('pyscratch-3', 'y8-2-2-score', 3, 'Task 3 of 3: write the whole program yourself.'));
 
 steps.push(selfMarked('why-constant', 'Explain: Why Use a Constant?', 'Explain: Why Use a Constant?', '', [
-  { id: 'why-constant', prompt: 'A program uses the speed limit 90 in six places. Explain why the programmer should make the speed limit a constant.', marks: 2,
+  { id: 'why-constant', aiModel: 'haiku', context: 'Year 8 pseudocode lesson on constants (CONSTANT SpeedLimit <- 90). A program uses the speed limit 90 in six places.', prompt: 'A program uses the speed limit 90 in six places. Explain why the programmer should make the speed limit a constant.', marks: 2,
     modelAnswer: 'If the limit changes, only one line needs to change (1), so no place can be missed and every line uses the same value (1).',
     scheme: ['A change to the value is made in one place only / only one line to edit',
       'So no use of it can be missed / every line uses the same value / fewer errors / the name says what 90 means'] },
@@ -219,6 +260,11 @@ steps.push(checkStep('practice', 'Practice: Fix the Data Types', 'Practice: Fix 
   { label: 'Which data type should Height have?', answer: TYPE_RE.REAL, feedback: '1.58 has a decimal part.' },
   { label: 'Member holds TRUE or FALSE. Which data type should line 3 use?', answer: TYPE_RE.BOOLEAN, feedback: 'Which data type has only two values?' },
 ], code(PR, true)));
+
+steps.push({ id: 'how-to-play', label: 'Circuit Siege: How to Play',
+  content: '<h2 class="lesson-h2">Circuit Siege: How to Play</h2>' +
+    '<ol class="lesson-facts" style="font-size:22px;line-height:1.6"><li><strong>Build towers</strong> on the path.</li><li><strong>Stop the bugs</strong> before they reach your base.</li><li><strong>Between waves</strong>, answer questions on data types and constants to earn coins.</li></ol>' });
+steps.push(Object.assign(embed('game', 'Play: Circuit Siege', 'tower-defence', 'Play: Circuit Siege', ''), { embedQuery: 'set=y8-data-types&goal=3' }));
 
 steps.push(embed('plenary', 'Plenary: Data Types and Constants', 'drill-y8-2-2-data-types', 'Plenary: Data Types and Constants',
   'The four data types, choosing one, whether a program runs, and constants. Your progress is saved.'));
