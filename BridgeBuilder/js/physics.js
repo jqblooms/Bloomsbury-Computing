@@ -9,9 +9,9 @@
   var G = 9.8, FPS = 60, SUB = 24;
 
   var MATS = {
-    road:  { name: 'Road',  price: 5,  ea: 3.0e4, strength: 50,  density: 0.10 },
-    wood:  { name: 'Wood',  price: 3,  ea: 2.0e4, strength: 44,  density: 0.05 },
-    steel: { name: 'Steel', price: 7,  ea: 6.0e4, strength: 120, density: 0.08 }
+    road:  { name: 'Road',  price: 5,  ea: 3.0e4, strength: 80,  density: 0.10 },
+    wood:  { name: 'Wood',  price: 3,  ea: 2.0e4, strength: 70,  density: 0.05 },
+    steel: { name: 'Steel', price: 7,  ea: 6.0e4, strength: 192, density: 0.08 }
   };
   var MAT_ORDER = ['road', 'wood', 'steel'];
 
@@ -181,7 +181,7 @@
 
   // ---------------------------------------------------------------- simulation
   // A road piece also bends under a wheel: moment = force * t(1 - t) * length. Long road pieces need support.
-  var ROAD_BEND = 14, IMPACT = 2;
+  var ROAD_BEND = 18, IMPACT = 2;
   var WHEEL_R = 0.45, AXLE = 2.4, DRIVE = 3.2, TRACTION = 7, START_AT = 1.2;
 
   function makeSim(lv, d) {

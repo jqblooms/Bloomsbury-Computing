@@ -72,7 +72,7 @@ for (let n = 1; n <= B.LEVELS.length; n++) {
   const good = build(lv, designs[n].sound), s = sim(lv, good.d), cost = B.designCost(good.d);
   ok(!good.probs.length, `${tag}: the designed bridge follows the build rules (${good.probs.join('; ')})`);
   ok(s.state === 'won', `${tag}: the designed bridge should hold (got ${s.state}, max stress ${s.maxStress.toFixed(2)})`);
-  ok(s.maxStress < 1, `${tag}: no beam over strength`);
+  ok(s.maxStress < 0.7, `${tag}: the designed bridge has a safety margin (peak ${s.maxStress.toFixed(2)} of its limit, must be under 0.7)`);
   ok(cost <= lv.pool, `${tag}: the designed bridge (${cost}) fits the full-marks pool (${lv.pool})`);
   const bad = build(lv, designs[n].flimsy), sb = sim(lv, bad.d);
   ok(!bad.probs.length, `${tag}: the flimsy bridge follows the build rules (${bad.probs.join('; ')})`);
