@@ -42,7 +42,7 @@
   // S (saved per topic): { v, round, coins, phase: exam | build | testing | over | won, design, exam, best, stats, over }
   var sets = [], setId = '', setTitle = '';
   var S = null, LV = null, sim = null;
-  var ui = { mat: 'road', sel: null, hover: null, undo: [], speed: 1, acc: 0, endShown: false };
+  var ui = { mat: 'road', sel: null, hover: null, undo: [], speed: 1, acc: 0, endShown: false, drawn: 0 };
 
   function newGame() {
     S = { v: 2, round: 1, coins: 0, phase: 'exam', design: null, exam: null, best: load('best:' + setId, 0),
@@ -132,16 +132,16 @@
     var g = c.getContext('2d');
     g.save(); g.scale(0.5, 0.5); g.translate(0, -70);
     var lv = Ph.level(1);
-    drawBackground(g, lv);
+    Art.drawScene(g, makeScene(lv, false), sx(lv.L + 1.6));
     var d = Ph.emptyDesign(lv);
     [[lv.L, 0, lv.L + 2, 0, 'road'], [lv.L + 2, 0, lv.L + 4, 0, 'road'], [lv.L + 4, 0, lv.R, 0, 'road'], [lv.L, 0, lv.L + 1, 2, 'wood'],
       [lv.L + 1, 2, lv.L + 2, 0, 'wood'], [lv.L + 2, 0, lv.L + 3, 2, 'steel'], [lv.L + 3, 2, lv.L + 4, 0, 'steel'], [lv.L + 4, 0, lv.L + 5, 2, 'wood'],
       [lv.L + 5, 2, lv.R, 0, 'wood'], [lv.L + 1, 2, lv.L + 3, 2, 'wood'], [lv.L + 3, 2, lv.L + 5, 2, 'wood']].forEach(function (b) {
       Ph.addBeam(d, { x: b[0], y: b[1] }, { x: b[2], y: b[3] }, b[4]);
     });
-    d.beams.forEach(function (bm) { drawBeam(g, d.nodes[bm.a], d.nodes[bm.b], bm.mat, null); });
-    d.nodes.forEach(function (n) { drawNode(g, n.x, n.y, n.fixed); });
-    drawTruck(g, { x: lv.L + 1.6, y: Ph.WHEEL_R }, { x: lv.L + 1.6 + Ph.AXLE, y: Ph.WHEEL_R });
+    d.beams.forEach(function (bm) { Art.drawBeam(g, d.nodes[bm.a], d.nodes[bm.b], bm.mat, null); });
+    d.nodes.forEach(function (n) { Art.drawNode(g, n.x, n.y, n.fixed); });
+    Art.drawTruck(g, { x: lv.L + 1.6, y: Ph.WHEEL_R }, { x: lv.L + 1.6 + Ph.AXLE, y: Ph.WHEEL_R }, false);
     g.restore();
   }
 
@@ -158,7 +158,7 @@
   }
 
   // ---------------------------------------------------------------- build screen
-  var canvas, ctx, bg;
+  var canvas, ctx;
 
   function enterBuild() {
     sim = null; ui.endShown = false;
@@ -173,7 +173,7 @@
       '<div class="bb-over" id="over" hidden></div></div>' +
       '<div class="bb-tools" id="tools"></div>';
     canvas = $('cv'); ctx = canvas.getContext('2d');
-    bg = document.createElement('canvas'); bg.width = W; bg.height = H; drawBackground(bg.getContext('2d'), LV);
+    scene = makeScene(LV, true); valid.key = ''; Art.resetSim();
     canvas.addEventListener('pointermove', onMove);
     canvas.addEventListener('pointerleave', function () { ui.hover = null; render(); });
     canvas.addEventListener('pointerdown', onDown);
@@ -306,7 +306,7 @@
       }
     }
     ui.sel = null; ui.hover = null;
-    sim = Ph.makeSim(LV, S.design);
+    sim = Ph.makeSim(LV, S.design); ui.simD = S.design;
     S.phase = 'testing'; save();
     tipDone(2);
     if ($('tip')) $('tip').hidden = true;
@@ -338,175 +338,84 @@
       setHud(true);
       $('screen').innerHTML = '<div class="bb-q">' + html + '</div>';
     } else {
-      var o = $('over'); o.className = 'bb-over ' + (won ? 'is-good' : 'is-bad'); o.innerHTML = html; o.hidden = false;
+      var o = $('over'); o.className = 'bb-over ' + (won ? 'is-good' : 'is-bad'); o.innerHTML = html;
+      setTimeout(function () {
+        if ($('over') !== o) return;
+        o.hidden = false;
+        try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
+      }, won ? 1600 : 1100);
     }
     updateHud();
     $('nextBtn').onclick = go;
-    try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
+    if (quiet) try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
   }
 
-  // ---------------------------------------------------------------- art
-  function rng(seed) { return function () { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }; }
-  // Scenery colours per round: [sky top, sky bottom, circuit traces, rack, rack outline, rack slots].
-  var THEMES = [
-    ['#0a1424', '#0d1f2e', '64, 196, 170', '#1b2330', '#5a6e88', '#232e3e'],
-    ['#120f26', '#1b1534', '150, 120, 255', '#211c33', '#7464a8', '#2b2542'],
-    ['#1a130a', '#24190e', '240, 170, 70', '#2a2219', '#8a7050', '#352b20'],
-    ['#08180f', '#0c2216', '90, 220, 120', '#18261d', '#4f7a5c', '#20322a'],
-    ['#07142a', '#0a1d3a', '90, 160, 255', '#17223a', '#5274a8', '#1f2c48'],
-    ['#1c0d16', '#26111d', '240, 110, 160', '#2a1a24', '#8a5a74', '#36222f']
-  ];
-  function polyPath(g, pts) {
-    g.beginPath();
-    pts.forEach(function (p, i) { var x = sx(p[0]), y = sy(p[1]); if (i) g.lineTo(x, y); else g.moveTo(x, y); });
-    g.closePath();
+  // ---------------------------------------------------------------- art (all drawing lives in js/art.js)
+  var Art = window.Art;
+  Art.setup({ W: W, H: H, SC: SC, TOP_Y: TOP_Y, WORLD_W: Ph.WORLD_W, WHEEL_R: Ph.WHEEL_R, AXLE: Ph.AXLE });
+  var scene = null, valid = { key: '', pts: [] };
+  function makeScene(lv, grid) {
+    return Art.prepare(lv, grid ? { gridOk: function (x, y) { return y >= Ph.Y_MIN && y <= Ph.Y_MAX && Ph.pointOk(lv, x, y) && !Ph.isAnchor(lv, x, y); } } : null);
   }
-  function drawBackground(g, lv) {
-    var th = THEMES[(lv.theme || 0) % THEMES.length];
-    var grd = g.createLinearGradient(0, 0, 0, H);
-    grd.addColorStop(0, th[0]); grd.addColorStop(1, th[1]);
-    g.fillStyle = grd; g.fillRect(0, 0, W, H);
-    // circuit traces
-    var r = rng(7 + lv.n * 13);
-    g.lineWidth = 2; g.strokeStyle = 'rgba(' + th[2] + ', .13)'; g.fillStyle = 'rgba(' + th[2] + ', .22)';
-    for (var i = 0; i < 26; i++) {
-      var x = r() * W, y = r() * (H - 20), len = 40 + r() * 140;
-      g.beginPath(); g.moveTo(x, y); g.lineTo(x + len, y); g.lineTo(x + len + 24, y + (r() < .5 ? 24 : -24)); g.stroke();
-      g.beginPath(); g.arc(x, y, 3.5, 0, 7); g.fill();
-    }
-    // below the road: a stream of bits falling away
-    var top = sy(Math.min(lv.start.y, lv.goal.y));
-    var dg = g.createLinearGradient(0, top, 0, H);
-    dg.addColorStop(0, 'rgba(10, 30, 60, 0)'); dg.addColorStop(1, 'rgba(40, 120, 255, .25)');
-    g.fillStyle = dg; g.fillRect(0, top, W, H - top);
-    g.font = '12px monospace'; g.fillStyle = 'rgba(120, 180, 255, .18)';
-    for (var k = 0; k < 120; k++) g.fillText(r() < .5 ? '0' : '1', 6 + r() * (W - 12), top + 20 + r() * (H - top - 20));
-    // the terrain: server racks cut to each shape
-    lv.ground.forEach(function (gr) { rack(g, gr.pts, th, r); });
-    // the goal: a green port on the far side
-    var gx = sx(lv.goal.x), gy = sy(lv.goal.y);
-    g.strokeStyle = '#3ddc84'; g.lineWidth = 3; g.beginPath(); g.moveTo(gx, gy); g.lineTo(gx, gy - 52); g.stroke();
-    g.fillStyle = '#3ddc84'; g.beginPath(); g.moveTo(gx, gy - 52); g.lineTo(gx + 24, gy - 44); g.lineTo(gx, gy - 36); g.closePath(); g.fill();
-    // build grid dots
-    g.fillStyle = 'rgba(255, 255, 255, .16)';
-    for (var gx2 = 0; gx2 <= Ph.WORLD_W; gx2++) for (var gy2 = Ph.Y_MIN; gy2 <= Ph.Y_MAX; gy2++) {
-      if (Ph.pointOk(lv, gx2, gy2) && !Ph.isAnchor(lv, gx2, gy2)) g.fillRect(sx(gx2) - 1.5, sy(gy2) - 1.5, 3, 3);
-    }
-  }
-  function rack(g, pts, th, r) {
-    var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-    pts.forEach(function (p) { x0 = Math.min(x0, sx(p[0])); x1 = Math.max(x1, sx(p[0])); y0 = Math.min(y0, sy(p[1])); y1 = Math.max(y1, sy(p[1])); });
-    x0 = Math.max(x0, -10); x1 = Math.min(x1, W + 10); y0 = Math.max(y0, -10); y1 = Math.min(y1, H + 10);
-    g.save();
-    polyPath(g, pts); g.fillStyle = th[3]; g.fill();
-    g.clip();
-    for (var y = y0 + 10; y < y1; y += 22) {
-      g.fillStyle = th[5]; g.fillRect(x0 + 8, y, x1 - x0 - 16, 16);
-      g.fillStyle = 'rgba(0, 0, 0, .35)';
-      for (var v = x0 + 40; v < x1 - 14; v += 8) g.fillRect(v, y + 5, 4, 6);
-      for (var lx = x0 + 14; lx < x1 - 20; lx += 160) {
-        g.fillStyle = r() < .7 ? '#3ddc84' : '#ffb74d'; g.fillRect(lx, y + 6, 4, 4);
-        g.fillStyle = r() < .5 ? '#3ddc84' : 'rgba(255, 255, 255, .08)'; g.fillRect(lx + 8, y + 6, 4, 4);
+  function truckAt(lv) { return [{ x: lv.start.x, y: lv.start.y + Ph.WHEEL_R }, { x: lv.start.x + Ph.AXLE, y: lv.start.y + Ph.WHEEL_R }]; }
+  // the points a beam from the selected joint could reach, worked out once per selection
+  function validPoints(d) {
+    var key = ui.sel.x + ',' + ui.sel.y + ':' + d.beams.length + ':' + d.nodes.length;
+    if (valid.key === key) return valid.pts;
+    var pts = [];
+    for (var x = Math.ceil(ui.sel.x - Ph.MAX_LEN); x <= ui.sel.x + Ph.MAX_LEN; x++) {
+      for (var y = Math.ceil(ui.sel.y - Ph.MAX_LEN); y <= ui.sel.y + Ph.MAX_LEN; y++) {
+        if (x < 0 || x > Ph.WORLD_W || (x === ui.sel.x && y === ui.sel.y)) continue;
+        if (!Ph.beamProblem(LV, d, ui.sel, { x: x, y: y })) pts.push({ x: x, y: y });
       }
     }
-    g.restore();
-    polyPath(g, pts); g.strokeStyle = th[4]; g.lineWidth = 3; g.lineJoin = 'round'; g.stroke();
-  }
-  function stressCol(s) {
-    s = Math.max(0, Math.min(1, s));
-    var a = s < .5 ? [61, 220, 132] : [255, 214, 64], b = s < .5 ? [255, 214, 64] : [244, 67, 54], t = s < .5 ? s * 2 : (s - .5) * 2;
-    return 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * t) + ',' + Math.round(a[1] + (b[1] - a[1]) * t) + ',' + Math.round(a[2] + (b[2] - a[2]) * t) + ')';
-  }
-  function drawBeam(g, a, b, mat, stress, alpha) {
-    var ax = sx(a.x), ay = sy(a.y), bx = sx(b.x), by = sy(b.y);
-    g.save(); g.globalAlpha = alpha == null ? 1 : alpha; g.lineCap = 'round';
-    if (mat === 'road') {
-      g.strokeStyle = stress == null ? '#2b313a' : '#1a1d22'; g.lineWidth = 11; g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, by); g.stroke();
-      g.strokeStyle = stress == null ? MAT_COL.road : stressCol(stress); g.lineWidth = 8; g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, by); g.stroke();
-      g.strokeStyle = 'rgba(255, 220, 90, .8)'; g.lineWidth = 1.5; g.setLineDash([6, 6]); g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, by); g.stroke();
-    } else {
-      g.strokeStyle = 'rgba(0, 0, 0, .55)'; g.lineWidth = mat === 'steel' ? 8 : 7; g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, by); g.stroke();
-      g.strokeStyle = stress == null ? MAT_COL[mat] : stressCol(stress); g.lineWidth = mat === 'steel' ? 5 : 4.5;
-      g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, by); g.stroke();
-      if (mat === 'steel' && stress == null) { g.strokeStyle = 'rgba(255, 255, 255, .45)'; g.lineWidth = 1; g.beginPath(); g.moveTo(ax, ay - 1); g.lineTo(bx, by - 1); g.stroke(); }
-    }
-    g.restore();
-  }
-  function drawNode(g, x, y, fixed, on) {
-    var px = sx(x), py = sy(y);
-    if (fixed) {
-      g.fillStyle = '#f2b632'; g.strokeStyle = '#7a5410'; g.lineWidth = 2;
-      g.fillRect(px - 6, py - 6, 12, 12); g.strokeRect(px - 6, py - 6, 12, 12);
-    } else {
-      g.fillStyle = '#dfe6ee'; g.strokeStyle = '#3a4656'; g.lineWidth = 2;
-      g.beginPath(); g.arc(px, py, 4.5, 0, 7); g.fill(); g.stroke();
-    }
-    if (on) { g.strokeStyle = '#8ab4f8'; g.lineWidth = 3; g.beginPath(); g.arc(px, py, 11, 0, 7); g.stroke(); }
-  }
-  function drawTruck(g, w0, w1) {
-    var x0 = sx(w0.x), y0 = sy(w0.y), x1 = sx(w1.x), y1 = sy(w1.y);
-    var ang = Math.atan2(y1 - y0, x1 - x0), len = Math.hypot(x1 - x0, y1 - y0), wr = Ph.WHEEL_R * SC;
-    g.save(); g.translate(x0, y0); g.rotate(ang);
-    // cargo box with bits
-    g.fillStyle = '#1f6feb'; g.strokeStyle = '#0b3d91'; g.lineWidth = 2;
-    g.fillRect(-20, -46, len + 6, 34); g.strokeRect(-20, -46, len + 6, 34);
-    g.fillStyle = '#cfe3ff'; g.font = 'bold 13px monospace'; g.fillText('1011 0010', -14, -24);
-    // cab
-    g.fillStyle = '#f2b632'; g.strokeStyle = '#7a5410';
-    g.beginPath(); g.moveTo(len - 12, -12); g.lineTo(len - 12, -38); g.lineTo(len + 10, -38); g.lineTo(len + 22, -22); g.lineTo(len + 22, -12); g.closePath(); g.fill(); g.stroke();
-    g.fillStyle = '#9fd3ff'; g.fillRect(len + 2, -34, 10, 10);
-    g.fillStyle = '#2b313a'; g.fillRect(-22, -14, len + 46, 6);
-    [0, len].forEach(function (x) {
-      g.fillStyle = '#15181d'; g.beginPath(); g.arc(x, 0, wr, 0, 7); g.fill();
-      g.fillStyle = '#8a96a6'; g.beginPath(); g.arc(x, 0, wr * .45, 0, 7); g.fill();
-    });
-    g.restore();
+    valid.key = key; valid.pts = pts;
+    return pts;
   }
 
   function render() {
-    if (!ctx || !S || !S.design) return;
-    var g = ctx, d = S.design;
-    g.drawImage(bg, 0, 0);
+    var d = sim ? ui.simD : S && S.design;   // the drive keeps its design after the round ends (S.design is cleared)
+    if (!ctx || !S || !d || !scene) return;
+    var g = ctx;
+    Art.tick();
+    if (sim) Art.trackSim(sim);
+    var tw = sim ? [sim.P[sim.wheels[0]], sim.P[sim.wheels[1]]] : truckAt(LV);
+    Art.begin(g);
+    Art.drawScene(g, scene, sx((tw[0].x + tw[1].x) / 2));
     if (sim) {
-      sim.B.forEach(function (bm) {
-        if (bm.broken) return;
-        drawBeam(g, sim.P[bm.a], sim.P[bm.b], bm.mat, bm.stress);
-      });
-      sim.P.forEach(function (p, i) { if (!p.wheel && i < d.nodes.length) drawNode(g, p.x, p.y, p.fixed); });
-      drawTruck(g, sim.P[sim.wheels[0]], sim.P[sim.wheels[1]]);
+      sim.B.forEach(function (bm) { if (!bm.broken) Art.drawBeam(g, sim.P[bm.a], sim.P[bm.b], bm.mat, bm.stress); });
+      sim.P.forEach(function (p, i) { if (!p.wheel && i < d.nodes.length) Art.drawNode(g, p.x, p.y, p.fixed); });
+      Art.drawTruck(g, tw[0], tw[1], true);
+      Art.drawFx(g); Art.end(g);
       return;
     }
-    d.beams.forEach(function (bm) { drawBeam(g, d.nodes[bm.a], d.nodes[bm.b], bm.mat, null); });
-    d.nodes.forEach(function (n) { drawNode(g, n.x, n.y, n.fixed, ui.sel && ui.sel.x === n.x && ui.sel.y === n.y); });
-    drawTruck(g, { x: LV.start.x, y: LV.start.y + Ph.WHEEL_R }, { x: LV.start.x + Ph.AXLE, y: LV.start.y + Ph.WHEEL_R });
+    Art.drawGrid(g, scene);
+    d.beams.forEach(function (bm) { Art.drawBeam(g, d.nodes[bm.a], d.nodes[bm.b], bm.mat, null); });
+    if (ui.sel && ui.mat !== 'delete') Art.drawValid(g, validPoints(d));
+    d.nodes.forEach(function (n) { Art.drawNode(g, n.x, n.y, n.fixed, ui.sel && ui.sel.x === n.x && ui.sel.y === n.y); });
+    Art.drawTruck(g, tw[0], tw[1], false);
     var hv = ui.hover;
     if (hv && ui.mat === 'delete') {
       var bi = beamAt(hv.px, hv.py);
       if (bi >= 0) {
         var bm = d.beams[bi];
-        g.save(); g.strokeStyle = 'rgba(244, 67, 54, .9)'; g.lineWidth = 12; g.lineCap = 'round'; g.globalAlpha = .6;
+        g.save(); g.strokeStyle = 'rgba(244, 67, 54, .9)'; g.lineWidth = 14; g.lineCap = 'round'; g.globalAlpha = .6;
         g.beginPath(); g.moveTo(sx(d.nodes[bm.a].x), sy(d.nodes[bm.a].y)); g.lineTo(sx(d.nodes[bm.b].x), sy(d.nodes[bm.b].y)); g.stroke(); g.restore();
-        label(g, hv.px, hv.py - 16, 'Delete: +' + Ph.beamCost(bm.mat, d.nodes[bm.a], d.nodes[bm.b]) + ' coins', '#f28b82');
+        Art.label(g, hv.px, hv.py - 18, 'Delete: +' + Ph.beamCost(bm.mat, d.nodes[bm.a], d.nodes[bm.b]) + ' coins', '#f28b82');
       }
     } else if (hv && ui.sel) {
       var why = (ui.sel.x === hv.g.x && ui.sel.y === hv.g.y) ? 'same' : Ph.beamProblem(LV, d, ui.sel, hv.g);
       if (why !== 'same') {
-        var c = Ph.beamCost(ui.mat, ui.sel, hv.g), poor = spent() + c > S.coins;
-        drawBeam(g, ui.sel, hv.g, ui.mat, null, why || poor ? .35 : .75);
-        var len = Ph.blen(ui.sel, hv.g);
-        label(g, sx(hv.g.x), sy(hv.g.y) - 18, why ? (len > Ph.MAX_LEN ? 'Too long' : 'Not here') : (poor ? c + ' coins: not enough' : c + ' coins'), why || poor ? '#f28b82' : '#fff');
+        var c = Ph.beamCost(ui.mat, ui.sel, hv.g), poor = spent() + c > S.coins, len = Ph.blen(ui.sel, hv.g);
+        Art.drawGhost(g, ui.sel, hv.g, ui.mat, !!(why || poor));
+        Art.label(g, sx(hv.g.x), sy(hv.g.y) - 22, why ? (len > Ph.MAX_LEN ? 'Too long' : 'Not here') : (poor ? c + ' coins: not enough' : c + ' coins, ' + (Math.round(len * 10) / 10) + ' squares'), why || poor ? '#f28b82' : '#ffffff');
       }
-      g.strokeStyle = 'rgba(255,255,255,.7)'; g.lineWidth = 1.5; g.beginPath(); g.arc(sx(hv.g.x), sy(hv.g.y), 7, 0, 7); g.stroke();
+      g.strokeStyle = 'rgba(255,255,255,.8)'; g.lineWidth = 1.5; g.beginPath(); g.arc(sx(hv.g.x), sy(hv.g.y), 7, 0, 7); g.stroke();
     } else if (hv) {
       var on = Ph.findNode(d, hv.g.x, hv.g.y) >= 0;
-      g.strokeStyle = on ? 'rgba(138,180,248,.9)' : 'rgba(255,255,255,.25)'; g.lineWidth = 2; g.beginPath(); g.arc(sx(hv.g.x), sy(hv.g.y), on ? 10 : 6, 0, 7); g.stroke();
+      g.strokeStyle = on ? 'rgba(138,180,248,.9)' : 'rgba(255,255,255,.35)'; g.lineWidth = 2; g.beginPath(); g.arc(sx(hv.g.x), sy(hv.g.y), on ? 12 : 6, 0, 7); g.stroke();
     }
-  }
-  function label(g, x, y, text, col) {
-    g.save(); g.font = 'bold 14px system-ui, sans-serif'; g.textAlign = 'center';
-    var w = g.measureText(text).width + 14;
-    g.fillStyle = 'rgba(10, 16, 28, .85)'; g.fillRect(x - w / 2, y - 14, w, 20);
-    g.fillStyle = col; g.fillText(text, x, y + 1); g.restore();
+    Art.drawFx(g); Art.end(g);
   }
 
   // One timer drives the test. It does nothing while the page is hidden (a preloaded lesson slide).
@@ -514,7 +423,8 @@
   setInterval(function () {
     var now = Date.now(), real = Math.min(0.1, (now - last) / 1000);
     last = now;
-    if (hiddenNow() || !sim || !ctx || !document.body.contains(canvas)) return;
+    if (hiddenNow() || !ctx || !document.body.contains(canvas)) return;
+    if (!sim) { if (now - ui.drawn >= 33) { ui.drawn = now; render(); } return; }
     ui.acc += real * Ph.FPS * ui.speed;
     var n = 0;
     while (ui.acc >= 1 && n < 16) { n++; ui.acc -= 1; }
