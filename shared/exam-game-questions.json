@@ -686,6 +686,117 @@
      "marks": 2
     }
    ]
+  },
+  {
+   "setId": "y10-instruction-sets",
+   "title": "Instruction Sets",
+   "questions": [
+    {
+     "qid": "y10i-23n12-3c",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 3(c)\nA user's computer has a central processing unit (CPU).\nThe CPU has a list of all the machine code commands it can process.\nState the name of this list of commands. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-24j12-5b",
+     "text": "Cambridge IGCSE 0478/12, June 2024, Question 5(b)\nInstructions are processed by a central processing unit (CPU) in a computer.\nThe CPU uses an instruction set to decode the instruction.\nState what is meant by an instruction set. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-25m12-3d",
+     "text": "Cambridge IGCSE 0478/12, March 2025, Question 3(d)\nComputer A has a 2.1 GHz quad-core processor.\nComputer B has a 2.5 GHz dual-core processor.\nComputer C has a 5.2 GHz single-core processor.\nAll three computers have the same instruction set.\nDefine the term instruction set. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-26j13-3c",
+     "text": "Cambridge IGCSE 0478/13, June 2026, Question 3(c)(i)\nA student uses her tablet computer to record the sound produced by her piano.\nThe tablet computer has a 1.8 GHz quad-core processor.\nInstructions are fetched from random access memory (RAM) into the processor.\nThe control unit uses a list to decode the instructions into commands that can be processed.\nGive the name of the list that is used for this purpose. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-25j11-5a",
+     "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(a) (adapted: one row of the table)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nComplete the table with the missing term.\nTerm: ........\nDefinition: This is a list of all the commands that can be processed by the CPU. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-25n11-6a",
+     "text": "Cambridge IGCSE 0478/11, November 2025, Question 6(a) (adapted: the last of the six gaps)\nA computer with a Von Neumann architecture has a central processing unit (CPU).\nComplete the statement about the operation of the CPU. Use a term from the list.\ncharacter set, cipher, decoding set, instruction counter, instruction set, program register\nThe instruction is then sent to the current instruction register where it is decoded by the control unit. The instruction is decoded using an ........ . [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-24n11-5b",
+     "text": "Cambridge IGCSE 0478/11, November 2024, Question 5(b)\nA central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle.\nDescribe what happens at the decode stage of the cycle. [3]",
+     "marks": 3
+    },
+    {
+     "qid": "y10i-26j11-2a",
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 2(a)(ii)\nA smartphone has a processor.\nThe processor performs the fetch-decode-execute (FDE) cycle.\nDescribe the actions that take place in the decode stage of the FDE cycle. [3]",
+     "marks": 3
+    },
+    {
+     "qid": "y10i-24n13-3b",
+     "text": "Cambridge IGCSE 0478/13, November 2024, Question 3(b) (adapted: describe for 3 marks, not complete and annotate the diagram)\nAn instruction is fetched from random access memory (RAM) into the memory data register (MDR) to be decoded.\nDescribe how the instruction is decoded once it has been fetched into the MDR. [3]",
+     "marks": 3
+    },
+    {
+     "qid": "y10i-25n12-4a",
+     "text": "Cambridge IGCSE 0478/12, November 2025, Question 4(a) (adapted: the decode part only, for 3 marks, not complete and annotate the diagram)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that performs the fetch-decode-execute (FDE) cycle.\nThe CPU has a control unit (CU).\nDescribe how instructions are decoded. [3]",
+     "marks": 3
+    },
+    {
+     "qid": "y10i-25n13-2b",
+     "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(b)(i)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nThe CPU has a control unit (CU).\nDescribe the role of the CU in the CPU. [3]",
+     "marks": 3
+    },
+    {
+     "qid": "y10i-own-decode1",
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nDecode the instruction 0001 0110. Give the command and the operand in denary. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y10i-own-decode2",
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nDecode the instruction 0100 0111. Give the command and the operand in denary. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y10i-own-opcode",
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nA CPU fetches the instruction 0011 0101.\nGive the 4 bits that are the opcode. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-own-operand",
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nA CPU fetches the instruction 0100 1001.\nThe operand is an address. Give this address in denary. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-own-encode",
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nWrite the instruction ADD 9 as machine code. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y10i-own-trace1",
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nLOAD copies the value at the address into the accumulator (ACC). ADD adds the value at the address to the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0110, then 0010 0111.\nState the value in the ACC after both instructions. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-own-trace2",
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nLOAD copies the value at the address into the accumulator (ACC). SUB takes the value at the address away from the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0111, then 0011 0110.\nState the value in the ACC after both instructions. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-own-cpub",
+     "text": "A machine code program was made for CPU A.\nCPU A's instruction set: 0001 LOAD, 0010 ADD, 0011 SUB, 0100 STORE, 0101 OUTPUT\nCPU B's instruction set: 0001 OUTPUT, 0010 LOAD, 0011 ADD, 0100 STORE\nThe program is run on CPU B. Its next instruction is 0010 0111.\nState the command that CPU B carries out. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y10i-own-binary",
+     "text": "A program is stored in memory as machine code.\nExplain what machine code is, and why a program is stored in memory as machine code. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y10i-own-differ",
+     "text": "A machine code program was made for CPU A.\nCPU B has a different type of CPU.\nExplain why the program may not run correctly on CPU B. [2]",
+     "marks": 2
+    }
+   ]
   }
  ]
 }
