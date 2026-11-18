@@ -595,6 +595,7 @@
   var PEN_W = 800, PEN_H = 320, PEN_INK = 3, PEN_MARGIN = 16, PEN_MAX_SIDE = 800;
   var pens = { key: '', list: [] };
   var ansBoxes = [], ansSaveT = 0, sending = false;   // one answer box per question (shared/answer-box.js)
+  var sendFailed = '';   // the message after a send that still failed after the client's own retries
 
   function penFor(i) {
     var key = S.round.n + '|' + S.round.qs.map(function (q) { return q.qid; }).join(',');
@@ -775,10 +776,15 @@
     });
     var ready = open.length && open.every(function (i) { var t = ansBoxes[i] ? ansBoxes[i].text() : r.items[i].answer; return String(t || '').trim(); });
     var h = '';
-    if (open.length) h += '<button class="bc-btn cs-big" id="submitAll"' + (ready && !sending ? '' : ' disabled') + '>' + (sending ? 'Marking...' : 'Submit all') + '</button>';
+    if (open.length) h += '<button class="bc-btn cs-big" id="submitAll"' + (ready && !sending ? '' : ' disabled') + '>' + (sending ? 'Marking...' : sendFailed ? 'Send again' : 'Submit all') + '</button>';
     if (!open.length && retry.length) h += '<button class="bc-btn is-outline" id="againAll">Try again on the wrong ones</button>';
-    if (unmarked === stuck && !sending) h += '<button class="bc-btn' + (open.length ? ' is-outline' : ' cs-big') + '" id="nextWave">Next wave</button>';
+    if (!sending && !unmarked) h += '<button class="bc-btn' + (open.length ? ' is-outline' : ' cs-big') + '" id="nextWave">Next wave</button>';
+    // Skipping is only ever a small extra next to Send again, after a send failed.
+    else if (!sending && (sendFailed || stuck)) h += '<button class="bc-btn is-text cs-skip" id="skipRound">Skip (no coins)</button>';
     acts.innerHTML = h;
+    if ($('skipRound')) $('skipRound').onclick = finishRound;
+    var se = $('sendErr');
+    if (se) { se.hidden = !sendFailed || sending; se.textContent = sendFailed; }
     if ($('submitAll')) $('submitAll').onclick = submitAll;
     if ($('againAll')) $('againAll').onclick = function () { openRetry(retry); };
     if ($('nextWave')) $('nextWave').onclick = finishRound;
@@ -790,11 +796,12 @@
   }
 
   // Sends every open question in one request (ExamGame.submitMany; one request each if the client has no submitMany).
+  // The client retries a failed send itself (after about 2 s, then 5 s) with the same rid per answer.
   function sendAnswers(items) {
     var a = api();
     if (a.submitMany) return call(function () { return a.submitMany(items); });
     return Promise.all(items.map(function (it) {
-      return call(function () { return a.submit(it.qid, it.answer, it.attempt, it.image); }).then(function (res) { return res; },
+      return call(function () { return a.submit(it.qid, it.answer, it.attempt, it.image, it.rid); }).then(function (res) { return res; },
         function (e) { return { qid: it.qid, error: errText(e) }; });
     }));
   }
@@ -811,22 +818,24 @@
     var payload = idx.map(function (i) {
       var it = r.items[i];
       it.answer = ansBoxes[i].text(); it.doc = ansBoxes[i].doc(); it.err = '';
-      return { qid: r.qs[i].qid, answer: it.answer, attempt: it.attempt, image: penImage(penFor(i)) };
+      // One id per send of this answer, kept until a mark comes back: a resend then never counts twice on the server.
+      if (!it.rid) it.rid = api().newRid ? api().newRid() : 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+      return { qid: r.qs[i].qid, answer: it.answer, attempt: it.attempt, image: penImage(penFor(i)), rid: it.rid };
     });
     save();
     sending = true;
     idx.forEach(function (i) { ansBoxes[i].setReadOnly(true); penFor(i).locked = true; if ($('err' + i)) $('err' + i).hidden = true; });
-    $('sendErr').hidden = true;
+    sendFailed = '';
     updateActs();
     sendAnswers(payload).then(function (list) {
-      sending = false;
+      sending = false; sendFailed = '';
       if (S.round !== r) return;
       var paidNow = 0;
       idx.forEach(function (i, k) {
         var it = r.items[i], q = r.qs[i], res = list && list[k];
         if (!res || res.error) {
           it.err = (res && res.error) || 'No mark came back for this question. Submit it again.';
-          if (it.attempt === 2 && /no second try/i.test(it.err)) { it.open = false; if (it.fb) it.fb.canRetry = false; }
+          if (it.attempt === 2 && /no second try/i.test(it.err)) { it.open = false; it.rid = ''; if (it.fb) it.fb.canRetry = false; }
           return;
         }
         var max = Number(res.max) || q.marks, marks = Math.max(0, Math.min(max, Number(res.marks) || 0)), pay;
@@ -834,7 +843,7 @@
         else pay = Math.round(Math.max(0, marks - (it.first || 0)) * r.rate * 0.5);
         var before = it.attempt === 2 && it.fb ? it.fb.pay || 0 : 0;   // the question's coins from both tries
         it.fb = { marks: marks, max: max, feedback: res.feedback || '', canRetry: !!res.canRetry && it.attempt === 1 && marks < max, pay: before + pay };
-        it.open = false;
+        it.open = false; it.rid = '';
         if (pay) { S.cash += pay; r.paid += pay; paidNow += pay; }
       });
       save();
@@ -842,12 +851,10 @@
       updateHud(); coinPop(paidNow); showRound();
     }, function (e) {
       sending = false;
+      sendFailed = e && e.message === 'Sign in to play.' ? errText(e) + ' Your answers are saved.' : 'Could not reach the marker. Your answers are saved.';
+      save();
       if (S.round !== r || !$('roundForm')) return;
       showRound();
-      var el = $('sendErr'); el.hidden = false; el.textContent = errText(e);
-      var acts = $('roundActs');
-      var skip = document.createElement('button'); skip.className = 'bc-btn is-text'; skip.textContent = 'Skip this round';
-      skip.onclick = finishRound; acts.appendChild(skip);
     });
   }
 
@@ -855,6 +862,7 @@
   function finishRound() {
     var r = S.round;
     if (sending) return;
+    sendFailed = '';
     r.qs.forEach(function (q, i) {
       var it = r.items[i];
       if (it.counted) return;

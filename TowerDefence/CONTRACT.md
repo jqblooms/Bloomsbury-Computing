@@ -8,7 +8,7 @@ Folder: `TowerDefence/` (entry `TowerDefence/index.html`). Lesson slide embeds i
 Load the client (answers and mark schemes stay on the server):
 
 ```html
-<script src="../shared/exam-game-client.js?v=20261118a"></script>
+<script src="../shared/exam-game-client.js?v=20261118b"></script>
 ```
 
 All calls return Promises.
@@ -34,6 +34,11 @@ All calls return Promises.
   - Limits: 10 answers, each image at most 400000 base64 characters and 1200000 in all.
   - A shell without the op answers "Unknown request."; the client then sends one `submit` per answer.
   - Circuit Siege shows the whole round on one page and sends it with this (James 2026-11-18).
+- Resends are safe: give each send of an answer an id (`rid`, from `ExamGame.newRid()`) as the 5th argument of `submit` or
+  in each `submitMany` item, and keep it until a mark comes back. Both calls retry by themselves after about 2 s and 5 s;
+  the server answers a send with a rid it already marked with the stored result (no new attempt, slot or second try).
+  When they still fail, keep every answer and offer a big "Send again" (skip only as a small text button).
+  Stub: `?examStubFail=N` or `ExamGame.stubFail(N)` makes the next N submit requests fail like a network error.
 - `ExamGame.isStub()` says whether the local stub is in use; `ExamGame.useStub(true)` forces it.
 - Errors reject with an `Error` whose message is safe to show ("Sign in to play", "No answer from the site...").
 

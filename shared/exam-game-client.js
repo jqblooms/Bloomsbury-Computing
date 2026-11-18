@@ -6,9 +6,11 @@
 //   ExamGame.warm(setId)                      -> starts the one history read for the set (also warms the relay)
 //   ExamGame.submit(qid, answer, attempt, image) -> Promise { marks, max, feedback, canRetry, attempt, full }
 //     image: optional pen working, a base64 PNG without the data: prefix ('' for none). AI marking only.
-//   ExamGame.submitMany([{ qid, answer, attempt, image }]) -> Promise [result | { qid, error }]
+//   ExamGame.submitMany([{ qid, answer, attempt, image, rid }]) -> Promise [result | { qid, error }]
 //     a whole round in ONE request, marked in parallel on the server; each item is a submit result (plus qid) or
 //     its own error. A shell without the op gets the answers one request each instead.
+//   Both submits retry by themselves after about 2 s and 5 s; rid (ExamGame.newRid()) makes a resend safe: the
+//   server answers a send it already marked with the stored result, not a new attempt.
 // Stub mode (no shell): ?examStub=1, ExamGame.useStub(true), or automatically when the page is not in a frame.
 // Three practice questions, marked by checking the final number only.
 (function () {
@@ -26,14 +28,33 @@
     if (d.ok) p.resolve(d.result); else p.reject(new Error(d.error || 'Something went wrong.'));
   });
 
+  // A submit that fails to arrive (network error, relay timeout, server exception) is sent again by itself after
+  // about 2 s, then 5 s, with the same rid, so the server answers a send it already marked with that stored result.
+  var RETRY_MS = [2000, 5000];
+  function noRetry(e) { var m = e && e.message; return m === 'Unknown request.' || m === 'Sign in to play.'; }
   function request(op, payload) {
-    if (stub) return Promise.resolve().then(function () { return STUB[op](payload || {}); });
+    if (op !== 'submit' && op !== 'submitMany') return requestOnce(op, payload);
+    var n = 0;
+    var go = function () {
+      return requestOnce(op, payload).catch(function (e) {
+        if (noRetry(e) || n >= RETRY_MS.length) throw e;
+        var wait = RETRY_MS[n++];
+        return new Promise(function (res) { setTimeout(res, wait); }).then(go);
+      });
+    };
+    return go();
+  }
+  function requestOnce(op, payload) {
+    if (stub) return Promise.resolve().then(function () {
+      if ((op === 'submit' || op === 'submitMany') && stubFails > 0) { stubFails--; stubFailed++; throw new Error('No answer from the site. Check you are signed in, then try again.'); }
+      return STUB[op](payload || {});
+    });
     return new Promise(function (resolve, reject) {
       var reqId = 'eg' + (++seq) + '-' + Date.now();
       pending[reqId] = { resolve: resolve, reject: reject, timer: setTimeout(function () {
         delete pending[reqId];
         reject(new Error('No answer from the site. Check you are signed in, then try again.'));
-      }, op === 'submitMany' ? 90000 : op === 'submit' ? 45000 : 20000) };
+      }, op === 'submitMany' ? 60000 : op === 'submit' ? 45000 : 20000) };
       try { window.parent.postMessage({ type: 'BC_EXAM_GAME_REQUEST', reqId: reqId, op: op, payload: payload || {} }, '*'); }
       catch (err) { delete pending[reqId]; reject(err); }
     });
@@ -48,6 +69,9 @@
   var stubOpen = {}, stubTurn = 0, stubLast = null;
   function lastBits(t) { var m = String(t).replace(/([01]{4})\s([01]{4})/g, '$1$2').match(/[01]{8}/g); return m ? m[m.length - 1] : ''; }
   function lastInt(t) { var m = String(t).replace(/−/g, '-').match(/-?\d+/g); return m ? Number(m[m.length - 1]) : NaN; }
+  // Stub resends: the same rid gets the stored result. ?examStubFail=N (or ExamGame.stubFail(N)) makes the next
+  // N submit requests fail as a network error would.
+  var stubSent = {}, stubFails = Math.max(0, Number(params.get('examStubFail')) || 0), stubFailed = 0;
   var STUB = {
     submitMany: function (p) {
       var items = Array.isArray(p.items) ? p.items : [];
@@ -67,6 +91,13 @@
       return out;
     },
     submit: function (p) {
+      var sentKey = p.rid ? p.qid + '|' + (Number(p.attempt) === 2 ? 2 : 1) : '';
+      if (sentKey && stubSent[sentKey] && stubSent[sentKey].rid === p.rid) return JSON.parse(stubSent[sentKey].res);
+      var out = STUB.markOne(p);
+      if (sentKey) stubSent[sentKey] = { rid: p.rid, res: JSON.stringify(out) };
+      return out;
+    },
+    markOne: function (p) {
       var q = STUB_QS.filter(function (x) { return x.qid === p.qid; })[0];
       // With ?examFile=1 the questions come from the file; the stub cannot mark those, so it gives 0 and says so.
       if (!q) { stubLast = { qid: p.qid, answer: String(p.answer || ''), answerChars: String(p.answer || '').length, imageChars: 0 }; return { marks: 0, max: 1, attempt: Number(p.attempt) === 2 ? 2 : 1, full: false, canRetry: Number(p.attempt) !== 2, feedback: 'Practice marking only marks the three practice questions.' }; }
@@ -215,8 +246,10 @@
       }, server);
     },
     // image: the pen working as a base64 PNG without the data: prefix, or '' for none.
-    submit: function (qid, answer, attempt, image) {
+    // rid: an id for this send (any short string); a resend of the same answer passes the same rid.
+    submit: function (qid, answer, attempt, image, rid) {
       var p = { qid: String(qid || ''), answer: String(answer == null ? '' : answer), attempt: attempt === 2 ? 2 : 1 };
+      if (rid) p.rid = String(rid);
       if (typeof image === 'string' && image) { p.image = image; p.imageType = 'image/png'; }
       return request('submit', p).then(function (res) { noteResult(p, res); return res; });
     },
@@ -225,6 +258,7 @@
       var ps = (items || []).map(function (it) {
         it = it || {};
         var p = { qid: String(it.qid || ''), answer: String(it.answer == null ? '' : it.answer), attempt: it.attempt === 2 ? 2 : 1 };
+        if (it.rid) p.rid = String(it.rid);
         if (typeof it.image === 'string' && it.image) { p.image = it.image; p.imageType = 'image/png'; }
         return p;
       });
@@ -248,6 +282,10 @@
     },
     // Stub only: what the last submit sent ({ qid, answerChars, imageChars }).
     lastStubSubmit: function () { return stubLast; },
+    // Stub only: the next n submit requests fail like a network error; stubFailed() counts the failures so far.
+    stubFail: function (n) { stubFails = Math.max(0, Number(n) || 0); },
+    stubFailed: function () { return stubFailed; },
+    newRid: function () { return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); },
     useStub: function (on) { stub = on !== false; },
     isStub: function () { return stub; },
     usesFile: function () { return useFile; }
