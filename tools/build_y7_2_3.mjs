@@ -193,7 +193,7 @@ function noteSlide(id, label, notes) {
   const A = 'lives = 3\nlives = lives - 1\nprint(Lives)', B = 'coins = 10\ncoisn = coins + 5\nprint(coins)';
   const b = await py(B + '\nprint(coisn)');
   assert((await py(A)).error && b.out.join('|') === '10|15', 'names-check');
-  steps.push(checkStep('names-check', 'Your Turn: Find the Name Slip', 'Your Turn: Find the Name Slip', 'Read every name letter by letter.', [
+  steps.push(checkStep('names-check', 'Your Turn: Find the Name Slip', 'Your Turn: Find the Name Slip', '', [
     { line: true, label: 'Program A: what happens? Type what it prints, or error.', answer: ERR, feedback: 'Compare the name on line 3 with the name stored on line 1, letter by letter.' },
     { line: true, label: 'Program B: what does it print?', answer: num(b.out[0]), feedback: 'Which variable did line 2 store into? Did coins change?' },
     { line: true, label: 'Program B: which variable holds 15?', answer: '^\\s*(the\\s+variable\\s+)?coisn\\s*\\.?\\s*$', flags: '', feedback: 'Line 2 works out 15. Read the name on the left of = exactly.' },
