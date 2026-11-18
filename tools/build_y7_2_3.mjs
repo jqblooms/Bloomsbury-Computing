@@ -4,13 +4,13 @@
 // Year 7 unit "Text-based Programming" (tools/y7_text_kit.mjs).
 //   node tools/build_y7_2_3.mjs
 // Python, as in 2.1 and 2.2. The lesson (James, 2026-11-18): about 25 minutes of slides while students make notes,
-// then Circuit Siege (set y7-data-types, the shell's ExamGameSetY7Types.gs), whose questions come from this lesson.
+// then Data Bridge (set y7-data-types, the shell's ExamGameSetY7Types.gs), whose questions come from this lesson.
 // Three ideas, each a PyIOAnim animation (scene=choose, mix, names: predicted first), a Haiku-marked Explain It, a
 // "Your Notes" slide with Check my note, then a short check:
 //   choose  choose the data type from what the program does with the value (a phone number through int() loses its 0)
 //   mix     a Real and an Integer together give a Real; str() is needed where a number meets text in +
 //   names   the same name every time: score and Score are different; a typo makes a new variable with no error
-// Then two PyScratch Tasks (PyScratchTask/tasks/y7-2-3.js), How to Play, Circuit Siege and the plenary drill.
+// Then two PyScratch Tasks (PyScratchTask/tasks/y7-2-3.js), How to Play, Data Bridge and the plenary drill.
 // Every program on a slide is run in Python (Skulpt) here, and every check's answer comes from that run.
 import { assert, py, tps, facts, columns, paneTitle, note, hl, code, typedIn, lessonKit, num, outRe, TYPE_RE, checkLesson, writeDrill, register, writeLesson } from './y7_text_kit.mjs';
 
@@ -19,7 +19,7 @@ const P = 'y723';
 const { validators, checkStep, embed, selfMarked } = lessonKit(P);
 const ERR = '^\\s*(it\\s+)?(an?\\s+)?(stops(\\s+with\\s+an\\s+error)?|crash(es)?|error|name\\s*error|an\\s+error)\\s*\\.?\\s*$';
 const todo = (t) => `<p class="lesson-lead"><strong>What to do:</strong> ${t}</p>`;
-const GAME = '<strong>You will use these notes in Circuit Siege.</strong>';
+const GAME = '<strong>You will use these notes in Data Bridge.</strong>';
 
 const TPS = {
   'do-now': ['Why does a program need to know the data type of a value?', 'The data type decides what the program can do with the value, like maths or joining text.'],
@@ -40,7 +40,7 @@ const TPS = {
   'notes-check': ['Why check your notes now, before the game?', 'The game asks about all three ideas. A missing note means a missing answer later.'],
   'pyscratch-1': ['Why read the error message before changing the code?', 'It says which line went wrong and what Python could not find.'],
   'pyscratch-2': ['Why does the check try more than one price?', 'A program can work for one value by luck. New values show it works every time.'],
-  'how-to-play': ['Why do the coins come only from correct answers?', 'Towers cost coins. Knowing the work is what keeps your base safe.'],
+  'how-to-play': ['Why do the coins come only from correct answers?', 'Beams cost coins. Knowing the work is what keeps your bridge strong.'],
   'game': ['Why keep your notes open while you play?', 'The questions use the same ideas. Your notes help you answer them right the first time.'],
   'plenary': ['Why do the questions use new values every time?', 'If you can do it with any values, you really understand it.'],
 };
@@ -96,7 +96,7 @@ steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y7-2-2-inpu
 
 steps.push({ id: 'title', label: '2.3: Programs Using Data Types',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Text-based Programming</p><h2 class="lesson-h2">2.3: Programs Using Data Types</h2><p>Year 7</p></div>' +
-    facts(['<strong>Today:</strong> watch, explain, and make notes on three ideas. Then use your notes in <strong>Circuit Siege</strong>.',
+    facts(['<strong>Today:</strong> watch, explain, and make notes on three ideas. Then use your notes in <strong>Data Bridge</strong>.',
       '<strong>The big question:</strong> why does choosing the right data type, and the right name, matter?']) });
 
 // Teaching animations (docs/lessons.md 2b): PyIOAnim scenes, predicted first; each followed by a Haiku-marked Explain It,
@@ -200,8 +200,8 @@ function noteSlide(id, label, notes) {
   ], paneTitle('Program A') + code(A) + paneTitle('Program B') + code(B)));
 }
 
-steps.push({ id: 'notes-check', label: 'Notes Check: Ready for Circuit Siege',
-  content: '<h2 class="lesson-h2">Notes Check: Ready for Circuit Siege</h2>' +
+steps.push({ id: 'notes-check', label: 'Notes Check: Ready for Data Bridge',
+  content: '<h2 class="lesson-h2">Notes Check: Ready for Data Bridge</h2>' +
     todo('open your notes (the pen icon at the top). You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. ' + GAME) +
     facts(['<strong>The two questions that choose a data type. WHY a phone number is a String.</strong> Slide: Your Notes: Choosing a Data Type.',
       '<strong>An Integer and a Real together give a Real. WHY str() is needed with +.</strong> Slide: Your Notes: Two Data Types Together.',
@@ -214,15 +214,15 @@ const pst = (id, task, n, what) => embed(id, `Activity: PyScratch Task ${n}`, 'p
 steps.push(pst('pyscratch-1', 'y7-2-3-names', 1, 'Task 1 of 2: fix the program.'));
 steps.push(pst('pyscratch-2', 'y7-2-3-shop', 2, 'Task 2 of 2: write the whole program yourself.'));
 
-// ---------------------------------------------------------------- Circuit Siege (shell ExamGameSetY7Types.gs, set y7-data-types)
-steps.push({ id: 'how-to-play', label: 'Circuit Siege: Use Your Notes',
-  content: '<h2 class="lesson-h2">Circuit Siege: Use Your Notes</h2>' +
+// ---------------------------------------------------------------- Data Bridge (shell ExamGameSetY7Types.gs, set y7-data-types)
+steps.push({ id: 'how-to-play', label: 'Data Bridge: Use Your Notes',
+  content: '<h2 class="lesson-h2">Data Bridge: Use Your Notes</h2>' +
     '<ol class="lesson-facts" style="font-size:22px;line-height:1.6">' +
     '<li><strong>Open your notes</strong> (the pen icon at the top) beside the game.</li>' +
-    '<li><strong>Build towers</strong> on the path and stop the bugs before they reach your base.</li>' +
-    '<li><strong>Between waves</strong>, answer questions from today: choosing data types, two data types together, and names.</li>' +
+    '<li><strong>Answer questions from today</strong> to earn coins: choosing data types, two data types together, and names.</li>' +
+    '<li><strong>Buy beams and build a bridge</strong> so the data truck can cross the gap. If the bridge breaks, you start again at round 1.</li>' +
     '<li><strong>Coins only come from correct answers.</strong> Check your notes before you answer.</li></ol>' });
-steps.push(Object.assign(embed('game', 'Play: Circuit Siege', 'tower-defence', 'Play: Circuit Siege', ''), { embedQuery: 'set=y7-data-types&goal=3' }));
+steps.push(Object.assign(embed('game', 'Play: Data Bridge', 'bridge-builder', 'Play: Data Bridge', ''), { embedQuery: 'set=y7-data-types&goal=3' }));
 
 steps.push(embed('plenary', 'Plenary: Programs Using Data Types', 'drill-y7-2-3-programs', 'Plenary: Programs Using Data Types',
   'Choosing a data type, two data types together, and the same name every time. Get 3 right in a row on each card. Your progress is saved.'));
@@ -246,8 +246,8 @@ checkLesson(steps, validators, {
   cited: ['do-now'],
 });
 Object.keys(ANIMS).forEach((id) => { const i = steps.findIndex((s) => s.id === id); const e = steps[i + 1]; assert(e && e.type === 'self-marked-response' && e.items.every((it) => it.aiModel === 'haiku' && it.scheme.length >= it.marks && it.context && it.modelAnswer), `${id} is followed by a Haiku Explain It`); });
-// Each Explain It is followed by its notes slide; every notes slide says the notes are for Circuit Siege.
-Object.keys(ANIMS).forEach((id) => { const i = steps.findIndex((s) => s.id === id); assert(steps[i + 2].id.startsWith('notes-') && steps[i + 2].content.includes('Circuit Siege'), id + ' notes'); });
+// Each Explain It is followed by its notes slide; every notes slide says the notes are for Data Bridge.
+Object.keys(ANIMS).forEach((id) => { const i = steps.findIndex((s) => s.id === id); assert(steps[i + 2].id.startsWith('notes-') && steps[i + 2].content.includes('Data Bridge'), id + ' notes'); });
 assert(NOTES.length === 6 && NOTES.every((n) => !/[–—]/.test(n.q + n.model)), 'notes');
 assert(new Set(steps.map((s) => s.id)).size === steps.length, 'step ids unique');
 
