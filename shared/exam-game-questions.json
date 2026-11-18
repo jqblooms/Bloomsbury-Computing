@@ -449,6 +449,127 @@
      "marks": 3
     }
    ]
+  },
+  {
+   "setId": "y8-data-types",
+   "title": "Data Types and Constants",
+   "questions": [
+    {
+     "qid": "y8t-23j23-1",
+     "text": "Cambridge IGCSE 0478/23, June 2023, Question 1\nTick one box to complete the sentence. Type one letter.\nA constant\nA stores a value that can change at any time during the execution of a program.\nB stores a value that cannot change during the execution of a program.\nC stores values of multiple data types.\nD stores values that must be of the same data type.",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-23n23-2",
+     "text": "Cambridge IGCSE 0478/23, November 2023, Question 2\nTick one box to show which library routine returns the remainder of a division. Type one letter.\nA DIV\nB MOD\nC RANDOM\nD ROUND",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-26j23-2",
+     "text": "Cambridge IGCSE 0478/23, June 2026, Question 2\nTick one box to identify a programming data type used to store any combination of letters and numbers. Type one letter.\nA char\nB Boolean\nC string\nD real",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-real",
+     "text": "A runner's time in seconds is stored: 12.8\nState the most appropriate data type for this value. Type INTEGER, REAL, STRING or BOOLEAN.",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-int",
+     "text": "The number of goals scored in a match is stored: 3\nState the most appropriate data type for this value. Type INTEGER, REAL, STRING or BOOLEAN.",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-str",
+     "text": "A phone number is stored with quotes: \"0812345678\"\nState the most appropriate data type for this value. Type INTEGER, REAL, STRING or BOOLEAN.",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-bool",
+     "text": "Whether a door is locked is stored: TRUE\nState the most appropriate data type for this value. Type INTEGER, REAL, STRING or BOOLEAN.",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-two",
+     "text": "State the most appropriate data type for each value. Type INTEGER, REAL, STRING or BOOLEAN.\n(a) The price of a drink in baht: 9.75 [1]\n(b) The name of a town: \"Songkhla\" [1]",
+     "marks": 2
+    },
+    {
+     "qid": "y8t-own-declare",
+     "text": "A program stores the height of a plant in metres, like 0.45\nWhich line declares the variable for it? Type one letter.\nA DECLARE Height : INTEGER\nB DECLARE Height : REAL\nC DECLARE Height : STRING\nD DECLARE Height : BOOLEAN",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-constline",
+     "text": "A program uses the number of days in a week, 7. It never changes.\nWhich line sets it as a constant? Type one letter.\nA DECLARE Days : INTEGER\nB Days <- 7\nC CONSTANT Days <- 7\nD CONSTANT Days : INTEGER",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-pickconst",
+     "text": "A shop program has four values. Which one should be a constant? Type one letter.\nA The number of items a customer buys\nB The name a customer types in\nC The total cost of one order\nD The price of one bag, which is the same all day",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-libline",
+     "text": "Which line calls a library function? Type one letter.\nA DECLARE Total : INTEGER\nB INPUT Total\nC OUTPUT Total * 2\nD OUTPUT MOD(Total, 4)",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-fix",
+     "text": "This program stops with an error.\n1  DECLARE Name : STRING\n2  DECLARE Speed : INTEGER\n3  INPUT Name\n4  Speed <- 0.75\n(a) Which line declares the wrong data type? [1]\n(b) Which data type should Speed have? [1]",
+     "marks": 2
+    },
+    {
+     "qid": "y8t-own-error",
+     "text": "DECLARE Age : INTEGER\nAge <- 12.5\nOUTPUT Age\n(a) What happens when this program runs? [1]\n(b) Which data type should Age have? [1]",
+     "marks": 2
+    },
+    {
+     "qid": "y8t-own-trace1",
+     "text": "CONSTANT Price <- 30\nDECLARE Tickets : INTEGER\nTickets <- 4\nOUTPUT Tickets * Price\nWhat is output?",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-trace2",
+     "text": "CONSTANT Bonus <- 5\nDECLARE Score : INTEGER\nScore <- 12\nScore <- Score + Bonus\nOUTPUT Score\nOUTPUT Score * 2\nWhat is output? Give both lines.",
+     "marks": 2
+    },
+    {
+     "qid": "y8t-own-pass",
+     "text": "CONSTANT PassMark <- 40\nDECLARE Mark : INTEGER\nINPUT Mark\nIF Mark >= PassMark THEN\n    OUTPUT \"Pass\"\nELSE\n    OUTPUT \"Try again\"\nENDIF\n35 is typed in. What is output?",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-divmod",
+     "text": "CONSTANT BoxSize <- 6\nDECLARE Eggs : INTEGER\nEggs <- 20\nOUTPUT DIV(Eggs, BoxSize)\nOUTPUT MOD(Eggs, BoxSize)\nWhat is output? Give both lines.",
+     "marks": 2
+    },
+    {
+     "qid": "y8t-own-round",
+     "text": "CONSTANT Teams <- 3\nDECLARE Points : INTEGER\nPoints <- 25\nOUTPUT ROUND(Points / Teams, 1)\nWhat is output?",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-length",
+     "text": "DECLARE Place : STRING\nPlace <- \"Ko Samui\"\nOUTPUT LENGTH(Place)\nWhat is output?",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-whyconst",
+     "text": "A game uses the number of lives, 3, in five places in the program.\nExplain why the programmer should make the number of lives a constant. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y8t-own-whatconst",
+     "text": "What is a constant? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y8t-own-whylib",
+     "text": "Give one reason why programmers use library functions. [1]",
+     "marks": 1
+    }
+   ]
   }
  ]
 }
