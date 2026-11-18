@@ -19,7 +19,8 @@
       var opts = { inputs: [String(c[0])] };
       if (code) opts.code = code;
       return T.run(opts).then(function (r) {
-        var words = said(T, r), moved = dx(T, r);
+        var words = said(T, r), moved = dx(T, r), all = T.callsTo(r, 'say');
+        if (all.length > 1) return T.fail(c[0] + ' was typed in and the sprite said ' + all.length + ' things: ' + all.map(function (a) { return '"' + a[0] + '"'; }).join(', then '), 'For ' + c[0] + ' the sprite says one thing only: "' + c[1] + '"', sayLine);
         if (words !== c[1]) return T.fail(c[0] + ' was typed in and the sprite said ' + (words ? '"' + words + '"' : 'nothing'), 'For ' + c[0] + ' the sprite says "' + c[1] + '"', sayLine);
         if (moved !== c[2]) return T.fail(c[0] + ' was typed in and the sprite moved ' + moved + ' steps', 'For ' + c[0] + ' the sprite moves ' + c[2] + ' steps', moveLine);
         return next();
