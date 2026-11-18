@@ -556,7 +556,7 @@
     },
     {
      "qid": "y8t-own-whyconst",
-     "text": "A game uses the number of lives, 3, in five places in the program.\nExplain why the programmer should make the number of lives a constant. [2]",
+     "text": "A board game program lets up to 4 players join. The programmer stores the 4 as a constant called MaxPlayers.\n(a) Write the line of pseudocode that sets this constant. [1]\n(b) Give a reason why a constant was used rather than a variable. [1]",
      "marks": 2
     },
     {
