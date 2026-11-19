@@ -5044,6 +5044,794 @@
      ]
     }
    ]
+  },
+  {
+   "setId": "y8-logic",
+   "title": "AND, OR and NOT",
+   "year": "Year 8",
+   "unit": "Unit 2 Programming",
+   "questions": [
+    {
+     "qid": "y8l-22m22-2a",
+     "text": "Cambridge IGCSE 0478/22, March 2022, Question 2(a)\nAn algorithm has been written to:\n• input the ages of 100 students\n• count and output the number of students aged 7 and under 12\n• count and output the number of students aged 12 and under 18\n• count and output the number of students aged 18 and over.\nComplete the pseudocode algorithm:\n1  Count7to12 <- 0\n2  Count12to18 <- 0\n3  CountOver18 <- 0\n4  FOR Student <- 1 TO 100\n5      OUTPUT \"Please enter student's age in years \"\n6      INPUT Age\n7      IF Age >= 7 ........\n8          THEN\n9              Count7to12 <- Count7to12 + 1\n10      ENDIF\n11      IF Age >= 12 AND Age < 18\n12          THEN\n13              Count12to18 <- Count12to18 + 1\n14      ENDIF\n15      IF Age >= 18\n16          THEN\n17              CountOver18 <- CountOver18 + 1\n18      ENDIF\n19  NEXT Student\n20  OUTPUT \"There are \", Count7to12, \" students aged 7 and under 12.\"\n21  OUTPUT \"There are \", Count12to18, \" students aged 12 and under 18.\"\n22  OUTPUT \"There are \", CountOver18, \" students aged 18 and over.\"\nLine 7 ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/22, March 2022, Question 2(a)\nAn algorithm has been written to:\n• input the ages of 100 students\n• count and output the number of students aged 7 and under 12\n• count and output the number of students aged 12 and under 18\n• count and output the number of students aged 18 and over.\nComplete the pseudocode algorithm:"
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "Count7to12 <- 0",
+        "Count12to18 <- 0",
+        "CountOver18 <- 0",
+        "FOR Student <- 1 TO 100",
+        "    OUTPUT \"Please enter student's age in years \"",
+        "    INPUT Age",
+        "    IF Age >= 7 ........",
+        "        THEN",
+        "            Count7to12 <- Count7to12 + 1",
+        "    ENDIF",
+        "    IF Age >= 12 AND Age < 18",
+        "        THEN",
+        "            Count12to18 <- Count12to18 + 1",
+        "    ENDIF",
+        "    IF Age >= 18",
+        "        THEN",
+        "            CountOver18 <- CountOver18 + 1",
+        "    ENDIF",
+        "NEXT Student",
+        "OUTPUT \"There are \", Count7to12, \" students aged 7 and under 12.\"",
+        "OUTPUT \"There are \", Count12to18, \" students aged 12 and under 18.\"",
+        "OUTPUT \"There are \", CountOver18, \" students aged 18 and over.\""
+       ]
+      },
+      {
+       "type": "line",
+       "label": "Line 7"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-24n21-9b",
+     "text": "Cambridge IGCSE 0478/21, November 2024, Question 9(b)\nAn algorithm has been written in pseudocode to check if a temperature is in a given range.\nThe temperature values used in the algorithm are correct.\n1  REPEAT\n2      OUTPUT \"Please enter temperature \"\n3      INPUT Temperature\n4      IF Temperature <> 999\n5          THEN\n6              IF Temperature > 38.0\n7                  THEN\n8                      OUTPUT \"Temperature too high\"\n9              ENDIF\n10              IF Temperature < 35.0\n11                  THEN\n12                      OUTPUT \"Temperature too low\"\n13              ENDIF\n14              IF Temperature >= 35.0 AND Temperature <= 38.0\n15                  THEN\n16                      OUTPUT \"Temperature normal\"\n17              ENDIF\n18      ENDIF\n19  UNTIL Temperature = 999\nIdentify the temperature range used.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/21, November 2024, Question 9(b)\nAn algorithm has been written in pseudocode to check if a temperature is in a given range.\nThe temperature values used in the algorithm are correct."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "REPEAT",
+        "    OUTPUT \"Please enter temperature \"",
+        "    INPUT Temperature",
+        "    IF Temperature <> 999",
+        "        THEN",
+        "            IF Temperature > 38.0",
+        "                THEN",
+        "                    OUTPUT \"Temperature too high\"",
+        "            ENDIF",
+        "            IF Temperature < 35.0",
+        "                THEN",
+        "                    OUTPUT \"Temperature too low\"",
+        "            ENDIF",
+        "            IF Temperature >= 35.0 AND Temperature <= 38.0",
+        "                THEN",
+        "                    OUTPUT \"Temperature normal\"",
+        "            ENDIF",
+        "    ENDIF",
+        "UNTIL Temperature = 999"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Identify the temperature range used."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-24n21-9a",
+     "text": "Cambridge IGCSE 0478/21, November 2024, Question 9(a)\nAn algorithm has been written in pseudocode to check if a temperature is in a given range.\nThe temperature values used in the algorithm are correct.\n1  REPEAT\n2      OUTPUT \"Please enter temperature \"\n3      INPUT Temperature\n4      IF Temperature <> 999\n5          THEN\n6              IF Temperature > 38.0\n7                  THEN\n8                      OUTPUT \"Temperature too high\"\n9              ENDIF\n10              IF Temperature < 35.0\n11                  THEN\n12                      OUTPUT \"Temperature too low\"\n13              ENDIF\n14              IF Temperature >= 35.0 OR Temperature <= 38.0\n15                  THEN\n16                      OUTPUT \"Temperature normal\"\n17              ENDIF\n18      ENDIF\n19  UNTIL Temperature = 999\nIdentify the line number of the error in the pseudocode and suggest a correction for the error.\nError line number ........\nCorrection ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/21, November 2024, Question 9(a)\nAn algorithm has been written in pseudocode to check if a temperature is in a given range.\nThe temperature values used in the algorithm are correct."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "REPEAT",
+        "    OUTPUT \"Please enter temperature \"",
+        "    INPUT Temperature",
+        "    IF Temperature <> 999",
+        "        THEN",
+        "            IF Temperature > 38.0",
+        "                THEN",
+        "                    OUTPUT \"Temperature too high\"",
+        "            ENDIF",
+        "            IF Temperature < 35.0",
+        "                THEN",
+        "                    OUTPUT \"Temperature too low\"",
+        "            ENDIF",
+        "            IF Temperature >= 35.0 OR Temperature <= 38.0",
+        "                THEN",
+        "                    OUTPUT \"Temperature normal\"",
+        "            ENDIF",
+        "    ENDIF",
+        "UNTIL Temperature = 999"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Identify the line number of the error in the pseudocode and suggest a correction for the error."
+      },
+      {
+       "type": "line",
+       "label": "Error line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-ride",
+     "text": "1  DECLARE Age : INTEGER\n2  DECLARE Height : INTEGER\n3  INPUT Age\n4  INPUT Height\n5  IF Age >= 10 AND Height >= 140 THEN\n6      OUTPUT \"Ride\"\n7  ELSE\n8      OUTPUT \"Sorry\"\n9  ENDIF\nState the output when 12 is input for Age and 130 is input for Height.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "DECLARE Height : INTEGER",
+        "INPUT Age",
+        "INPUT Height",
+        "IF Age >= 10 AND Height >= 140 THEN",
+        "    OUTPUT \"Ride\"",
+        "ELSE",
+        "    OUTPUT \"Sorry\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 12 is input for Age and 130 is input for Height."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-free",
+     "text": "1  DECLARE Age : INTEGER\n2  INPUT Age\n3  IF Age < 5 OR Age >= 65 THEN\n4      OUTPUT \"Free\"\n5  ELSE\n6      OUTPUT \"Pay\"\n7  ENDIF\nState the output when 65 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "INPUT Age",
+        "IF Age < 5 OR Age >= 65 THEN",
+        "    OUTPUT \"Free\"",
+        "ELSE",
+        "    OUTPUT \"Pay\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 65 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-not",
+     "text": "1  DECLARE Raining : BOOLEAN\n2  Raining <- TRUE\n3  IF NOT Raining THEN\n4      OUTPUT \"Play outside\"\n5  ELSE\n6      OUTPUT \"Play inside\"\n7  ENDIF\nState the output of this program.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Raining : BOOLEAN",
+        "Raining <- TRUE",
+        "IF NOT Raining THEN",
+        "    OUTPUT \"Play outside\"",
+        "ELSE",
+        "    OUTPUT \"Play inside\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output of this program."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-tfand",
+     "text": "DECLARE Coins : INTEGER\nDECLARE Lives : INTEGER\nCoins <- 7\nLives <- 0\nState whether the condition Coins > 5 AND Lives > 0 is TRUE or FALSE.\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE Coins : INTEGER",
+        "DECLARE Lives : INTEGER",
+        "Coins <- 7",
+        "Lives <- 0"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State whether the condition Coins > 5 AND Lives > 0 is TRUE or FALSE."
+      },
+      {
+       "type": "line",
+       "label": "Answer"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-tfor",
+     "text": "DECLARE Coins : INTEGER\nDECLARE Lives : INTEGER\nCoins <- 7\nLives <- 0\nState whether the condition Coins > 5 OR Lives > 0 is TRUE or FALSE.\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE Coins : INTEGER",
+        "DECLARE Lives : INTEGER",
+        "Coins <- 7",
+        "Lives <- 0"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State whether the condition Coins > 5 OR Lives > 0 is TRUE or FALSE."
+      },
+      {
+       "type": "line",
+       "label": "Answer"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-tfnot",
+     "text": "DECLARE Done : BOOLEAN\nDone <- FALSE\nState whether the condition NOT Done is TRUE or FALSE.\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE Done : BOOLEAN",
+        "Done <- FALSE"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State whether the condition NOT Done is TRUE or FALSE."
+      },
+      {
+       "type": "line",
+       "label": "Answer"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-grid",
+     "text": "DECLARE X : INTEGER\nX <- 4\nTick (✓) one box in each row to show whether each condition is TRUE or FALSE.\nCondition | TRUE | FALSE\nX > 1 AND X < 3 | [ ] | [ ]\nX < 1 OR X > 3 | [ ] | [ ]\nNOT X = 4 | [ ] | [ ]\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE X : INTEGER",
+        "X <- 4"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box in each row to show whether each condition is TRUE or FALSE."
+      },
+      {
+       "type": "tickGrid",
+       "head": [
+        "Condition",
+        "TRUE",
+        "FALSE"
+       ],
+       "rows": [
+        [
+         "X > 1 AND X < 3"
+        ],
+        [
+         "X < 1 OR X > 3"
+        ],
+        [
+         "NOT X = 4"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-pickand",
+     "text": "A pupil can join the team if they are 12 or older and have been to 3 or more training sessions.\n1  DECLARE Age : INTEGER\n2  DECLARE Sessions : INTEGER\n3  INPUT Age\n4  INPUT Sessions\n5  IF Age >= 12 ..... Sessions >= 3 THEN\n6      OUTPUT \"Join\"\n7  ELSE\n8      OUTPUT \"Not yet\"\n9  ENDIF\nTick (✓) one box to identify the logical operator that completes line 5.\nA AND\nB OR\nC NOT\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A pupil can join the team if they are 12 or older and have been to 3 or more training sessions."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "DECLARE Sessions : INTEGER",
+        "INPUT Age",
+        "INPUT Sessions",
+        "IF Age >= 12 ..... Sessions >= 3 THEN",
+        "    OUTPUT \"Join\"",
+        "ELSE",
+        "    OUTPUT \"Not yet\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to identify the logical operator that completes line 5."
+      },
+      {
+       "type": "options",
+       "items": [
+        "AND",
+        "OR",
+        "NOT"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-pickor",
+     "text": "A shop gives a discount to children under 12 and to adults aged 60 or older.\n1  DECLARE Age : INTEGER\n2  INPUT Age\n3  IF Age < 12 ..... Age >= 60 THEN\n4      OUTPUT \"Discount\"\n5  ELSE\n6      OUTPUT \"Full price\"\n7  ENDIF\nTick (✓) one box to identify the logical operator that completes line 3.\nA AND\nB OR\nC NOT\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A shop gives a discount to children under 12 and to adults aged 60 or older."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "INPUT Age",
+        "IF Age < 12 ..... Age >= 60 THEN",
+        "    OUTPUT \"Discount\"",
+        "ELSE",
+        "    OUTPUT \"Full price\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to identify the logical operator that completes line 3."
+      },
+      {
+       "type": "options",
+       "items": [
+        "AND",
+        "OR",
+        "NOT"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-same",
+     "text": "Tick (✓) one box to show the condition that is the same as NOT Age >= 13\nA Age < 13\nB Age <= 13\nC Age > 13\nD Age = 13\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show the condition that is the same as NOT Age >= 13"
+      },
+      {
+       "type": "options",
+       "items": [
+        "Age < 13",
+        "Age <= 13",
+        "Age > 13",
+        "Age = 13"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-between",
+     "text": "A booking must accept 1 to 6 seats.\n1  DECLARE Seats : INTEGER\n2  INPUT Seats\n3  IF ........ THEN\n4      OUTPUT \"Accepted\"\n5  ELSE\n6      OUTPUT \"Rejected\"\n7  ENDIF\nWrite line 3 so that the program outputs Accepted only for 1 to 6 seats.\nLine 3 ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A booking must accept 1 to 6 seats."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Seats : INTEGER",
+        "INPUT Seats",
+        "IF ........ THEN",
+        "    OUTPUT \"Accepted\"",
+        "ELSE",
+        "    OUTPUT \"Rejected\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Write line 3 so that the program outputs Accepted only for 1 to 6 seats."
+      },
+      {
+       "type": "line",
+       "label": "Line 3"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-whyor",
+     "text": "A booking must accept 1 to 6 seats.\n1  DECLARE Seats : INTEGER\n2  INPUT Seats\n3  IF Seats >= 1 OR Seats <= 6 THEN\n4      OUTPUT \"Accepted\"\n5  ELSE\n6      OUTPUT \"Rejected\"\n7  ENDIF\nExplain why this program outputs Accepted for every number.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A booking must accept 1 to 6 seats."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Seats : INTEGER",
+        "INPUT Seats",
+        "IF Seats >= 1 OR Seats <= 6 THEN",
+        "    OUTPUT \"Accepted\"",
+        "ELSE",
+        "    OUTPUT \"Rejected\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Explain why this program outputs Accepted for every number."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-out9",
+     "text": "1  DECLARE Seats : INTEGER\n2  INPUT Seats\n3  IF Seats < 1 OR Seats > 6 THEN\n4      OUTPUT \"Rejected\"\n5  ELSE\n6      OUTPUT \"Accepted\"\n7  ENDIF\nState the output when 9 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Seats : INTEGER",
+        "INPUT Seats",
+        "IF Seats < 1 OR Seats > 6 THEN",
+        "    OUTPUT \"Rejected\"",
+        "ELSE",
+        "    OUTPUT \"Accepted\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 9 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-never0",
+     "text": "1  DECLARE Seats : INTEGER\n2  INPUT Seats\n3  IF Seats < 1 AND Seats > 6 THEN\n4      OUTPUT \"Rejected\"\n5  ELSE\n6      OUTPUT \"Accepted\"\n7  ENDIF\nState the output when 0 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Seats : INTEGER",
+        "INPUT Seats",
+        "IF Seats < 1 AND Seats > 6 THEN",
+        "    OUTPUT \"Rejected\"",
+        "ELSE",
+        "    OUTPUT \"Accepted\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 0 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-whyand",
+     "text": "A booking must accept 1 to 6 seats.\n1  DECLARE Seats : INTEGER\n2  INPUT Seats\n3  IF Seats < 1 AND Seats > 6 THEN\n4      OUTPUT \"Rejected\"\n5  ELSE\n6      OUTPUT \"Accepted\"\n7  ENDIF\nExplain why this program can never output Rejected.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A booking must accept 1 to 6 seats."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Seats : INTEGER",
+        "INPUT Seats",
+        "IF Seats < 1 AND Seats > 6 THEN",
+        "    OUTPUT \"Rejected\"",
+        "ELSE",
+        "    OUTPUT \"Accepted\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Explain why this program can never output Rejected."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-join",
+     "text": "1  DECLARE Age : INTEGER\n2  DECLARE Height : INTEGER\n3  INPUT Age\n4  INPUT Height\n5  IF Age >= 10 THEN\n6      IF Height >= 140 THEN\n7          OUTPUT \"Ride\"\n8      ELSE\n9          OUTPUT \"Sorry\"\n10      ENDIF\n11  ELSE\n12      OUTPUT \"Sorry\"\n13  ENDIF\nLines 5 to 13 are written again as one IF statement: IF Age >= 10 ..... Height >= 140 THEN\nTick (✓) one box to identify the logical operator that gives the same outputs.\nA AND\nB OR\nC NOT\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "DECLARE Height : INTEGER",
+        "INPUT Age",
+        "INPUT Height",
+        "IF Age >= 10 THEN",
+        "    IF Height >= 140 THEN",
+        "        OUTPUT \"Ride\"",
+        "    ELSE",
+        "        OUTPUT \"Sorry\"",
+        "    ENDIF",
+        "ELSE",
+        "    OUTPUT \"Sorry\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Lines 5 to 13 are written again as one IF statement: IF Age >= 10 ..... Height >= 140 THEN\nTick (✓) one box to identify the logical operator that gives the same outputs."
+      },
+      {
+       "type": "options",
+       "items": [
+        "AND",
+        "OR",
+        "NOT"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-largest",
+     "text": "1  DECLARE Score : INTEGER\n2  INPUT Score\n3  IF Score >= 50 AND Score < 80 THEN\n4      OUTPUT \"Silver\"\n5  ELSE\n6      OUTPUT \"No medal\"\n7  ENDIF\nState the largest whole number that can be input for the program to output Silver.\nNumber ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Score : INTEGER",
+        "INPUT Score",
+        "IF Score >= 50 AND Score < 80 THEN",
+        "    OUTPUT \"Silver\"",
+        "ELSE",
+        "    OUTPUT \"No medal\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the largest whole number that can be input for the program to output Silver."
+      },
+      {
+       "type": "line",
+       "label": "Number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8l-own-weekend",
+     "text": "Days are numbered 1 to 7.\n1  DECLARE Day : INTEGER\n2  INPUT Day\n3  IF Day = 6 OR Day = 7 THEN\n4      OUTPUT \"Weekend\"\n5  ELSE\n6      OUTPUT \"School day\"\n7  ENDIF\nGive the two values of Day that output Weekend.\nValue 1 ........\nValue 2 ........\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Days are numbered 1 to 7."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Day : INTEGER",
+        "INPUT Day",
+        "IF Day = 6 OR Day = 7 THEN",
+        "    OUTPUT \"Weekend\"",
+        "ELSE",
+        "    OUTPUT \"School day\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Give the two values of Day that output Weekend."
+      },
+      {
+       "type": "line",
+       "label": "Value 1"
+      },
+      {
+       "type": "line",
+       "label": "Value 2"
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    }
+   ]
   }
  ]
 }
