@@ -323,6 +323,13 @@
           ]
         },
         {
+          "code": "10",
+          "title": "Boolean Logic",
+          "lessons": [
+            "y11-2-1-gates"
+          ]
+        },
+        {
           "code": "",
           "title": "Exam Practice",
           "lessons": [

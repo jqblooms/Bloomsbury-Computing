@@ -811,6 +811,129 @@
      "marks": 2
     }
    ]
+  },
+  {
+   "setId": "y11-not-and-or",
+   "title": "NOT, AND and OR",
+   "year": "Year 11",
+   "unit": "10 Boolean Logic",
+   "questions": [
+    {
+     "qid": "y11g-24n21-2",
+     "text": "Cambridge IGCSE 0478/21, November 2024, Question 2\nTick one box to identify which option is used to show the inputs and output of a Boolean expression.\nA flowchart\nB trace table\nC truth table\nD variable\nType the letter or the option. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-23n23-6a",
+     "text": "Cambridge IGCSE 0478/23, November 2023, Question 6(a)\nA logic gate has two inputs A and B with one output X.\nThe only time the output is 1 is when both inputs are 1.\nIdentify the logic gate. Complete the truth table for this description.\nThe rows are in this order: A = 0, B = 0; A = 0, B = 1; A = 1, B = 0; A = 1, B = 1.\nType the gate, then the X column as one group, top row first (for example 1010). [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y11g-22m12-3a-11",
+     "text": "Cambridge IGCSE 0478/12, March 2022, Question 3(a) (adapted: the AND and OR columns only, one row)\nThe inputs are A = 1 and B = 1.\nWhich of the logic gates AND and OR will give an output of 1? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-22m12-3a-00",
+     "text": "Cambridge IGCSE 0478/12, March 2022, Question 3(a) (adapted: the AND and OR columns only, one row)\nThe inputs are A = 0 and B = 0.\nWhich of the logic gates AND and OR will give an output of 1? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-22m12-3a-10",
+     "text": "Cambridge IGCSE 0478/12, March 2022, Question 3(a) (adapted: the AND and OR columns only, one row)\nThe inputs are A = 1 and B = 0.\nWhich of the logic gates AND and OR will give an output of 1? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-22j13-3a-11",
+     "text": "Cambridge IGCSE 0478/13, June 2022, Question 3(a) (adapted: the AND and OR columns only, one statement)\nAND and OR are examples of logic gates.\nStatement: if both inputs are 1, the output is 1.\nWhich of the logic gates AND and OR does this statement apply to? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-22j13-3a-diff",
+     "text": "Cambridge IGCSE 0478/13, June 2022, Question 3(a) (adapted: the AND and OR columns only, one statement)\nAND and OR are examples of logic gates.\nStatement: if both inputs are different, the output is 1.\nWhich of the logic gates AND and OR does this statement apply to? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-22j13-3a-00",
+     "text": "Cambridge IGCSE 0478/13, June 2022, Question 3(a) (adapted: the AND and OR columns only, one statement)\nAND and OR are examples of logic gates.\nStatement: if both inputs are 0, the output is 0.\nWhich of the logic gates AND and OR does this statement apply to? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-21m12-5a-or",
+     "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table.\nA B | Output\n0 0 | 0\n0 1 | 1\n1 0 | 1\n1 1 | 1 [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-21m12-5a-and",
+     "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table.\nA B | Output\n0 0 | 0\n0 1 | 0\n1 0 | 0\n1 1 | 1 [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-24n23-8-open",
+     "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off.\nA = 0: air conditioning off; A = 1: air conditioning on\nT = 0: not too high; T = 1: too high\nH = 0: heater off; H = 1: heater on\nW = 0: window closed; W = 1: window open\nComplete this row of the truth table: A = 0, T = 1, H = 0. What is W? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-24n23-8-shut",
+     "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off.\nA = 0: air conditioning off; A = 1: air conditioning on\nT = 0: not too high; T = 1: too high\nH = 0: heater off; H = 1: heater on\nW = 0: window closed; W = 1: window open\nComplete this row of the truth table: A = 1, T = 1, H = 0. What is W? [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-not1",
+     "text": "A NOT gate has the input A = 1.\nState the output X. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-not0",
+     "text": "A NOT gate has the input A = 0.\nState the output X. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-shape-not",
+     "text": "A logic gate symbol is a triangle pointing right, with a small circle at its point.\nIt has one input.\nState the name of this logic gate. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-shape-and",
+     "text": "A logic gate symbol has a flat back and a round front, like the letter D.\nIt has two inputs.\nState the name of this logic gate. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-shape-or",
+     "text": "A logic gate symbol has a curved back and a pointed front.\nIt has two inputs.\nState the name of this logic gate. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-and01",
+     "text": "An AND gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y11g-own-or01",
+     "text": "An OR gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y11g-own-car",
+     "text": "A car engine starts (X = 1) only if the key is turned (K = 1) and the brake is pressed (P = 1).\nState the single logic gate that does this. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-bell",
+     "text": "A doorbell rings (X = 1) if the front button is pressed (F = 1) or the back button is pressed (B = 1). It also rings if both are pressed.\nState the single logic gate that does this. [1]",
+     "marks": 1
+    },
+    {
+     "qid": "y11g-own-rows",
+     "text": "A logic gate has two inputs, A and B.\nState how many rows its truth table needs. Explain why. [2]",
+     "marks": 2
+    },
+    {
+     "qid": "y11g-own-expr",
+     "text": "A logic circuit has one input A and one output X.\nThe output X is 1 only when A is 0, and 0 only when A is 1.\nWrite the logic expression for this circuit. [1]",
+     "marks": 1
+    }
+   ]
   }
  ]
 }
