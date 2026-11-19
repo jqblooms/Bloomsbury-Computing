@@ -916,25 +916,27 @@
   setId = WANT_SET;
   showStart();
 
-  // Full screen: the real thing when the browser allows it; otherwise the lesson page makes the game fill
-  // its window (its own Full screen mode). html.cs-fs lays the board out to fit the screen height.
-  function csIsFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
-  function csAskParentFull() { try { if (window.parent !== window) window.parent.postMessage({ type: 'BC_APP_FULLSCREEN' }, '*'); } catch (e) {} }
-  function csToggleFull() {
-    var el = document.documentElement;
-    if (csIsFull()) { (document.exitFullscreen || document.webkitExitFullscreen || function () {}).call(document); return; }
-    var req = el.requestFullscreen || el.webkitRequestFullscreen;
-    if (!req) { csAskParentFull(); return; }
-    try { var p = req.call(el); if (p && p.catch) p.catch(csAskParentFull); } catch (e) { csAskParentFull(); }
+  // Full screen (James 2026-11-19): never the browser's own full screen. Inside the site the page makes the app
+  // fill the area below its top bar (the notes stay usable); opened on its own the app only lays out to fit.
+  var csxFull = false;
+  function csxSetFull(on) {
+    csxFull = !!on;
+    document.documentElement.classList.toggle('cs-fs', csxFull);
+    
+    var b = document.getElementById('fsBtn'); if (b) b.textContent = csxFull ? 'Exit full screen' : 'Full screen';
   }
-  function csOnFullChange() {
-    document.documentElement.classList.toggle('cs-fs', csIsFull());
-    var b = document.getElementById('fsBtn'); if (b) b.textContent = csIsFull() ? 'Exit full screen' : 'Full screen';
+  function csxToggleFull() {
+    var want = !csxFull;
+    if (window.parent !== window) { try { window.parent.postMessage({ type: 'BC_APP_FULLSCREEN', on: want }, '*'); } catch (e) {} }
+    csxSetFull(want);
   }
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (e.source === window.parent && d && d.type === 'BC_APP_FULLSCREEN_STATE') csxSetFull(!!d.on);
+  });
   (function () {
     var b = document.createElement('button');
     b.type = 'button'; b.id = 'fsBtn'; b.className = 'bc-btn is-outline cs-fs-btn'; b.textContent = 'Full screen';
-    b.onclick = csToggleFull; document.body.appendChild(b);
+    b.onclick = csxToggleFull; document.body.appendChild(b);
   })();
   // Speed slider in the top bar (James 2026-11-17): 1x to 4x in half steps, remembered.
   (function () {
@@ -945,6 +947,4 @@
     apply(v);
     sl.addEventListener('input', function () { apply(Math.max(1, Math.min(4, Number(sl.value) || 1))); });
   })();
-  document.addEventListener('fullscreenchange', csOnFullChange);
-  document.addEventListener('webkitfullscreenchange', csOnFullChange);
 })();

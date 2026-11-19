@@ -1126,7 +1126,9 @@ function openModal(title,html){H('hm-modal-title').textContent=title;H('hm-modal
 function closeModal(){H('hm-platform-modal').classList.remove('show')}
 function fullscreenTarget(){return (window.frameElement&&window.frameElement.parentElement)||document.getElementById('game')}
 function fullscreenDocument(){const target=fullscreenTarget();return (target&&target.ownerDocument)||document}
-function toggleFullscreen(){const target=fullscreenTarget(),doc=fullscreenDocument();if(doc.fullscreenElement){doc.exitFullscreen&&doc.exitFullscreen();return}if(target&&target.requestFullscreen)target.requestFullscreen()}
+let hmFull=false;function hmSetFull(on){hmFull=!!on;const b=H('hm-fullscreen');if(b)b.textContent=hmFull?'Exit Fullscreen':'Fullscreen';scheduleWorkspaceResize();setTimeout(scheduleWorkspaceResize,120)}
+function toggleFullscreen(){const want=!hmFull;if(window.parent!==window){try{window.parent.postMessage({type:'BC_APP_FULLSCREEN',on:want},'*')}catch(e){}}hmSetFull(want)}
+window.addEventListener('message',e=>{const d=e.data;if(e.source===window.parent&&d&&d.type==='BC_APP_FULLSCREEN_STATE')hmSetFull(!!d.on)});
 function eventStartsOnBoardControl(e){
   return e.target.closest('.machine,.mainframe,.merge-station,.hm-laser,.hm-bug,.bug-banner,.tip,button,input,.bit,.table-wrap,.machine-inline,.merge-port,.port');
 }
@@ -1167,7 +1169,7 @@ function setupPlatformControls(){
     if(e.key==='Escape'&&state.placingLaser){state.placingLaser=null;showTemporaryBanner('Laser placement cancelled.',2200);updateBugBanner(performance.now())}
     if(e.key==='Escape'&&state.chainBuild){cancelChainBuild();showTemporaryBanner('Chain cancelled.',2200);updateBugBanner(performance.now())}
   });
-  fullscreenDocument().addEventListener('fullscreenchange',()=>{const b=H('hm-fullscreen');if(b)b.textContent=fullscreenDocument().fullscreenElement?'Exit Fullscreen':'Fullscreen';scheduleWorkspaceResize()});
+  if(window.parent===window){const b=H('hm-fullscreen');if(b)b.style.display='none'}
 }
 function seed(){const box=ws.getBoundingClientRect(),r=box.width>0&&box.height>0?box:{width:900,height:600};state.unlocked.clear();state.purchaseCounts.clear();state.machines=[];state.lasers=[];state.bugs=[];state.nextId=1;state.nextLaserId=1;state.nextBugId=1;state.bugAttack.wave=0;state.bugAttack.kills=0;const y=Math.max(50,r.height/2-63);addMachine(1,Math.max(24,r.width*.18-95),y);addMachine(1,Math.min(r.width-214,r.width*.82-95),y);renderLasers();renderBugs();renderShop();scheduleBugAttack(randomBugDelay());saveLocalNow()}
 // Reset Game, distinct from Reset View (which only recentres the camera).

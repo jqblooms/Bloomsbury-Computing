@@ -830,25 +830,27 @@
     devKeys(e);
   });
 
-  // Full screen: the real thing when the browser allows it; otherwise the lesson page makes the game fill its window.
-  function isFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
-  function askParentFull() { try { if (window.parent !== window) window.parent.postMessage({ type: 'BC_APP_FULLSCREEN' }, '*'); } catch (e) {} }
-  function toggleFull() {
-    var el = document.documentElement;
-    if (isFull()) { (document.exitFullscreen || document.webkitExitFullscreen || function () {}).call(document); return; }
-    var req = el.requestFullscreen || el.webkitRequestFullscreen;
-    if (!req) { askParentFull(); return; }
-    try { var p = req.call(el); if (p && p.catch) p.catch(askParentFull); } catch (e) { askParentFull(); }
+  // Full screen (James 2026-11-19): never the browser's own full screen. Inside the site the page makes the app
+  // fill the area below its top bar (the notes stay usable); opened on its own the app only lays out to fit.
+  var bbFull = false;
+  function bbSetFull(on) {
+    bbFull = !!on;
+    document.documentElement.classList.toggle('bb-fs', bbFull);
+    setTimeout(fitBoard, 0); setTimeout(fitBoard, 120);
+    var b = document.getElementById('fsBtn'); if (b) b.textContent = bbFull ? 'Exit full screen' : 'Full screen';
   }
-  function onFullChange() {
-    document.documentElement.classList.toggle('bb-fs', isFull());
-    setTimeout(fitBoard, 0);
-    var b = $('fsBtn'); if (b) b.textContent = isFull() ? 'Exit full screen' : 'Full screen';
+  function bbToggleFull() {
+    var want = !bbFull;
+    if (window.parent !== window) { try { window.parent.postMessage({ type: 'BC_APP_FULLSCREEN', on: want }, '*'); } catch (e) {} }
+    bbSetFull(want);
   }
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (e.source === window.parent && d && d.type === 'BC_APP_FULLSCREEN_STATE') bbSetFull(!!d.on);
+  });
   (function () {
     var b = document.createElement('button');
     b.type = 'button'; b.id = 'fsBtn'; b.className = 'bc-btn is-outline bb-fs-btn'; b.textContent = 'Full screen';
-    b.onclick = toggleFull; document.body.appendChild(b);
+    b.onclick = bbToggleFull; document.body.appendChild(b);
   })();
   (function () {
     var sl = $('hudSpeed'), out = $('hudSpeedVal');
@@ -857,6 +859,4 @@
     apply(v);
     sl.addEventListener('input', function () { apply(Math.max(1, Math.min(4, Number(sl.value) || 1))); });
   })();
-  document.addEventListener('fullscreenchange', onFullChange);
-  document.addEventListener('webkitfullscreenchange', onFullChange);
 })();
