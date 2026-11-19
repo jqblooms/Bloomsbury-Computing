@@ -1,0 +1,189 @@
+{
+ "id": "y10-3-1-l7",
+ "label": "3.1.7: Embedded Systems",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Name the List (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-317-do-now",
+   "validatorKey": "y10_317_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Name the List (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does every type of CPU need a list like this?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: the CPU has circuits for only some commands, so it must know which ones it can process.</p></div></details><p class=\"lesson-lead\">Recap of 3.1.6. Cambridge IGCSE 0478/12, November 2023, Question 3(c). A user's computer has a central processing unit (CPU). The CPU has a list of all the machine code commands it can process. State the name of this list of commands. <strong>What to do:</strong> type your answer, then press Check answers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-317-do-now-a\">Name of the list [1]</label><input id=\"y10-317-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Name the List (1 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-317-do-now-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-317-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: name the term",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> \"The CPU has a register that stores the address of the next instruction to be fetched. State the name of this register.\"",
+      "visual": "<div class=\"wt-note\">read the description, find its key words</div>"
+     },
+     {
+      "text": "Find the <span class=\"wt-hl\">key words</span>: \"stores the address\" and \"next instruction\".",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">key words: <span class=\"wt-hl\">address of the next instruction</span></p>"
+     },
+     {
+      "text": "Which part of the CPU holds the address of the next instruction? The <span class=\"wt-hl\">program counter (PC)</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">Answer to the similar question: <span class=\"wt-hl\">program counter</span></p>"
+     },
+     {
+      "text": "Now your question. Find the key words: a <span class=\"wt-hl\">list</span> of all the <span class=\"wt-hl\">commands</span> a CPU can process. What is that list called? You met it in 3.1.6.",
+      "visual": "<div class=\"wt-note\">key words, then the name</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: The Decode Stage (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-317-do-now-2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The Decode Stage (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the decode stage come before the execute stage?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: the CPU must know what the instruction means before it can carry it out.</p></div></details><p class=\"lesson-lead\">Recap of 3.1.4 and 3.1.6. Cambridge IGCSE 0478/11, November 2024, Question 5(b). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-317-do-now-2\"></div>",
+   "items": [
+    {
+     "id": "decode-stage",
+     "prompt": "(b) A central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle. Describe what happens at the decode stage of the cycle.",
+     "marks": 3,
+     "scheme": [
+      "CIR/CU receives the instruction from the MDR // Instruction sent from MDR to CIR/CU",
+      "... using the data bus",
+      "Instruction is separated into opcode and operand",
+      "Control unit decodes the instruction",
+      "... using an instruction set"
+     ],
+     "guidance": "Any three from the points, one mark each. A point marked ... follows on from the point before it.",
+     "modelAnswer": "It is split into opcode and operand. The CU decodes it using an instruction set."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: describe a stage of the cycle",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> \"Describe what happens at the execute stage of the cycle.\" It is worth 3 marks, so give 3 points.",
+      "visual": "<div class=\"wt-note\">3 marks: 3 points, in order</div>"
+     },
+     {
+      "text": "Point 1: which part <span class=\"wt-hl\">starts</span> the stage? The CU <span class=\"wt-hl\">sends a signal</span> to the ALU.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">1. CU sends a signal to the <span class=\"wt-hl\">ALU</span></p>"
+     },
+     {
+      "text": "Point 2: what does that part <span class=\"wt-hl\">do</span>? The ALU <span class=\"wt-hl\">performs the calculation</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">2. ALU performs the <span class=\"wt-hl\">calculation</span></p>"
+     },
+     {
+      "text": "Point 3: where does the result <span class=\"wt-hl\">go</span>? It is stored in the <span class=\"wt-hl\">ACC</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">3. result stored in the <span class=\"wt-hl\">ACC</span></p>"
+     },
+     {
+      "text": "Now your question, the decode stage. Use the same plan: where does the instruction come from and go to? Which part decodes it, and what does it use? What two parts is it split into?",
+      "visual": "<div class=\"wt-note\">from where, to where &nbsp; which part &nbsp; using what &nbsp; split into what</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l6",
+   "embedContainerId": "y10-317-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card use new instructions?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise the method, not one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these instruction set cards from 3.1.6. Stuck? Switch on <strong>I need help</strong>. Go to the next slide when you are ready.</p><div id=\"y10-317-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Embedded Systems",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">Embedded Systems</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> about 20 minutes of notes. Then use your notes in <strong>Data Bridge</strong>.</li><li>The big question: <strong>why</strong> do so many machines have a small computer inside them?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A washing machine and a laptop both have a computer inside. Why can you play a game on the laptop, but not on the washing machine?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Collect ideas. Today shows how the two computers are made for different jobs.</p></div></details>"
+  },
+  {
+   "id": "what",
+   "label": "What Is an Embedded System?",
+   "content": "<h2 class=\"lesson-h2\">What Is an Embedded System?</h2><div style=\"display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:start\"><ul class=\"lesson-facts\"><li>A washing machine has a small computer inside it.</li><li>The computer has one job: to <strong>control the wash</strong>.</li><li>It reads the buttons, fills the drum with water, turns the drum and drains the water.</li><li>It never does any other job.</li></ul><div style=\"border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:19px\"><b style=\"font-size:20px\">Inside the washing machine</b><ul class=\"lesson-facts\"><li>buttons and a small screen</li><li>a small computer</li><li>a motor, a water pump, a heater</li></ul></div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Embedded system:</b> a computer system built into a larger device to perform a dedicated function.</div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Dedicated function:</b> one job, or a few jobs, that the device is made for. It does not change.</div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> The machine only ever needs to do one job, so its computer is made for that one job.</p>"
+  },
+  {
+   "id": "notes-what",
+   "label": "Your Notes: What Is an Embedded System?",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: What Is an Embedded System?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Embedded system</b><br>A computer system built into a larger device to perform a dedicated function.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Dedicated function</b><br>One job, or a few jobs, that the device is made for. It does not change.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Example</b><br>A washing machine. Its embedded system controls the wash and does nothing else.</div>"
+  },
+  {
+   "id": "general",
+   "label": "General Purpose or Embedded?",
+   "content": "<h2 class=\"lesson-h2\">General Purpose or Embedded?</h2><table style=\"border-collapse:collapse;font-size:18px;width:100%\"><tr><th style=\"text-align:left;padding:3px 8px;border-bottom:2px solid var(--line-strong)\"></th><th style=\"text-align:left;padding:3px 8px;border-bottom:2px solid var(--line-strong)\">Laptop</th><th style=\"text-align:left;padding:3px 8px;border-bottom:2px solid var(--line-strong)\">Washing machine</th></tr><tr><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\"><b>Jobs</b></td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">many different tasks</td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">one dedicated function</td></tr><tr><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\"><b>Software</b></td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">new software can easily be installed</td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">cannot easily be reprogrammed</td></tr><tr><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\"><b>Extra devices</b></td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">peripherals can be plugged in, such as a printer or a mouse</td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">no peripherals can be plugged in</td></tr><tr><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\"><b>Processor</b></td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">a CPU</td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">a microprocessor</td></tr><tr><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\"><b>Where</b></td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">a computer on its own</td><td style=\"padding:3px 8px;border-bottom:1px solid var(--line)\">built into a larger device</td></tr></table><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>General purpose computer:</b> a computer that can perform many different tasks, such as a laptop or a PC.</div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Peripheral:</b> an extra device plugged into a computer, such as a printer or a mouse.</div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> The user of a laptop decides its job. The maker of a washing machine decides its job.</p>"
+  },
+  {
+   "id": "notes-general",
+   "label": "Your Notes: General Purpose or Embedded?",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: General Purpose or Embedded?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>General purpose computer</b><br>A computer that can perform many different tasks, such as a laptop or a PC.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>How it is different</b><br>New software can easily be installed. Peripherals, such as a printer, can be plugged in. It has a CPU.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY they are different</b><br>The user of a general purpose computer decides its job. The maker of an embedded system decides its job.</div>"
+  },
+  {
+   "id": "features",
+   "label": "Five Features of an Embedded System",
+   "content": "<h2 class=\"lesson-h2\">Five Features of an Embedded System</h2><table style=\"border-collapse:collapse;font-size:18px;width:100%\"><tr><th style=\"text-align:left;padding:3px 8px;border-bottom:2px solid var(--line-strong)\">Feature</th><th style=\"text-align:left;padding:3px 8px;border-bottom:2px solid var(--line-strong)\">What it means</th><th style=\"text-align:left;padding:3px 8px;border-bottom:2px solid var(--line-strong)\">WHY?</th></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\"><b>Dedicated function</b></td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">It does one job.</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">The device only needs one job.</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\"><b>Dedicated hardware</b></td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">It only has the parts its job needs.</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">Extra parts would cost money and use power.</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\"><b>Microprocessor</b></td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">A CPU on one small chip.</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">One chip is small and cheap.</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\"><b>Built into a larger device</b></td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">It is inside the machine it controls.</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">It must be next to the parts it controls.</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\"><b>Cannot easily be reprogrammed</b></td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">The user cannot change its program.</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line)\">Its job never needs to change.</td></tr></table><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Dedicated hardware:</b> only the hardware that is needed for the dedicated function.</div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> Every feature comes from one idea: the system only ever does <strong>one job</strong>.</p>"
+  },
+  {
+   "id": "notes-features",
+   "label": "Your Notes: Five Features",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Five Features</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Five features of an embedded system</b><br>1. Dedicated function. 2. Dedicated hardware. 3. A microprocessor. 4. Built into a larger device. 5. Cannot easily be reprogrammed.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Dedicated hardware</b><br>Only the hardware that is needed for the dedicated function.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY it has these features</b><br>It only ever does one job, so it only needs the parts and the program for that job.</div>"
+  },
+  {
+   "id": "benefits",
+   "label": "Why Use an Embedded System?",
+   "content": "<h2 class=\"lesson-h2\">Why Use an Embedded System?</h2><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start\"><div style=\"border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:19px\"><b style=\"font-size:20px\">A freezer with a laptop inside</b><ul class=\"lesson-facts\"><li>big, so it takes up space</li><li>costs a lot</li><li>uses a lot of power, all day and all night</li><li>a person must start the program</li></ul></div><div style=\"border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:19px\"><b style=\"font-size:20px\">A freezer with an embedded system</b><ul class=\"lesson-facts\"><li><strong>small</strong>: it fits inside the freezer</li><li><strong>cheap</strong> to make</li><li>uses <strong>little power</strong></li><li>works <strong>automatically</strong>, with no person</li></ul></div></div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> It only has the hardware for one job. Fewer parts make it small, cheap and low power.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A freezer runs every minute of every day for years. Why does low power matter so much for it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Collect ideas: think about the electricity it uses over a whole year.</p></div></details>"
+  },
+  {
+   "id": "notes-benefits",
+   "label": "Your Notes: Why Use an Embedded System?",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Why Use an Embedded System?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Benefits of an embedded system</b><br>Small. Cheap to make. Uses little power. Works automatically, with no person.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY it has these benefits</b><br>It only has the hardware for one job, so it has fewer parts.</div>"
+  },
+  {
+   "id": "examples",
+   "label": "Embedded or Not?",
+   "content": "<h2 class=\"lesson-h2\">Embedded or Not?</h2><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start\"><div style=\"border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:19px\"><b style=\"font-size:20px\">Embedded systems</b><ul class=\"lesson-facts\"><li><b>Domestic appliances</b> (machines in a home): washing machine, freezer, microwave oven</li><li><b>Cars</b>: the brakes, the air bags</li><li><b>Security systems</b>: a burglar alarm, a security light</li><li><b>Lighting systems</b>: street lights, traffic lights</li><li><b>Vending machines</b></li></ul></div><div style=\"border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:19px\"><b style=\"font-size:20px\">General purpose computers</b><ul class=\"lesson-facts\"><li>laptop</li><li>personal computer (PC)</li><li>tablet</li><li>smartphone: new apps can be installed</li><li>web server: runs many different programs</li></ul></div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Test:</b> Does it do <strong>one job</strong>, chosen by its <strong>maker</strong>? Then it is an embedded system.</div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> A smartphone is small, but you can install new apps, so it can do many different tasks. Small alone does not make it embedded.</p>"
+  },
+  {
+   "id": "notes-examples",
+   "label": "Your Notes: Embedded or Not?",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Embedded or Not?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Examples of embedded systems</b><br>Domestic appliances (washing machine, freezer, microwave oven), cars, security systems, lighting systems, vending machines.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>NOT embedded systems</b><br>Laptop, PC, tablet, smartphone, web server.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY a smartphone is not embedded</b><br>New apps can be installed, so it can perform many different tasks.</div>"
+  },
+  {
+   "id": "exam",
+   "label": "Exam Answers: Why Is It Embedded?",
+   "content": "<h2 class=\"lesson-h2\">Exam Answers: Why Is It Embedded?</h2><ul class=\"lesson-facts\"><li>The exam asks: <em>\"The microwave oven is an example of an embedded system. Explain why it is an embedded system.\"</em> [2]</li><li>2 marks: write <strong>2 features</strong>, about this device.</li></ul><div style=\"display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:start\"><div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;font-size:19px\"><b style=\"font-size:20px\">Earns the marks</b><ul class=\"lesson-facts\"><li>It has a dedicated function: heating food.</li><li>It has a microprocessor.</li></ul></div><div style=\"border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:19px\"><b style=\"font-size:20px\">Earns nothing</b><ul class=\"lesson-facts\"><li>It is a computer.</li><li>It is a machine in a home.</li></ul></div></div><ul class=\"lesson-facts\"><li>Asked why something is <strong>not</strong> embedded? Turn the features round: <em>It can perform many different tasks. New software can easily be installed.</em></li></ul><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> A mark is for a feature that only an embedded system has. Every computer is a computer.</p>"
+  },
+  {
+   "id": "notes-exam",
+   "label": "Your Notes: Exam Answers",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Exam Answers</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Explain why it is embedded (2 marks)</b><br>Write 2 features, about the device. Example: It has a dedicated function: heating food. It has a microprocessor.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Explain why it is NOT embedded</b><br>It can perform many different tasks. New software can easily be installed.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY \"it is a computer\" earns nothing</b><br>Every computer is a computer. A mark needs a feature that only an embedded system has.</div>"
+  },
+  {
+   "id": "notes-ready",
+   "label": "Your Notes: Ready for Data Bridge",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Ready for Data Bridge</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). You should have these six headings. Missing one? Go back to its slide and write it. <strong>You will use these notes in Data Bridge.</strong></p><ul class=\"lesson-facts\"><li><strong>What Is an Embedded System?</strong>: what it is, and what a dedicated function is.</li><li><strong>General Purpose or Embedded?</strong>: what a general purpose computer is, and WHY they are different.</li><li><strong>Five Features</strong>: the five features, and WHY it has them.</li><li><strong>Why Use an Embedded System?</strong>: the benefits, and WHY.</li><li><strong>Embedded or Not?</strong>: examples, and WHY a smartphone is not embedded.</li><li><strong>Exam Answers</strong>: how to explain why a device is, or is not, embedded.</li></ul>"
+  },
+  {
+   "id": "how-to-play",
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the questions</strong> to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
+  },
+  {
+   "id": "game",
+   "label": "Play: Data Bridge",
+   "type": "embedded-app",
+   "appId": "bridge-builder",
+   "embedContainerId": "y10-317-game",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><div id=\"y10-317-game\"></div>",
+   "embedQuery": "set=y10-embedded-systems&goal=3"
+  }
+ ],
+ "validators": {
+  "y10_317_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?instruction\\s*sets?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Every type of CPU has its own one. The CU uses it to decode each instruction."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
