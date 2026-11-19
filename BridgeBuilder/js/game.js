@@ -501,13 +501,12 @@
     save(); setHud(true); ctx = null; sim = null;
     var r = S.exam;
     if (r.qs) { showRound(); return; }
-    $('screen').innerHTML = '<div class="bb-card bb-q"><p class="bb-lead">Loading questions...</p></div>';
-    call(function () { return api().next(setId, { count: 3, maxMarks: 4 }); }).then(function (list) {
-      list = (list || []).filter(function (q) { return q && q.qid; });
+    $('screen').innerHTML = '<div class="bb-card bb-q"><p class="bb-lead">Loading a question...</p></div>';
+    // One question a round (James 2026-11-19), any number of marks: the round's pool is split across its marks.
+    call(function () { return api().next(setId, { count: 1, maxMarks: 99 }); }).then(function (list) {
+      list = (list || []).filter(function (q) { return q && q.qid; }).slice(0, 1);
       if (!list.length) throw new Error('No questions right now.');
-      // at most 4 marks in a round: drop questions from the end until it fits
-      var total = 0, keep = [];
-      list.forEach(function (q) { var m = Number(q.marks) || 1; if (!keep.length || total + m <= 4) { keep.push(q); total += m; } });
+      var total = Number(list[0].marks) || 1, keep = list;
       r.qs = keep.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1, blocks: q.blocks || null }; });
       r.items = r.qs.map(blankItem);
       r.pool = LV.pool;
@@ -522,6 +521,11 @@
   }
 
   function roundTotal() { return S.exam.qs.reduce(function (a, q) { return a + q.marks; }, 0); }
+  // "1 question, 3 marks" (an older saved round may still have more questions)
+  function roundSize() {
+    var n = S.exam.qs.length, m = roundTotal();
+    return n + (n === 1 ? ' question, ' : ' questions, ') + m + (m === 1 ? ' mark' : ' marks');
+  }
   function canSend(it) { return !it.fb || it.open; }
   // The question as the exam shows it (tables, gates, registers, sums: shared/exam-question.js), or its plain text.
   function showQuestion(el, q) {
@@ -530,13 +534,32 @@
     else el.textContent = q.text;
   }
 
+  // The question with its answer spaces (shared/exam-question.js answerUI): tick the grid or the boxes, fill the blank
+  // cells and registers, write on the answer lines, as on the paper. The typing box shows only where writing is needed.
+  function mountAnswer(q, it, i, ro) {
+    var opts = { doc: it.doc, text: it.bs ? '' : it.answer || '', state: it.bs || null, readOnly: ro, rows: 3, maxLength: 800,
+      label: 'Your answer to question ' + (i + 1), labelEl: $('ansLabel' + i),
+      placeholder: 'Type your final answer here. You can type working here too.',
+      onChange: function (text, doc, st) {
+        it.answer = text; it.doc = doc; if (st) it.bs = st;
+        clearTimeout(ansSaveT); ansSaveT = setTimeout(save, 400);
+        updateActs();
+      } };
+    if (window.BCExamQuestion && window.BCExamQuestion.answerUI) {
+      var blocks = q.blocks || (window.ExamGame && window.ExamGame.blocksFor ? window.ExamGame.blocksFor(q.qid) : null);
+      return window.BCExamQuestion.answerUI($('qText' + i), $('ans' + i), { text: q.text, blocks: blocks }, opts);
+    }
+    showQuestion($('qText' + i), q);
+    return window.BCAnswerBox.mount($('ans' + i), opts);
+  }
+
   function showRound() {
     var r = S.exam;
     if (r.intro) {
       var first = !load('seenRound', false);
       $('screen').innerHTML = '<div class="bb-card bb-q bb-intro"><h2>Exam round ' + r.n + '</h2>' +
         '<p class="bb-lead">' + esc(roundLine(Ph.level(r.n))) + '</p>' +
-        '<p class="bb-q-text">' + r.qs.length + ' questions, ' + roundTotal() + ' marks.\nFull marks pays ' + r.pool + ' coins.</p>' +
+        '<p class="bb-q-text">' + roundSize() + '.\nFull marks pays ' + r.pool + ' coins.</p>' +
         (S.coins ? '<p class="bb-lead">You also have ' + S.coins + ' coins saved.</p>' : '') +
         (first ? '<p class="bb-lead">Marks are the only way to earn coins. Then you spend them on your bridge.</p>' : '') +
         '<div class="bb-start-go"><button class="bc-btn bb-big" id="go">Start</button></div></div>';
@@ -546,15 +569,15 @@
     }
     var scrollY = window.scrollY, firstShow = !$('roundForm');
     var h = '<div class="bb-card bb-q" id="roundForm"><div class="bb-round-head"><h2>Exam round ' + r.n + '</h2>' +
-      '<span class="bb-pill">' + r.qs.length + ' questions, ' + roundTotal() + ' marks</span>' +
+      '<span class="bb-pill">' + roundSize() + '</span>' +
       '<span class="bb-pill">Full marks pays ' + r.pool + ' coins</span></div>';
     r.qs.forEach(function (q, i) {
       var it = r.items[i], edit = canSend(it);
-      h += '<section class="bb-qblock" id="qb' + i + '"><div class="bb-q-meta"><span class="bb-qnum">Question ' + (i + 1) + '</span>' +
+      h += '<section class="bb-qblock" id="qb' + i + '"><div class="bb-q-meta"><span class="bb-qnum">Question' + (r.qs.length > 1 ? ' ' + (i + 1) : '') + '</span>' +
         '<span class="bb-pill">' + q.marks + (q.marks === 1 ? ' mark' : ' marks') + '</span>' +
         (it.attempt === 2 && it.open ? '<span class="bb-pill is-warn">Second try: half coins</span>' : '') + '</div>' +
         '<div class="bb-q-text" id="qText' + i + '"></div>' +
-        '<p class="bb-label">Your answer' + (edit ? ' (you must type it)' : '') + ':</p><div id="ans' + i + '" class="bb-ans"></div>' +
+        '<p class="bb-label" id="ansLabel' + i + '">Your answer' + (edit ? ' (you must type it)' : '') + ':</p><div id="ans' + i + '" class="bb-ans"></div>' +
         '<div class="bb-fb" id="fb' + i + '" hidden></div><p class="bb-q-err" id="err' + i + '" hidden></p></section>';
     });
     h += '<div class="bb-round-foot"><p class="bb-round-total" id="roundTotal" hidden></p><p class="bb-q-err" id="sendErr" hidden></p>' +
@@ -563,15 +586,7 @@
     ansBoxes = [];
     r.qs.forEach(function (q, i) {
       var it = r.items[i], edit = canSend(it);
-      showQuestion($('qText' + i), q);
-      ansBoxes[i] = window.BCAnswerBox.mount($('ans' + i), { doc: it.doc, text: it.answer || '', rows: 3, maxLength: 800,
-        label: 'Your answer to question ' + (i + 1), readOnly: !edit || sending,
-        placeholder: 'Type your final answer here. You can type working here too.',
-        onChange: function (text, doc) {
-          it.answer = text; it.doc = doc;
-          clearTimeout(ansSaveT); ansSaveT = setTimeout(save, 400);
-          updateActs();
-        } });
+      ansBoxes[i] = mountAnswer(q, it, i, !edit || sending);
       if (!edit || sending) ansBoxes[i].setReadOnly(true);
       if (it.fb) showItemFeedback(i);
       if (it.err) { $('err' + i).hidden = false; $('err' + i).textContent = it.err; }
@@ -616,8 +631,8 @@
     });
     var ready = open.length && open.every(function (i) { var t = ansBoxes[i] ? ansBoxes[i].text() : r.items[i].answer; return String(t || '').trim(); });
     var h = '';
-    if (open.length) h += '<button class="bc-btn bb-big" id="submitAll"' + (ready && !sending ? '' : ' disabled') + '>' + (sending ? 'Marking...' : sendFailed ? 'Send again' : 'Submit all') + '</button>';
-    if (!open.length && retry.length) h += '<button class="bc-btn is-outline" id="againAll">Try again on the wrong ones</button>';
+    if (open.length) h += '<button class="bc-btn bb-big" id="submitAll"' + (ready && !sending ? '' : ' disabled') + '>' + (sending ? 'Marking...' : sendFailed ? 'Send again' : open.length === 1 ? 'Submit' : 'Submit all') + '</button>';
+    if (!open.length && retry.length) h += '<button class="bc-btn is-outline" id="againAll">' + (r.items.length === 1 ? 'Try again' : 'Try again on the wrong ones') + '</button>';
     if (!sending && !unmarked) h += '<button class="bc-btn' + (open.length ? ' is-outline' : ' bb-big') + '" id="toBuild">Build the bridge</button>';
     else if (!sending && (sendFailed || stuck)) h += '<button class="bc-btn is-text bb-skip" id="skipRound">Skip (no coins)</button>';
     acts.innerHTML = h;
@@ -651,7 +666,7 @@
     }
     var payload = idx.map(function (i) {
       var it = r.items[i];
-      it.answer = ansBoxes[i].text(); it.doc = ansBoxes[i].doc(); it.err = '';
+      it.answer = ansBoxes[i].text(); it.doc = ansBoxes[i].doc(); if (ansBoxes[i].state) it.bs = ansBoxes[i].state(); it.err = '';
       if (!it.rid) it.rid = api().newRid ? api().newRid() : 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       return { qid: r.qs[i].qid, answer: it.answer, attempt: it.attempt, image: '', rid: it.rid };
     });

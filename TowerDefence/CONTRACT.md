@@ -8,8 +8,8 @@ Folder: `TowerDefence/` (entry `TowerDefence/index.html`). Lesson slide embeds i
 Load the client (answers and mark schemes stay on the server):
 
 ```html
-<script src="../shared/exam-game-client.js?v=20261119q"></script>
-<script src="../shared/exam-question.js?v=20261119q"></script>
+<script src="../shared/exam-game-client.js?v=20261119eqa"></script>
+<script src="../shared/exam-question.js?v=20261119eqa"></script>
 ```
 
 All calls return Promises.
@@ -46,6 +46,50 @@ All calls return Promises.
   Stub: `?examStubFail=N` or `ExamGame.stubFail(N)` makes the next N submit requests fail like a network error.
 - `ExamGame.isStub()` says whether the local stub is in use; `ExamGame.useStub(true)` forces it.
 - Errors reject with an `Error` whose message is safe to show ("Sign in to play", "No answer from the site...").
+
+## Answering in the exam's own spaces (James 2026-11-19)
+
+Every question is written exactly as on the Cambridge paper, and students answer the way the paper does. Mount a
+question with `BCExamQuestion.answerUI(qEl, ansEl, { text, blocks }, opts)` (shared/exam-question.js): it draws the
+blocks with their answer spaces live and returns the answer box API (`text()`, `doc()`, `state()`, `setReadOnly(b)`,
+`focus()`). Keep `state()` with the saved round so a reload keeps the ticks and cells.
+
+- `tickGrid` and `options`: click a box to tick it (click again to untick).
+- Blank truth table cells, empty register boxes, the carry row and answer boxes of a sum: type 0 or 1 (the cursor moves on).
+- A blank table cell, and a `line` ("Logic gate ........"): type a value.
+- A `lines` block (answer lines for working or explanations): the typing box (shared/answer-box.js) is mounted there.
+  A question with nothing to fill in gets the typing box in `ansEl`. Otherwise `ansEl` (and `opts.labelEl`) are hidden.
+
+`text()` is the answer sent to `submit`/`submitMany`: plain text, one line per answer space in block order, joined by
+`\n`. A space with nothing filled in writes no line. Exactly:
+
+| Space | Line(s) sent |
+| --- | --- |
+| tickGrid | Every row, once anything in the grid is ticked: `Row 1: AND, OR.` then `Row 2: none.` (the ticked column heads, left to right, joined by `, `; `none` when the row has no tick; rows numbered from 1) |
+| options | One line per ticked box: `Option C: truth table.` |
+| truthTable | One line per output column that has a blank: `X: 0001` (the whole column, top row first; a printed cell gives its own value; a blank left empty is `?`) |
+| register (empty) | `Register: 10110010` (the caption without its colon, else `Register`; an empty box is `?`) |
+| table blank cell | `<first cell of its row>: <value>`, e.g. `00100011: 35`; when the blank is in the first column, `<column head>, row n: <value>` |
+| sum | `Carry: 01100110` (an empty carry box is `0`) and `Answer: 10011001` (an empty box is `?`) |
+| line | `<label>: <value>` (an empty label is written `Answer`) |
+| lines | The typed text, as typed, at the place of the lines block (with no lines block, typed text comes first) |
+
+Example, 0478/12 March 2022 Q3(a): `Row 1: AND, OR.\nRow 2: none.\nRow 3: OR.` earns 3 marks.
+
+Marking reads that text (ExamGame.gs): Haiku against the mark scheme, or for `markBy: 'key'` questions and as the
+fallback, the keyword `points` plus the question's `key`, both plain JSON:
+- `{ grid: [['AND','OR'], [], ['OR']], scale? }`: finds every `Row n: ...` (on its own line or several on one line,
+  ending at `.` or a line break), splits the ticks on `,`, trims, uppercases, compares as a set to row n of the grid
+  (`none` is the empty set). The count of right rows is the marks, or goes through `scale`.
+- `{ label: 'W', value: '00100000' | ['OR', 'OR gate'], scale?, marks? }`: the LAST line whose text, with all
+  whitespace removed and lowercased, starts with the label (whitespace removed, lowercased) plus `:`. The rest is the
+  value (same normalising). A list `value`: any match earns `marks` (default 1). With `scale`: count the positions where
+  value and the answer agree (only when both have the same length). Otherwise an exact match earns `marks` (default 1).
+- `scale`: `[[min, marks], ...]`, largest `min` first; the first `min` the count reaches gives the marks, else 0.
+- Total = points met + key marks, capped at the question's marks. `markBy: 'key'` means no Haiku for that question.
+- `adaptNote` is for teachers and docs only and never reaches the questions file.
+
+The LAN party copy needs this shared/exam-question.js and must send the same text; its C# marker needs the `key` rules above.
 
 ## Testing without the shell
 

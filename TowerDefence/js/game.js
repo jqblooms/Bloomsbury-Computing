@@ -680,6 +680,26 @@
     else el.textContent = q.text;
   }
 
+  // The question with its answer spaces (shared/exam-question.js answerUI): students tick the grid or the boxes, fill
+  // the blank cells and registers, and write on the answer lines, as on the paper. The typing box shows only where the
+  // question needs writing. The answer goes for marking as plain text (BCExamQuestion.serialise).
+  function mountAnswer(q, it, i, ro) {
+    var opts = { doc: it.doc, text: it.bs ? '' : it.answer || '', state: it.bs || null, readOnly: ro, rows: 3, maxLength: 800,
+      label: 'Your answer to question ' + (i + 1), labelEl: $('ansLabel' + i),
+      placeholder: 'Type your final answer here. You can type working here too.',
+      onChange: function (text, doc, st) {
+        it.answer = text; it.doc = doc; if (st) it.bs = st;
+        clearTimeout(ansSaveT); ansSaveT = setTimeout(save, 400);   // a reload keeps the ticks, cells, typing and table
+        updateActs();
+      } };
+    if (window.BCExamQuestion && window.BCExamQuestion.answerUI) {
+      var blocks = q.blocks || (window.ExamGame && window.ExamGame.blocksFor ? window.ExamGame.blocksFor(q.qid) : null);
+      return window.BCExamQuestion.answerUI($('qText' + i), $('ans' + i), { text: q.text, blocks: blocks }, opts);
+    }
+    showQuestion($('qText' + i), q);
+    return window.BCAnswerBox.mount($('ans' + i), opts);
+  }
+
   function showRound() {
     var r = S.round;
     if (r.intro) {
@@ -708,7 +728,7 @@
           '<div class="cs-pen-tools"><button class="bc-btn is-outline" id="penUndo' + i + '" type="button">Undo</button>' +
           '<button class="bc-btn is-outline" id="penClear' + i + '" type="button">Clear</button></div></div>';
       }
-      h += '<p class="cs-label">Your answer' + (edit ? ' (you must type it)' : '') + ':</p><div id="ans' + i + '" class="cs-ans"></div>' +
+      h += '<p class="cs-label" id="ansLabel' + i + '">Your answer' + (edit ? ' (you must type it)' : '') + ':</p><div id="ans' + i + '" class="cs-ans"></div>' +
         '<div class="cs-fb" id="fb' + i + '" hidden></div><p class="cs-q-err" id="err' + i + '" hidden></p></section>';
     });
     h += '<div class="cs-round-foot"><p class="cs-round-total" id="roundTotal" hidden></p><p class="cs-q-err" id="sendErr" hidden></p>' +
@@ -718,15 +738,7 @@
     ansBoxes = [];
     r.qs.forEach(function (q, i) {
       var it = r.items[i], edit = canSend(it);
-      showQuestion($('qText' + i), q);
-      ansBoxes[i] = window.BCAnswerBox.mount($('ans' + i), { doc: it.doc, text: it.answer || '', rows: 3, maxLength: 800,
-        label: 'Your answer to question ' + (i + 1), readOnly: !edit || sending,
-        placeholder: 'Type your final answer here. You can type working here too.',
-        onChange: function (text, doc) {
-          it.answer = text; it.doc = doc;
-          clearTimeout(ansSaveT); ansSaveT = setTimeout(save, 400);   // a reload keeps the typing and the table
-          updateActs();
-        } });
+      ansBoxes[i] = mountAnswer(q, it, i, !edit || sending);
       if (!edit || sending) ansBoxes[i].setReadOnly(true);
       if (edit) {
         var pen = penFor(i);
@@ -825,7 +837,7 @@
     }
     var payload = idx.map(function (i) {
       var it = r.items[i];
-      it.answer = ansBoxes[i].text(); it.doc = ansBoxes[i].doc(); it.err = '';
+      it.answer = ansBoxes[i].text(); it.doc = ansBoxes[i].doc(); if (ansBoxes[i].state) it.bs = ansBoxes[i].state(); it.err = '';
       // One id per send of this answer, kept until a mark comes back: a resend then never counts twice on the server.
       if (!it.rid) it.rid = api().newRid ? api().newRid() : 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       return { qid: r.qs[i].qid, answer: it.answer, attempt: it.attempt, image: penImage(penFor(i)), rid: it.rid };

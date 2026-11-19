@@ -101,7 +101,7 @@
     markOne: function (p) {
       var q = STUB_QS.filter(function (x) { return x.qid === p.qid; })[0];
       // With ?examFile=1 the questions come from the file; the stub cannot mark those, so it gives 0 and says so.
-      if (!q) { stubLast = { qid: p.qid, answer: String(p.answer || ''), answerChars: String(p.answer || '').length, imageChars: 0 }; return { marks: 0, max: 1, attempt: Number(p.attempt) === 2 ? 2 : 1, full: false, canRetry: Number(p.attempt) !== 2, feedback: 'Practice marking only marks the three practice questions.' }; }
+      if (!q) { stubLast = { qid: p.qid, answer: String(p.answer || ''), answerChars: String(p.answer || '').length, imageChars: 0 }; return { marks: 0, max: fileMarks[p.qid] || 1, attempt: Number(p.attempt) === 2 ? 2 : 1, full: false, canRetry: Number(p.attempt) !== 2, feedback: 'Practice marking only marks the three practice questions. The answer sent was: ' + String(p.answer || '') }; }
       stubLast = { qid: p.qid, answerChars: String(p.answer || '').length, imageChars: p.image ? String(p.image).length : 0 };
       var attempt = Number(p.attempt) === 2 ? 2 : 1;
       if (attempt === 2 && !stubOpen[q.qid]) throw new Error('There is no second try on this question.');
@@ -120,7 +120,7 @@
   // sets and texts at once, so a round needs no server call. The student's history comes ONCE per set from the server
   // ('history'), with a copy kept in localStorage per set as the fallback; each submit result updates it. The pick
   // follows the server's rules (examGameNext_ in ExamGame.gs): no repeats until the pool is used up, then weakest first.
-  var QFILE_G = 'e74af573';
+  var QFILE_G = 'a2556cc1';
   var base = (function () {
     var s = document.currentScript && document.currentScript.src;
     return s ? s.replace(/[^\/]*$/, '') : '../shared/';
@@ -200,7 +200,8 @@
   }
   // The exam-style blocks of a question in the loaded file (shared/exam-question.js draws them), or null.
   var fileBlocks = {};
-  function noteBlocks(d) { d.sets.forEach(function (s) { s.questions.forEach(function (q) { if (q.blocks) fileBlocks[q.qid] = q.blocks; }); }); return d; }
+  function noteBlocks(d) { d.sets.forEach(function (s) { s.questions.forEach(function (q) { fileMarks[q.qid] = Number(q.marks) || 1; if (q.blocks) fileBlocks[q.qid] = q.blocks; }); }); return d; }
+  var fileMarks = {};
 
   var qidSet = {};
   // A mark updates the history copy here, so the next round's pick follows it.

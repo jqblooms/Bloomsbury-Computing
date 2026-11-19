@@ -47,7 +47,7 @@ const fail = (m) => { console.error('FAIL ' + m); process.exit(1); };
 // Blocks (drawn by shared/exam-question.js): each type may carry only its own fields, of the right kind. A blank the
 // student works out is null (truth table) or simply absent (register bits, the sum's carry row and answer boxes), so
 // there is nowhere for an answer to sit; and no answer-like field name may appear anywhere inside.
-const ANSWER_KEYS = /^(model|ms|points|reveal|fallback|check|answer|answers|solution|correct|key|result|sum|carries|how|howText|guidance)$/i;
+const ANSWER_KEYS = /^(model|ms|points|reveal|fallback|check|answer|answers|solution|correct|key|result|sum|carries|how|howText|guidance|adaptNote|markBy)$/i;
 const isStr = (v) => typeof v === 'string';
 const strs = (v) => Array.isArray(v) && v.every(isStr);
 const BLOCKS = {
@@ -61,9 +61,12 @@ const BLOCKS = {
     heads: (v) => v === 'tc' || v === 'bin' || (Array.isArray(v) && v.every(Number.isFinite)) },
   sum: { rows: (v) => Array.isArray(v) && v.length >= 2 && v.every((r) => /^[01]{1,16}$/.test(r)), carry: (v) => v === true, boxes: (v) => v === true },
   code: { lines: strs, lang: (v) => v === 'python' || v === 'pseudocode', numbered: (v) => v === true },
-  options: { items: (v) => strs(v) && v.length >= 2 && v.length <= 8 }
+  options: { items: (v) => strs(v) && v.length >= 2 && v.length <= 8 },
+  tickGrid: { head: (v) => strs(v) && v.length >= 2, rows: (v) => Array.isArray(v) && v.length >= 1 && v.every((r) => strs(r) && r.length >= 1), caption: isStr },
+  line: { label: isStr },
+  lines: { rows: (v) => Number.isInteger(v) && v >= 1 && v <= 8 }
 };
-const REQUIRED = { para: ['text'], table: ['head', 'rows'], truthTable: ['inputs', 'outputs', 'rows'], gate: ['gate'], register: [], sum: ['rows'], code: ['lines'], options: ['items'] };
+const REQUIRED = { para: ['text'], table: ['head', 'rows'], truthTable: ['inputs', 'outputs', 'rows'], gate: ['gate'], register: [], sum: ['rows'], code: ['lines'], options: ['items'], tickGrid: ['head', 'rows'], line: [], lines: [] };
 function walkKeys(v, where) {
   if (Array.isArray(v)) v.forEach((x) => walkKeys(x, where));
   else if (v && typeof v === 'object') for (const k of Object.keys(v)) { if (ANSWER_KEYS.test(k)) fail(where + ' has an answer-like field "' + k + '" in its blocks'); walkKeys(v[k], where); }
@@ -88,6 +91,7 @@ function checkBlocks(q, srcQ) {
     if (b.type === 'truthTable' && b.rows.some((r) => r.length !== b.inputs.length + b.outputs.length)) fail(where + ': row length');
     if (b.type === 'truthTable' && b.rows.some((r) => r.slice(0, b.inputs.length).includes(null))) fail(where + ': input cells cannot be blank');
     if (b.type === 'register' && b.bits && b.size && b.bits.length !== b.size) fail(where + ': bits and size differ');
+    if (b.type === 'tickGrid' && b.rows.some((r) => r.length >= b.head.length)) fail(where + ': every row needs at least one tick column');
   });
   const blob = JSON.stringify(q.blocks);
   for (const a of answersOf(srcQ)) if (blob.includes(a)) fail(q.qid + ' blocks contain the answer ' + a);
@@ -124,11 +128,15 @@ for (const s of sets) {
 // The texts must not carry an answer either: no mark scheme or model answer text from the server appears in the file.
 const json = JSON.stringify(data);
 for (const s of Object.values(all)) for (const q of s.questions) {
-  for (const k of ['ms', 'model', 'fallback', 'howText']) {
+  for (const k of ['ms', 'model', 'fallback', 'howText', 'adaptNote']) {
     const v = typeof q[k] === 'string' ? q[k].trim() : '';
     if (v.length > 40 && !q.text.includes(v) && json.includes(JSON.stringify(v).slice(1, -1))) fail(q.qid + ' ' + k + ' found in the file');
   }
 }
+
+// Notes of ours are never shown: no adaptNote text and no '(adapted' in anything students see.
+for (const s of Object.values(all)) for (const q of s.questions) if (q.adaptNote && json.includes(JSON.stringify(String(q.adaptNote)).slice(1, -1))) fail(q.qid + ' adaptNote found in the file');
+if (/\(adapted/i.test(json)) fail('a question shows an (adapted ...) note: move it to adaptNote');
 
 const text = JSON.stringify(data, null, 1) + '\n';
 const g = crypto.createHash('sha1').update(text).digest('hex').slice(0, 8);

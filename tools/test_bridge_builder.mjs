@@ -181,5 +181,14 @@ for (let n = 1; n <= B.LEVELS.length; n++) {
   ok(g.phase === 'won', 'crossing the last round wins the game');
 }
 
+// The exam round is ONE question of any marks (James 2026-11-19); the pool is split across that question's marks.
+{
+  const src = require('fs').readFileSync(path.join(here, '..', 'BridgeBuilder', 'js', 'game.js'), 'utf8');
+  ok(/api\(\)\.next\(setId, \{ count: 1, maxMarks: 99 \}\)/.test(src), 'an exam round asks for one question, any marks');
+  ok(!/count: 3/.test(src) && !/total \+ m <= 4/.test(src), 'no three-question or four-mark round is left');
+  ok(/r\.rate = r\.pool \/ total/.test(src) && /var total = Number\(list\[0\]\.marks\) \|\| 1/.test(src), 'full marks on the one question pays the whole pool');
+  ok(/BCExamQuestion\.answerUI/.test(src), 'questions are answered in their exam-style answer spaces');
+}
+
 console.log(fails ? `${fails} failed, ${passes} passed` : `All ${passes} checks passed.`);
 process.exit(fails ? 1 : 0);

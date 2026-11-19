@@ -14,7 +14,7 @@ Folder: `BridgeBuilder/` (entry `BridgeBuilder/index.html`). Shell registry id `
 ## Rules
 
 - Questions and marking come from `shared/exam-game-client.js` exactly as in `TowerDefence/CONTRACT.md` (one-page round with `submitMany`, rids, Send again).
-- Each round: about 3 questions, at most 4 marks. The round pool (`LEVELS[n].pool` in `js/physics.js`) is split per mark; a second try pays half.
+- Each round: ONE exam question (any number of marks, James 2026-11-19), answered in its exam-style answer spaces (shared/exam-question.js answerUI). The round pool (`LEVELS[n].pool` in `js/physics.js`) is split per mark; a second try pays half.
 - Build, then Send the truck. A crossing keeps the leftover coins. Any snapped beam, a fall or a stuck truck keeps the same round: the failed bridge's coins are spent, the leftover is kept (capped at that round's pool), then a fresh exam round for that round (normal pool) and a rebuild.
 - A reload during the drive finishes that test at once (the physics is deterministic), so it cannot dodge a failed round.
 - Timers only, never `requestAnimationFrame`; nothing runs while the page is hidden. Saves per topic under `bc-databridge-v1:`.
