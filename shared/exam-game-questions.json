@@ -5832,6 +5832,482 @@
      ]
     }
    ]
+  },
+  {
+   "setId": "y10-embedded-systems",
+   "title": "Embedded Systems",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [
+    {
+     "qid": "y10e-23n12-4a",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 4(a)\nA washing machine is an example of an embedded system.\nGive two characteristics of an embedded system.\n1 ........\n2 ........\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 4(a)\nA washing machine is an example of an embedded system.\nGive two characteristics of an embedded system."
+      },
+      {
+       "type": "line",
+       "label": "1"
+      },
+      {
+       "type": "line",
+       "label": "2"
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-23n12-4b",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 4(b)\nA washing machine is an example of an embedded system.\nCircle three other examples of an embedded system.\nA freezer\nB laptop\nC personal computer (PC)\nD security light system\nE smartphone\nF vending machine\nG web server\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 4(b)\nA washing machine is an example of an embedded system.\nCircle three other examples of an embedded system."
+      },
+      {
+       "type": "options",
+       "items": [
+        "freezer",
+        "laptop",
+        "personal computer (PC)",
+        "security light system",
+        "smartphone",
+        "vending machine",
+        "web server"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-24n11-6a",
+     "text": "Cambridge IGCSE 0478/11, November 2024, Question 6(a)\nA computer programmer uses assembly language to create a computer program for an embedded system in a washing machine.\nState what is meant by an embedded system.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2024, Question 6(a)\nA computer programmer uses assembly language to create a computer program for an embedded system in a washing machine.\nState what is meant by an embedded system."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-24n12-4e",
+     "text": "Cambridge IGCSE 0478/12, November 2024, Question 4(e)\nA student has a smartwatch.\nThe smartwatch only displays the time and text messages.\nA student incorrectly describes this smartwatch as a general-purpose computer.\nExplain why the student's description is incorrect.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2024, Question 4(e)\nA student has a smartwatch.\nThe smartwatch only displays the time and text messages.\nA student incorrectly describes this smartwatch as a general-purpose computer.\nExplain why the student's description is incorrect."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-25j12-4b",
+     "text": "Cambridge IGCSE 0478/12, June 2025, Question 4(b)\nAn employee uses a computer that has a Von Neumann architecture to complete many different tasks in their working day.\nThe computer is an example of a general purpose computer and not an embedded system.\nExplain why the computer is not an embedded system.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2025, Question 4(b)\nAn employee uses a computer that has a Von Neumann architecture to complete many different tasks in their working day.\nThe computer is an example of a general purpose computer and not an embedded system.\nExplain why the computer is not an embedded system."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-25m12-4b",
+     "text": "Cambridge IGCSE 0478/12, March 2025, Question 4(b)\nAn automated teller machine (ATM) is a device where a person inserts their bank card and can request to withdraw money. The ATM also allows the person to check how much money they have in their bank account.\nDescribe the features of the ATM that identify it as an embedded system.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2025, Question 4(b)\nAn automated teller machine (ATM) is a device where a person inserts their bank card and can request to withdraw money. The ATM also allows the person to check how much money they have in their bank account.\nDescribe the features of the ATM that identify it as an embedded system."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-25n11-1g",
+     "text": "Cambridge IGCSE 0478/11, November 2025, Question 1(g)\nA student has an electronic calculator. The calculator has a screen that displays the result of calculations.\nThe electronic calculator is an example of an embedded system.\nExplain why it is an example of an embedded system.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2025, Question 1(g)\nA student has an electronic calculator. The calculator has a screen that displays the result of calculations.\nThe electronic calculator is an example of an embedded system.\nExplain why it is an example of an embedded system."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-25n12-7d",
+     "text": "Cambridge IGCSE 0478/12, November 2025, Question 7(d)\nA house has a smart speaker that can take voice commands as input. A person in the house can tell the smart speaker to play music or audio books.\nThe smart speaker is an example of an embedded system.\nExplain why the smart speaker is an embedded system.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2025, Question 7(d)\nA house has a smart speaker that can take voice commands as input. A person in the house can tell the smart speaker to play music or audio books.\nThe smart speaker is an example of an embedded system.\nExplain why the smart speaker is an embedded system."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-25n13-1f",
+     "text": "Cambridge IGCSE 0478/13, November 2025, Question 1(f)\nA flower shop has a room that has an air-conditioning system. It is used to keep the room at a constant temperature for storing flowers.\nThe air-conditioning system is an example of an embedded system.\nExplain why the air-conditioning system is an embedded system.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2025, Question 1(f)\nA flower shop has a room that has an air-conditioning system. It is used to keep the room at a constant temperature for storing flowers.\nThe air-conditioning system is an example of an embedded system.\nExplain why the air-conditioning system is an embedded system."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-pick-device",
+     "text": "Tick (✓) one box to show which device is an embedded system.\nA laptop\nB smartphone\nC web server\nD dishwasher\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show which device is an embedded system."
+      },
+      {
+       "type": "options",
+       "items": [
+        "laptop",
+        "smartphone",
+        "web server",
+        "dishwasher"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-pick-part",
+     "text": "Tick (✓) one box to show which component is found in every embedded system.\nA printer\nB mouse\nC microprocessor\nD keyboard\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show which component is found in every embedded system."
+      },
+      {
+       "type": "options",
+       "items": [
+        "printer",
+        "mouse",
+        "microprocessor",
+        "keyboard"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-pick-feature",
+     "text": "Tick (✓) one box to show which statement describes an embedded system.\nA It has dedicated hardware.\nB It can run many different programs.\nC Peripherals can be plugged in.\nD The user can easily reprogram it.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show which statement describes an embedded system."
+      },
+      {
+       "type": "options",
+       "items": [
+        "It has dedicated hardware.",
+        "It can run many different programs.",
+        "Peripherals can be plugged in.",
+        "The user can easily reprogram it."
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-grid-device",
+     "text": "Tick (✓) one box in each row to show whether each device is an embedded system or a general purpose computer.\nDevice | Embedded system | General purpose computer\nair bag system in a car | [ ] | [ ]\nlaptop | [ ] | [ ]\ntraffic light system | [ ] | [ ]\nweb server | [ ] | [ ]\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box in each row to show whether each device is an embedded system or a general purpose computer."
+      },
+      {
+       "type": "tickGrid",
+       "head": [
+        "Device",
+        "Embedded system",
+        "General purpose computer"
+       ],
+       "rows": [
+        [
+         "air bag system in a car"
+        ],
+        [
+         "laptop"
+        ],
+        [
+         "traffic light system"
+        ],
+        [
+         "web server"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-grid-statement",
+     "text": "Tick (✓) one box in each row to show whether each statement describes an embedded system or a general purpose computer.\nStatement | Embedded system | General purpose computer\nNew software can easily be installed. | [ ] | [ ]\nIt performs a dedicated function. | [ ] | [ ]\nIt is built into a larger device. | [ ] | [ ]\nPeripherals, such as a printer, can be plugged in. | [ ] | [ ]\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box in each row to show whether each statement describes an embedded system or a general purpose computer."
+      },
+      {
+       "type": "tickGrid",
+       "head": [
+        "Statement",
+        "Embedded system",
+        "General purpose computer"
+       ],
+       "rows": [
+        [
+         "New software can easily be installed."
+        ],
+        [
+         "It performs a dedicated function."
+        ],
+        [
+         "It is built into a larger device."
+        ],
+        [
+         "Peripherals, such as a printer, can be plugged in."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-terms",
+     "text": "Complete the table with the missing terms.\nTerm | Description\n........ | A computer system built into a larger device to perform a dedicated function.\n........ | A computer that can perform many different tasks, such as a laptop.\n........ | Only the hardware that is needed for the dedicated function.\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Complete the table with the missing terms."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Term",
+        "Description"
+       ],
+       "rows": [
+        [
+         "",
+         "A computer system built into a larger device to perform a dedicated function."
+        ],
+        [
+         "",
+         "A computer that can perform many different tasks, such as a laptop."
+        ],
+        [
+         "",
+         "Only the hardware that is needed for the dedicated function."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-define-gp",
+     "text": "A laptop is an example of a general purpose computer.\nState what is meant by a general purpose computer.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A laptop is an example of a general purpose computer.\nState what is meant by a general purpose computer."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-gp-chars",
+     "text": "A laptop is an example of a general purpose computer.\nGive two characteristics of a general purpose computer.\n1 ........\n2 ........\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A laptop is an example of a general purpose computer.\nGive two characteristics of a general purpose computer."
+      },
+      {
+       "type": "line",
+       "label": "1"
+      },
+      {
+       "type": "line",
+       "label": "2"
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-smartphone",
+     "text": "A student says: \"A smartphone is an embedded system because it is small.\"\nExplain why the student is incorrect.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A student says: \"A smartphone is an embedded system because it is small.\"\nExplain why the student is incorrect."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-benefits",
+     "text": "A freezer contains an embedded system, not a general purpose computer.\nGive two benefits of using an embedded system in the freezer.\n1 ........\n2 ........\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A freezer contains an embedded system, not a general purpose computer.\nGive two benefits of using an embedded system in the freezer."
+      },
+      {
+       "type": "line",
+       "label": "1"
+      },
+      {
+       "type": "line",
+       "label": "2"
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10e-own-traffic",
+     "text": "A town has a traffic light system.\nThe traffic light system is an example of an embedded system.\nExplain why the traffic light system is an embedded system.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A town has a traffic light system.\nThe traffic light system is an example of an embedded system.\nExplain why the traffic light system is an embedded system."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    }
+   ]
   }
  ]
 }
