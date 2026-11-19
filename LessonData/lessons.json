@@ -269,6 +269,14 @@
             "y10-3-1-l7",
             "y10-3-hw-sensors"
           ]
+        },
+        {
+          "code": "3.1.R",
+          "title": "Computer Architecture Review",
+          "lessons": [
+            "y10-3-1-r",
+            "y10-3-1-r2"
+          ]
         }
       ]
     },

@@ -6308,6 +6308,444 @@
      ]
     }
    ]
+  },
+  {
+   "setId": "y10-cpu",
+   "title": "The CPU and the FDE Cycle",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [
+    {
+     "qid": "y10c-22n11-2a",
+     "text": "Cambridge IGCSE 0478/11, November 2022, Question 2(a)\nPhil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU).\nOne type of component within the CPU is an address bus.\nIdentify two other types of bus and state what each is responsible for transmitting in the CPU.\nBus 1 ........\nBus 2 ........\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2022, Question 2(a)\nPhil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU).\nOne type of component within the CPU is an address bus.\nIdentify two other types of bus and state what each is responsible for transmitting in the CPU."
+      },
+      {
+       "type": "line",
+       "label": "Bus 1"
+      },
+      {
+       "type": "line",
+       "label": "Bus 2"
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-22n11-2c",
+     "text": "Cambridge IGCSE 0478/11, November 2022, Question 2(c)\nPhil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU).\nIdentify the component within the CPU that the accumulator is built into and describe the purpose of the accumulator.\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2022, Question 2(c)\nPhil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU).\nIdentify the component within the CPU that the accumulator is built into and describe the purpose of the accumulator."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-21m12-8a",
+     "text": "Cambridge IGCSE 0478/12, March 2021, Question 8(a)\nThe Von Neumann model, for a computer system, uses the stored program concept.\nDescribe what is meant by the stored program concept.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2021, Question 8(a)\nThe Von Neumann model, for a computer system, uses the stored program concept.\nDescribe what is meant by the stored program concept."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-21m12-8bi",
+     "text": "Cambridge IGCSE 0478/12, March 2021, Question 8(b)(i)\nThe fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses.\nDescribe the role of the Program Counter.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2021, Question 8(b)(i)\nThe fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses.\nDescribe the role of the Program Counter."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-21m12-8bii",
+     "text": "Cambridge IGCSE 0478/12, March 2021, Question 8(b)(ii)\nThe fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses.\nDescribe the role of the Control Bus.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2021, Question 8(b)(ii)\nThe fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses.\nDescribe the role of the Control Bus."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-23n11-1c",
+     "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(c)\nA student uses a computer and several hardware devices to complete his schoolwork.\nThe computer has a central processing unit (CPU).\nA component in the CPU sends signals to manage the fetch-decode-execute cycle.\nState the name of this component.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(c)\nA student uses a computer and several hardware devices to complete his schoolwork.\nThe computer has a central processing unit (CPU).\nA component in the CPU sends signals to manage the fetch-decode-execute cycle.\nState the name of this component."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-23n11-1ei",
+     "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(e)(i)\nThe CPU contains registers including the memory data register (MDR).\nDescribe the role of the MDR in the fetch-decode-execute cycle.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(e)(i)\nThe CPU contains registers including the memory data register (MDR).\nDescribe the role of the MDR in the fetch-decode-execute cycle."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-23n12-3b",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 3(b)\nA user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz.\nThe CPU contains a memory address register (MAR).\nDescribe the role of the MAR in the fetch-decode-execute cycle.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 3(b)\nA user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz.\nThe CPU contains a memory address register (MAR).\nDescribe the role of the MAR in the fetch-decode-execute cycle."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-23j13-2ci",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(c)(i)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU contains registers and buses.\nDescribe the role of a register in the CPU.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(c)(i)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU contains registers and buses.\nDescribe the role of a register in the CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-23j13-2cii",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(c)(ii)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU contains registers and buses.\nIdentify one bus that can be found in the CPU and explain its purpose in the fetch-decode-execute cycle.\nBus ........\nPurpose ........\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(c)(ii)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU contains registers and buses.\nIdentify one bus that can be found in the CPU and explain its purpose in the fetch-decode-execute cycle."
+      },
+      {
+       "type": "line",
+       "label": "Bus"
+      },
+      {
+       "type": "line",
+       "label": "Purpose"
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-22j11-2a",
+     "text": "Cambridge IGCSE 0478/11, June 2022, Question 2(a)\nA computer is designed using the Von Neumann model for a computer system. The computer has a central processing unit (CPU).\nData is fetched from primary storage into the CPU to be processed.\n(i) State the name of the primary storage from where data is fetched. [1]\n(i) ........\n(ii) The CPU performs a cycle to process data. Fetch is the first stage in this cycle.\nState the names of the second and third stages in the cycle.\nSecond stage ........\nThird stage ........\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2022, Question 2(a)\nA computer is designed using the Von Neumann model for a computer system. The computer has a central processing unit (CPU).\nData is fetched from primary storage into the CPU to be processed.\n(i) State the name of the primary storage from where data is fetched. [1]"
+      },
+      {
+       "type": "line",
+       "label": "(i)"
+      },
+      {
+       "type": "para",
+       "text": "(ii) The CPU performs a cycle to process data. Fetch is the first stage in this cycle.\nState the names of the second and third stages in the cycle."
+      },
+      {
+       "type": "line",
+       "label": "Second stage"
+      },
+      {
+       "type": "line",
+       "label": "Third stage"
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-25n13-2a",
+     "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(a)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nGive the name of the first register that is used in the fetch part of the cycle.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(a)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nGive the name of the first register that is used in the fetch part of the cycle."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-25n13-2bii",
+     "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(b)(ii)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nThe CPU has a control unit (CU).\nGive the name of the register that is part of the CU.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(b)(ii)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nThe CPU has a control unit (CU).\nGive the name of the register that is part of the CU."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-26j11-2aiii",
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 2(a)(iii)\nA smartphone has a quad-core 2.4 GHz processor.\nThe processor performs the fetch-decode-execute (FDE) cycle.\nGive the name of one component that is used in the execute stage of the FDE cycle.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2026, Question 2(a)(iii)\nA smartphone has a quad-core 2.4 GHz processor.\nThe processor performs the fetch-decode-execute (FDE) cycle.\nGive the name of one component that is used in the execute stage of the FDE cycle."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-own-pick-reg",
+     "text": "Tick (✓) one box to show which register holds the address of the next instruction to be fetched.\nA memory data register (MDR)\nB accumulator (ACC)\nC program counter (PC)\nD current instruction register (CIR)\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show which register holds the address of the next instruction to be fetched."
+      },
+      {
+       "type": "options",
+       "items": [
+        "memory data register (MDR)",
+        "accumulator (ACC)",
+        "program counter (PC)",
+        "current instruction register (CIR)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-own-order",
+     "text": "Four steps of the fetch stage are shown.\nWrite the numbers 1 to 4 in the table to show the order of the steps.\nOrder | Step\n........ | The instruction is sent from RAM to the MDR.\n........ | The address in the PC is copied to the MAR.\n........ | The instruction is copied from the MDR to the CIR.\n........ | The address in the MAR is sent to RAM.\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Four steps of the fetch stage are shown.\nWrite the numbers 1 to 4 in the table to show the order of the steps."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Order",
+        "Step"
+       ],
+       "rows": [
+        [
+         "",
+         "The instruction is sent from RAM to the MDR."
+        ],
+        [
+         "",
+         "The address in the PC is copied to the MAR."
+        ],
+        [
+         "",
+         "The instruction is copied from the MDR to the CIR."
+        ],
+        [
+         "",
+         "The address in the MAR is sent to RAM."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-own-alu-cu",
+     "text": "Tick (✓) one box in each row to show whether each statement applies to the arithmetic logic unit (ALU) or the control unit (CU).\nStatement | ALU | CU\nIt carries out calculations. | [ ] | [ ]\nIt decodes instructions. | [ ] | [ ]\nIt contains the accumulator. | [ ] | [ ]\nIt sends signals to manage the other components. | [ ] | [ ]\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box in each row to show whether each statement applies to the arithmetic logic unit (ALU) or the control unit (CU)."
+      },
+      {
+       "type": "tickGrid",
+       "head": [
+        "Statement",
+        "ALU",
+        "CU"
+       ],
+       "rows": [
+        [
+         "It carries out calculations."
+        ],
+        [
+         "It decodes instructions."
+        ],
+        [
+         "It contains the accumulator."
+        ],
+        [
+         "It sends signals to manage the other components."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-own-pc-inc",
+     "text": "During the fetch stage, the value in the program counter (PC) is incremented.\nExplain why the PC is incremented.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "During the fetch stage, the value in the program counter (PC) is incremented.\nExplain why the PC is incremented."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10c-own-von",
+     "text": "Tick (✓) one box to show which statement describes the stored program concept.\nA Instructions and data are stored in the same memory.\nB Instructions are stored in the CPU and data is stored in RAM.\nC Only data is stored in memory.\nD Each instruction is stored in a register before the program starts.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show which statement describes the stored program concept."
+      },
+      {
+       "type": "options",
+       "items": [
+        "Instructions and data are stored in the same memory.",
+        "Instructions are stored in the CPU and data is stored in RAM.",
+        "Only data is stored in memory.",
+        "Each instruction is stored in a register before the program starts."
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    }
+   ]
   }
  ]
 }

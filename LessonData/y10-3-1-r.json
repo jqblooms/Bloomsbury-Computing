@@ -1,0 +1,333 @@
+{
+ "id": "y10-3-1-r",
+ "label": "3.1.R Exam Practice 1: The CPU and the FDE Cycle",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: The CPU (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-31r-do-now",
+   "validatorKey": "y10_31r_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The CPU (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does an exam question give you one stage and ask for another?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It checks that you know the whole cycle. Giving back the stage it named earns nothing.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/11, November 2022, Question 2(b). Part (b): Cambridge IGCSE 0478/13, November 2023, Question 3(d). Part (c): Cambridge IGCSE 0478/11, June 2022, Question 2(a)(i).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-31r-do-now-a\">(a) The CPU performs a cycle that has three stages. One of these stages is execute. Identify one other stage of the cycle that is performed by the CPU. [1]</label><input id=\"y10-31r-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: The CPU (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-31r-do-now-b\">(b) The CPU has a component that carries out all calculations and logical operations. State the name of this component. [1]</label><input id=\"y10-31r-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: The CPU (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-31r-do-now-c\">(c) Data is fetched from primary storage into the CPU to be processed. State the name of the primary storage from where data is fetched. [1]</label><input id=\"y10-31r-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: The CPU (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-31r-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-31r-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: stages, parts and storage",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> A washing machine has three stages: wash, rinse and spin. One stage is spin. Identify one other stage.",
+      "visual": "<div style=\"display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px\"><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">wash</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">rinse</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">spin</span></div></div>"
+     },
+     {
+      "text": "The question gives one stage. Any one of the other two earns the mark. Never give back the stage the question names.",
+      "visual": "<div class=\"wt-note\">given: spin &rarr; answer: wash or rinse</div>"
+     },
+     {
+      "text": "Your part (a): the CPU cycle has three stages, in order. The last one is given. Name one of the two that come before it.",
+      "visual": "<div style=\"display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px\"><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">?</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">?</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">execute</span></div></div>"
+     },
+     {
+      "text": "<strong>A similar question.</strong> Which part of the CPU sends signals to manage the cycle? Ask: which part is in charge?",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">in charge, sends signals: the control unit</div>"
+     },
+     {
+      "text": "Your part (b): ask a different question. Which part does the working out: adding, comparing, true or false?",
+      "visual": "<div class=\"wt-note\">the part that calculates</div>"
+     },
+     {
+      "text": "Your part (c): primary storage has two kinds. One keeps the start-up instructions and cannot be changed. The other holds the programs and data in use now. Which one does the CPU take each instruction from?",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">read only memory: start-up instructions</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">?: programs and data in use now</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Registers (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-31r-do-now-2",
+   "validatorKey": "y10_31r_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Registers (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a \"State the purpose\" question want what a part is for, not where it is?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The mark is for its job. Saying where a part is, or what it looks like, does not show what it does.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/11, June 2026, Question 2(a)(i). A smartphone has a quad-core 2.4 GHz processor. The processor performs the fetch-decode-execute (FDE) cycle. Part (b): Cambridge IGCSE 0478/13, June 2024, Question 8(b)(i). The CPU contains registers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-31r-do-now-2-a\">(a) The first register used in the FDE cycle stores the location in random access memory (RAM) of the next instruction. Identify the name of this register. [1]</label><input id=\"y10-31r-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Registers (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-31r-do-now-2-b\">(b) State the purpose of a register. [1]</label><input id=\"y10-31r-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Registers (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-31r-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-31r-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the first register and a register",
+    "steps": [
+     {
+      "text": "The cycle starts with fetch. Before the CPU can fetch, it must know <strong>where</strong> the next instruction is in RAM.",
+      "visual": "<div class=\"wt-note\">a place in RAM is called an address</div>"
+     },
+     {
+      "text": "So the first register holds an address: the address of the next instruction.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">RAM address 4: LOAD 7</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">RAM address 5: ADD 8</div>"
+     },
+     {
+      "text": "Your part (a): which register keeps the address of the next instruction, and adds 1 after each fetch? Its name says that it counts.",
+      "visual": "<div class=\"wt-note\">it counts through the program</div>"
+     },
+     {
+      "text": "<strong>A similar question.</strong> State the purpose of a bus. Say what it does, with what.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">A bus <span class=\"wt-hl\">carries</span> values between components.</div>"
+     },
+     {
+      "text": "A register is a different kind of part. It is a tiny store inside the CPU, very close to the ALU and the CU.",
+      "visual": "<div class=\"wt-note\">inside the CPU, next to the parts that use it</div>"
+     },
+     {
+      "text": "Your part (b): what does a register hold? And for how long: for ever, or only while the CPU works on it?",
+      "visual": "<div class=\"wt-note\">what it holds + for how long</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l3",
+   "embedContainerId": "y10-31r-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise questions from earlier lessons in a review lesson?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Coming back to a topic after a gap helps you remember it for longer. The exam mixes topics too.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on the CPU, its registers and the buses. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-31r-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "The CPU and the FDE Cycle Exam Practice",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 1</p><h2 class=\"lesson-h2\">The CPU and the FDE Cycle</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions on the parts of the CPU, the registers, the buses and the FDE cycle.</li><li><strong>Also:</strong> run the CPU yourself, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An exam question has 3 marks. Why is one long sentence about one idea not enough?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is for a different point. One idea, said in many ways, still gets one mark.</p></div></details>"
+  },
+  {
+   "id": "exam-acc",
+   "label": "The CPU: The Accumulator",
+   "type": "self-marked-response",
+   "containerId": "y10-31r-exam-acc",
+   "content": "<h2 class=\"lesson-h2\">The CPU: The Accumulator</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This question asks two things. Why plan where each mark will come from?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One mark is for naming the part and two are for the purpose. A plan stops you writing three points about only one of them.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/11, November 2022, Question 2(c). Phil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU).</p><div id=\"y10-31r-exam-acc\"></div>",
+   "items": [
+    {
+     "id": "acc",
+     "prompt": "Identify the component within the CPU that the accumulator is built into and describe the purpose of the accumulator.",
+     "marks": 3,
+     "modelAnswer": "It is built into the ALU. It temporarily stores data. It stores the results of calculations.",
+     "scheme": [
+      "the component: arithmetic logic unit / ALU",
+      "to temporarily store data",
+      "it stores the result of interim calculations"
+     ],
+     "source": "0478/11 November 2022 Q2(c)",
+     "context": "4 minutes. Cambridge IGCSE 0478/11, November 2022, Question 2(c). Phil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU). Question: Identify the component within the CPU that the accumulator is built into and describe the purpose of the accumulator. Marking rule: One mark for the component (ALU), then any two from, one mark for each point met, up to 3."
+    }
+   ]
+  },
+  {
+   "id": "fix-stored",
+   "label": "Von Neumann: Fix the Answer",
+   "type": "self-marked-response",
+   "containerId": "y10-31r-fix-stored",
+   "content": "<h2 class=\"lesson-h2\">Von Neumann: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can an answer that sounds right still get 0 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It may only say the question again in other words. A mark needs a fact the question did not already give.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/12, March 2021, Question 8(a). The Von Neumann model, for a computer system, uses the stored program concept. Describe what is meant by the stored program concept.</p><div id=\"y10-31r-fix-stored\"></div>",
+   "items": [
+    {
+     "id": "fix-stored-program",
+     "prompt": "A student wrote: <em>&ldquo;The program is stored on the computer so it can be used again later.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 2 marks.",
+     "marks": 2,
+     "modelAnswer": "Instructions and data are stored in the same memory. Instructions are fetched and executed in order.",
+     "scheme": [
+      "instructions and data stored in the same / main memory",
+      "instructions fetched and executed in order / one after another / in sequence"
+     ],
+     "source": "0478/12 March 2021 Q8(a)",
+     "ariaLabel": "Describe what is meant by the stored program concept. (better answer)",
+     "context": "4 minutes. Cambridge IGCSE 0478/12, March 2021, Question 8(a). The Von Neumann model, for a computer system, uses the stored program concept. Describe what is meant by the stored program concept. A student wrote: \"The program is stored on the computer so it can be used again later.\" This got 0 of 2 marks: it does not say where the instructions and data are kept, or how the instructions are run. The student now writes a better answer. Marking rule: One mark each, one mark for each point met, up to 2."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Watch the Registers",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-31r-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Watch the Registers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict before you run the CPU?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A prediction shows what you really think. When the run is different, you find the exact step you had wrong.</p></div></details><p class=\"lesson-lead\"><strong>7 minutes.</strong> Predict what each register will hold, then check, then run the CPU one step at a time to see why. Clear the levels to finish.</p><div id=\"y10-31r-activity-1\"></div>",
+   "embedQuery": "activity=regs&level=2&upto=3"
+  },
+  {
+   "id": "exam-bus",
+   "label": "Buses: One Bus and Its Purpose",
+   "type": "self-marked-response",
+   "containerId": "y10-31r-exam-bus",
+   "content": "<h2 class=\"lesson-h2\">Buses: One Bus and Its Purpose</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the purpose match the bus you named?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each bus carries one kind of value. A purpose that belongs to a different bus earns nothing.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/13, June 2023, Question 2(c)(ii). A library has a self-checkout system that allows customers to register books that they want to borrow. The self-checkout system has a central processing unit (CPU). The CPU contains registers and buses.</p><div id=\"y10-31r-exam-bus\"></div>",
+   "items": [
+    {
+     "id": "bus",
+     "prompt": "Identify one bus that can be found in the CPU and explain its purpose in the fetch-decode-execute cycle.",
+     "marks": 3,
+     "modelAnswer": "Data bus. It carries data between components in the CPU.",
+     "scheme": [
+      "address bus / data bus / control bus (one mark for the name)",
+      "address bus: transmits / carries addresses ... between components in the CPU",
+      "data bus: transmits / carries data ... between components in the CPU",
+      "control bus: transmits control signals ... from the control unit to other components in the CPU"
+     ],
+     "source": "0478/13 June 2023 Q2(c)(ii)",
+     "context": "4 minutes. Cambridge IGCSE 0478/13, June 2023, Question 2(c)(ii). A library has a self-checkout system that allows customers to register books that they want to borrow. The self-checkout system has a central processing unit (CPU). The CPU contains registers and buses. Question: Identify one bus that can be found in the CPU and explain its purpose in the fetch-decode-execute cycle. Marking rule: One mark for the bus, two marks for the matching description, one mark for each point met, up to 3."
+    }
+   ]
+  },
+  {
+   "id": "fix-mar-mdr",
+   "label": "Registers: Fix the Answer",
+   "type": "self-marked-response",
+   "containerId": "y10-31r-fix-mar-mdr",
+   "content": "<h2 class=\"lesson-h2\">Registers: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Two registers have names that look alike. How can you remember which holds what?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Read the middle word of each name. It says what kind of value that register holds.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/12, June 2026, Question 2(c). A computer has a central processing unit (CPU). A value is fetched from random access memory (RAM) to the CPU. Explain how the MAR and MDR are used in this process.</p><div id=\"y10-31r-fix-mar-mdr\"></div>",
+   "items": [
+    {
+     "id": "fix-mar-mdr-use",
+     "prompt": "A student wrote: <em>&ldquo;The MDR holds the address of the value, and the MAR holds the value when it arrives from RAM.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 3 marks.",
+     "marks": 3,
+     "modelAnswer": "The MAR holds the address of the value to be fetched. The value is copied into the MDR.",
+     "scheme": [
+      "the MAR stores / holds the address / location // the address is sent / copied to the MAR ...",
+      "... for the value / data that is to be fetched / in RAM",
+      "the MDR stores / holds the value / data // the data is sent / copied to the MDR"
+     ],
+     "source": "0478/12 June 2026 Q2(c)",
+     "ariaLabel": "Explain how the MAR and MDR are used in this process. (better answer)",
+     "context": "4 minutes. Cambridge IGCSE 0478/12, June 2026, Question 2(c). A computer has a central processing unit (CPU). A value is fetched from random access memory (RAM) to the CPU. Explain how the MAR and MDR are used in this process. A student wrote: \"The MDR holds the address of the value, and the MAR holds the value when it arrives from RAM.\" This got 0 of 3 marks: the two registers are swapped: the MAR holds the address and the MDR holds the value. The student now writes a better answer. Marking rule: Three from, one mark for each point met, up to 3."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Trace the Buses",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-31r-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Trace the Buses</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why trace a write as well as a read?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The data goes the other way in a write. Tracing both shows you know what each bus does, not just one pattern.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Trace a read and a write: for each bus, pick what it carries and which way it goes. Then do it with no help.</p><div id=\"y10-31r-activity-2\"></div>",
+   "embedQuery": "activity=buses&level=3&upto=4"
+  },
+  {
+   "id": "exam-pc",
+   "label": "The FDE Cycle: The Program Counter",
+   "type": "self-marked-response",
+   "containerId": "y10-31r-exam-pc",
+   "content": "<h2 class=\"lesson-h2\">The FDE Cycle: The Program Counter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A register holds one value. Why does the exam want you to say which value?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every register holds a value. Saying which one shows what makes this register different.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Cambridge IGCSE 0478/12, March 2021, Question 8(b)(i). The fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses.</p><div id=\"y10-31r-exam-pc\"></div>",
+   "items": [
+    {
+     "id": "pc",
+     "prompt": "Describe the role of the Program Counter.",
+     "marks": 2,
+     "modelAnswer": "It holds the address of the next instruction.",
+     "scheme": [
+      "holds the address ...",
+      "... of next / current instruction"
+     ],
+     "source": "0478/12 March 2021 Q8(b)(i)",
+     "context": "3 minutes. Cambridge IGCSE 0478/12, March 2021, Question 8(b)(i). The fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses. Question: Describe the role of the Program Counter. Marking rule: One mark each, one mark for each point met, up to 2."
+    }
+   ]
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Quick Exam Questions",
+   "type": "short-answer-validation",
+   "validatorId": "y10-31r-practice",
+   "validatorKey": "y10_31r_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Quick Exam Questions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why give the full name of a component, not a word such as \"register\" or \"unit\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Many parts share those words. Only the full name, or its letters, tells the examiner which part you mean.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Part (a): Cambridge IGCSE 0478/11, November 2023, Question 1(c). Part (b): Cambridge IGCSE 0478/11, June 2026, Question 2(a)(iii). Part (c): Cambridge IGCSE 0478/13, November 2025, Question 2(b)(ii). The CPU has a control unit (CU).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-31r-practice-a\">(a) A component in the CPU sends signals to manage the fetch-decode-execute cycle. State the name of this component. [1]</label><input id=\"y10-31r-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Quick Exam Questions part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-31r-practice-b\">(b) Give the name of one component that is used in the execute stage of the FDE cycle. [1]</label><input id=\"y10-31r-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Quick Exam Questions part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-31r-practice-c\">(c) Give the name of the register that is part of the CU. [1]</label><input id=\"y10-31r-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Quick Exam Questions part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-31r-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-31r-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: The CPU and FDE Cycle Exam Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-r",
+   "embedContainerId": "y10-31r-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: The CPU and FDE Cycle Exam Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do questions keep coming back until you get them right three times in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right once can be luck. Three times in a row shows that you really know it.</p></div></details><p class=\"lesson-lead\"><strong>5 minutes.</strong> Real exam questions on the CPU, the registers, the buses and the FDE cycle. Get each one right three times in a row. Your progress is saved.</p><div id=\"y10-31r-plenary\"></div>"
+  },
+  {
+   "id": "how-to-play",
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before it costs you marks in the exam.</p></div></details><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the exam questions</strong> on the CPU and the FDE cycle to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
+  },
+  {
+   "id": "game",
+   "label": "Play: Data Bridge",
+   "type": "embedded-app",
+   "appId": "bridge-builder",
+   "embedContainerId": "y10-31r-game",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Earn coins with real exam questions, then build.</p><div id=\"y10-31r-game\"></div>",
+   "embedQuery": "set=y10-cpu&goal=3"
+  }
+ ],
+ "validators": {
+  "y10_31r_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(fetch|fetching|decode|decoding)(\\s+stage)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Execute is the last stage. Name one of the two stages that come before it."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?(alu|arithmetic\\s+(and\\s+)?logic(al)?\\s+unit)(\\s*\\(\\s*alu\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which part of the CPU does the working out? Give its full name or its letters."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(ram|random[\\s-]+access\\s+memory)(\\s*\\(\\s*ram\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which primary storage holds the programs and data in use now?"
+   }
+  ],
+  "y10_31r_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(pc|program\\s+counter|mar|memory\\s+address\\s+register)(\\s*\\(\\s*(pc|mar)\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which register keeps the address of the next instruction?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(stor\\w*|hold\\w*|keep\\w*)\\b)(?=.*\\b(data|instructions?|address\\w*|values?)\\b)(?=.*\\b(temporar\\w*|short|brief\\w*|while|during)\\b).*$|\\bimmediate(ly)?\\s+access\\w*\\b",
+     "flags": "i"
+    },
+    "feedback": "Say what a register holds, and for how long."
+   }
+  ],
+  "y10_31r_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(cu|control\\s+unit)(\\s*\\(\\s*cu\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which part of the CPU is in charge, and tells the other parts what to do?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?(alu|arithmetic\\s+(and\\s+)?logic(al)?\\s+unit|acc|accumulator|cu|control\\s+unit|mdr|memory\\s+data\\s+register|mar|memory\\s+address\\s+register|pc|program\\s+counter|ram|random[\\s-]+access\\s+memory|(data|address|control)\\s+bus)(\\s*\\(\\s*[a-z]+\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Name one part that does work when an instruction is carried out. Give its full name or its letters."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(cir|ir|(current\\s+)?instruction\\s+register)(\\s*\\(\\s*c?ir\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The CU decodes instructions. Which register holds the instruction while it is decoded?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

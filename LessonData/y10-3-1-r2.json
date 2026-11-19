@@ -1,0 +1,355 @@
+{
+ "id": "y10-3-1-r2",
+ "label": "3.1.R Exam Practice 2: Performance, Instruction Sets and Embedded Systems",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: The Clock (1 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-31r2-do-now",
+   "validatorKey": "y10_31r2_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The Clock (1 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does \"State the name of this component\" want a name, and not a description?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>State asks for a short answer. The name alone earns the mark, so a long description wastes time.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2023, Question 3(c). A computer has a central processing unit (CPU).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-31r2-do-now-a\">(a) The CPU has a component that regulates the number of fetch-decode-execute cycles the CPU can perform in a second. State the name of this component. [1]</label><input id=\"y10-31r2-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: The Clock (1 of 3) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-31r2-do-now-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-31r2-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the beat",
+    "steps": [
+     {
+      "text": "<strong>A similar idea.</strong> A band plays to a beat. One player keeps the beat, and everyone plays one note on each beat.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">beat, beat, beat: one note each</div>"
+     },
+     {
+      "text": "A faster beat means more notes in each minute. Everyone plays faster, but each note is the same.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">slow beat: 60 notes a minute</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">fast beat: 120 notes a minute</div>"
+     },
+     {
+      "text": "The CPU works the same way. One component sends out a regular pulse. On each pulse, one FDE cycle is done.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">pulse, pulse, pulse: one FDE cycle each</div>"
+     },
+     {
+      "text": "More pulses each second means more FDE cycles each second.",
+      "visual": "<div class=\"wt-note\">pulses per second = cycles per second</div>"
+     },
+     {
+      "text": "Your question asks for a component, not a speed. So give the name of a part of the computer.",
+      "visual": "<div class=\"wt-note\">a name, not a number</div>"
+     },
+     {
+      "text": "Your question: which component sends out those pulses? It sets how many cycles happen in one second.",
+      "visual": "<div class=\"wt-note\">the one that keeps the beat</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-cache",
+   "label": "Do Now: Cache (2 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-31r2-do-now-cache",
+   "validatorKey": "y10_31r2_do_now_cache",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Cache (2 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why test every option in a multiple choice question, not just pick the first one that sounds right?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Several options can sound right. Testing each one against what you know finds the one that is fully true.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2025, Question 2(c)(i). The computer has primary storage. One example of primary storage is cache.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-31r2-do-now-cache-a\">(a) Tick one box to show the correct statement that describes the purpose of cache. Type A, B, C or D.<span style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 16px;margin-top:4px;font-weight:400\"><span>A It stores important instructions.</span><span>B It stores the next instruction to be processed.</span><span>C It stores frequently used instructions.</span><span>D It stores instructions so they are not lost when the power is turned off.</span></span> [1]</label><input id=\"y10-31r2-do-now-cache-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-cache-a\" aria-label=\"Do Now: Cache (2 of 3) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-31r2-do-now-cache-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-31r2-do-now-cache-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: test each statement",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Which statement describes the purpose of a register? A: it stores data for many years. B: it stores data temporarily, inside the CPU.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">A: for many years?</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">B: temporarily, inside the CPU?</div>"
+     },
+     {
+      "text": "Test each statement against what you know. A register loses its value when the power goes off, so A is wrong. B fits.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">A: <span class=\"wt-hl\">no</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">B: <span class=\"wt-hl\">yes</span></div>"
+     },
+     {
+      "text": "Watch for a statement that describes a different part. Ask: is this the job of this part, or of another part?",
+      "visual": "<div class=\"wt-note\">the right job, for the right part</div>"
+     },
+     {
+      "text": "Cache is a small store very close to the CPU. Getting a value from it is faster than going out to RAM.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">CPU &harr; cache: fast</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">CPU &harr; RAM: slower</div>"
+     },
+     {
+      "text": "Cross out each statement that is wrong, and say why in a few words. The one left must be fully true.",
+      "visual": "<div class=\"wt-note\">cross out, then check the one left</div>"
+     },
+     {
+      "text": "Your question: test all four statements the same way. Which one says why cache makes the CPU faster than going to RAM each time?",
+      "visual": "<div class=\"wt-note\">test A, B, C and D one at a time</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-3",
+   "label": "Do Now: Instruction Sets and Embedded Systems (3 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-31r2-do-now-3",
+   "validatorKey": "y10_31r2_do_now_3",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Instruction Sets and Embedded Systems (3 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a \"State what is meant by\" question want a kind of thing first?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Saying what kind of thing it is, then what makes it different, gives the examiner a full meaning in one line.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/12, June 2024, Question 5(b). Instructions are processed by a central processing unit (CPU) in a computer. Part (b): Cambridge IGCSE 0478/11, November 2024, Question 6(a). A computer program is created for an embedded system in a washing machine.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-31r2-do-now-3-a\">(a) The CPU uses an instruction set to decode the instruction. State what is meant by an instruction set. [1]</label><input id=\"y10-31r2-do-now-3-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-a\" aria-label=\"Do Now: Instruction Sets and Embedded Systems (3 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-31r2-do-now-3-b\">(b) State what is meant by an embedded system. [1]</label><input id=\"y10-31r2-do-now-3-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-b\" aria-label=\"Do Now: Instruction Sets and Embedded Systems (3 of 3) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-31r2-do-now-3-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-31r2-do-now-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: instruction sets and embedded systems",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> State what is meant by a character set.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">character set: ?</div>"
+     },
+     {
+      "text": "Say what kind of thing it is, then what is in it, then who uses it.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">a list ... of all the characters ... a computer can represent</div>"
+     },
+     {
+      "text": "Your part (a): use the same pattern. It is a list. A list of what? Which part of the computer can carry them out?",
+      "visual": "<div class=\"wt-note\">a list + of what + by what</div>"
+     },
+     {
+      "text": "<strong>A similar question.</strong> State what is meant by a general purpose computer.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">general purpose computer: ?</div>"
+     },
+     {
+      "text": "Say what kind of thing it is, and what makes it different: it can perform many different tasks, such as a laptop.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">a computer ... that can perform <span class=\"wt-hl\">many different tasks</span></div>"
+     },
+     {
+      "text": "Your part (b): an embedded system is the other kind. How many tasks does it do? Where is it found: on a desk, or inside a machine?",
+      "visual": "<div class=\"wt-note\">how many tasks + where it is</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l4",
+   "embedContainerId": "y10-31r2-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise the FDE cycle again before a lesson on performance?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Clock speed, cache and cores all change how fast the FDE cycle runs. You need the cycle first.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on the fetch-decode-execute cycle. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-31r2-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Performance, Instruction Sets and Embedded Systems Exam Practice",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 2</p><h2 class=\"lesson-h2\">Performance, Instruction Sets and Embedded Systems</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions on CPU performance, instruction sets and embedded systems.</li><li><strong>Also:</strong> race two CPUs, run a machine code program, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An \"Explain\" question has 2 marks. Why should your answer use \"so\" or \"because\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Explain wants a point and its result. \"So\" or \"because\" joins the two marks together.</p></div></details>"
+  },
+  {
+   "id": "exam-clock",
+   "label": "Performance: Clock Speed",
+   "type": "self-marked-response",
+   "containerId": "y10-31r2-exam-clock",
+   "content": "<h2 class=\"lesson-h2\">Performance: Clock Speed</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"it makes the computer faster\" not enough for 3 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is one general idea. The marks need the steps: what the clock speed is, what changes, and the effect.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/11, June 2025, Question 5(c). Data is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.</p><div id=\"y10-31r2-exam-clock\"></div>",
+   "items": [
+    {
+     "id": "clock",
+     "prompt": "Explain how the clock speed can affect the performance of a CPU.",
+     "marks": 3,
+     "modelAnswer": "The clock speed is the number of FDE cycles performed per second. If it is increased, more FDE cycles are performed each second, so performance improves.",
+     "scheme": [
+      "on each clock pulse, an FDE cycle is performed",
+      "the clock speed is the number of FDE cycles performed in a second // the number of times the clock pulses per second",
+      "if clock speed is increased more FDE cycles can be performed in a second // if it is decreased fewer FDE cycles can be performed in a second",
+      "if clock speed is increased, it can improve the performance of the CPU // if it is decreased, it decreases the performance"
+     ],
+     "source": "0478/11 June 2025 Q5(c)",
+     "context": "4 minutes. Cambridge IGCSE 0478/11, June 2025, Question 5(c). Data is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture. Question: Explain how the clock speed can affect the performance of a CPU. Marking rule: Three from, one mark for each point met, up to 3."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: CPU Race",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-31r2-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: CPU Race</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can the CPU with more cores still lose a race?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Extra cores only help when the task can be split between them. The task decides which upgrade matters.</p></div></details><p class=\"lesson-lead\"><strong>7 minutes.</strong> Two CPUs run the same task. Predict which finishes first, or work out each time, then check. Some tasks cannot be split, and some data does not fit the cache.</p><div id=\"y10-31r2-activity-1\"></div>",
+   "embedQuery": "activity=perf&level=3&upto=4"
+  },
+  {
+   "id": "exam-cores",
+   "label": "Performance: Cores",
+   "type": "self-marked-response",
+   "containerId": "y10-31r2-exam-cores",
+   "content": "<h2 class=\"lesson-h2\">Performance: Cores</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read what changed in the question before you answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The answer must be about the part that changed. A reason about a different part earns nothing.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Cambridge IGCSE 0478/12, March 2024, Question 2(b)(ii). The computer has a single core 3.5 GHz processor and an 8 kB cache.</p><div id=\"y10-31r2-exam-cores\"></div>",
+   "items": [
+    {
+     "id": "cores",
+     "prompt": "The CPU is changed to a dual-core 3.5 GHz processor. Explain how the number of cores affects the performance of a CPU.",
+     "marks": 2,
+     "modelAnswer": "More cores mean more instructions are executed each second, because each core runs an FDE cycle at the same time.",
+     "scheme": [
+      "more cores increases / improves the performance",
+      "more cores mean more FDE cycles / instructions are executed each second",
+      "... because each core runs an FE cycle / instruction simultaneously"
+     ],
+     "source": "0478/12 March 2024 Q2(b)(ii)",
+     "context": "3 minutes. Cambridge IGCSE 0478/12, March 2024, Question 2(b)(ii). The computer has a single core 3.5 GHz processor and an 8 kB cache. Question: The CPU is changed to a dual-core 3.5 GHz processor. Explain how the number of cores affects the performance of a CPU. Marking rule: Any two from, one mark for each point met, up to 2."
+    }
+   ]
+  },
+  {
+   "id": "exam-cache",
+   "label": "Performance: Cache",
+   "type": "self-marked-response",
+   "containerId": "y10-31r2-exam-cache",
+   "content": "<h2 class=\"lesson-h2\">Performance: Cache</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the question give the old size and the new size?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They show what changed. Your answer must say what that change does, and why.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Cambridge IGCSE 0478/12, March 2024, Question 2(b)(iii). The computer has a single core 3.5 GHz processor and an 8 kB cache.</p><div id=\"y10-31r2-exam-cache\"></div>",
+   "items": [
+    {
+     "id": "cache",
+     "prompt": "The amount of cache is increased to 64 kB. Explain how the amount of cache affects the performance of a computer.",
+     "marks": 2,
+     "modelAnswer": "More cache means more frequently used data can be accessed faster, instead of from the slower RAM.",
+     "scheme": [
+      "more cache improves performance",
+      "... because more cache means the processor can access more frequently used data / instructions faster",
+      "... instead of having to access the data from the slower-access RAM"
+     ],
+     "source": "0478/12 March 2024 Q2(b)(iii)",
+     "context": "3 minutes. Cambridge IGCSE 0478/12, March 2024, Question 2(b)(iii). The computer has a single core 3.5 GHz processor and an 8 kB cache. Question: The amount of cache is increased to 64 kB. Explain how the amount of cache affects the performance of a computer. Marking rule: Any two from, one mark for each point met, up to 2."
+    }
+   ]
+  },
+  {
+   "id": "fix-quad",
+   "label": "Performance: Fix the Answer",
+   "type": "self-marked-response",
+   "containerId": "y10-31r2-fix-quad",
+   "content": "<h2 class=\"lesson-h2\">Performance: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read the numbers in the question before you explain a difference?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Only what is different can explain the advantage. A value that stays the same cannot be the reason.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/11, June 2026, Question 2(b). A smartphone has a quad-core 2.4 GHz processor. Explain the advantages of the smartphone having a quad-core processor instead of a dual-core processor.</p><div id=\"y10-31r2-fix-quad\"></div>",
+   "items": [
+    {
+     "id": "fix-quad-core",
+     "prompt": "A student wrote: <em>&ldquo;It is faster because it has a higher clock speed.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 2 marks.",
+     "marks": 2,
+     "modelAnswer": "It has twice as many cores, so four instructions can be executed simultaneously rather than two.",
+     "scheme": [
+      "it can execute more instructions / FDE cycles simultaneously // four instructions can be executed simultaneously rather than two",
+      "it can execute more instructions / FDE cycles per second",
+      "... as it has double the number of cores // it has more cores // it has 4 cores instead of 2"
+     ],
+     "source": "0478/11 June 2026 Q2(b)",
+     "ariaLabel": "Explain the advantages of the smartphone having a quad-core processor instead of a dual-core processor. (better answer)",
+     "context": "4 minutes. Cambridge IGCSE 0478/11, June 2026, Question 2(b). A smartphone has a quad-core 2.4 GHz processor. Explain the advantages of the smartphone having a quad-core processor instead of a dual-core processor. A student wrote: \"It is faster because it has a higher clock speed.\" This got 0 of 2 marks: the clock speed is not different here; the advantage comes from the number of cores. The student now writes a better answer. Marking rule: Two from, one mark for each point met, up to 2."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Run a Machine Code Program",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-31r2-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Run a Machine Code Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a program made for one CPU fail on another CPU?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each CPU decodes with its own instruction set. The same bits can mean a different command on another CPU.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Decode each machine code instruction with the instruction set, then run the program one line at a time. Then try a CPU with a different instruction set.</p><div id=\"y10-31r2-activity-2\"></div>",
+   "embedQuery": "activity=isa&level=3&upto=4"
+  },
+  {
+   "id": "exam-atm",
+   "label": "Embedded Systems: The ATM",
+   "type": "self-marked-response",
+   "containerId": "y10-31r2-exam-atm",
+   "content": "<h2 class=\"lesson-h2\">Embedded Systems: The ATM</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does \"it is a computer\" earn no mark in a question about embedded systems?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every computer is a computer. A mark needs a feature that only an embedded system has.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/12, March 2025, Question 4(b). An automated teller machine (ATM) is a device where a person inserts their bank card and can request to withdraw money. The ATM also allows the person to check how much money they have in their bank account.</p><div id=\"y10-31r2-exam-atm\"></div>",
+   "items": [
+    {
+     "id": "atm",
+     "prompt": "Describe the features of the ATM that identify it as an embedded system.",
+     "marks": 2,
+     "modelAnswer": "It has a dedicated function. It has a microprocessor.",
+     "scheme": [
+      "dedicated function // special purpose device // not general purpose device",
+      "dedicated hardware // by description, for example hardware is only used for ATM functions",
+      "cannot be (easily) reprogrammed",
+      "uses firmware",
+      "contains microprocessor // does not have CPU"
+     ],
+     "source": "0478/12 March 2025 Q4(b)",
+     "context": "4 minutes. Cambridge IGCSE 0478/12, March 2025, Question 4(b). An automated teller machine (ATM) is a device where a person inserts their bank card and can request to withdraw money. The ATM also allows the person to check how much money they have in their bank account. Question: Describe the features of the ATM that identify it as an embedded system. Marking rule: Any two from, one mark for each point met, up to 2."
+    }
+   ]
+  },
+  {
+   "id": "fix-watch",
+   "label": "Embedded Systems: Fix the Answer",
+   "type": "self-marked-response",
+   "containerId": "y10-31r2-fix-watch",
+   "content": "<h2 class=\"lesson-h2\">Embedded Systems: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the size of a device not a good reason in this kind of question?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Small devices can be general purpose, such as a smartphone. So size alone cannot decide it.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/12, November 2024, Question 4(e). A student has a smartwatch. The smartwatch only displays the time and text messages. A student incorrectly describes this smartwatch as a general-purpose computer. Explain why the student's description is incorrect.</p><div id=\"y10-31r2-fix-watch\"></div>",
+   "items": [
+    {
+     "id": "fix-watch-gp",
+     "prompt": "A student wrote: <em>&ldquo;The smartwatch is too small to be a general-purpose computer.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 2 marks.",
+     "marks": 2,
+     "modelAnswer": "The watch can only perform a dedicated function, whereas a general purpose computer performs many functions.",
+     "scheme": [
+      "the watch can only perform a dedicated / limited function",
+      "... and a general purpose computer performs many / multiple functions",
+      "... (this means that) it is an embedded system",
+      "you cannot plug in peripherals",
+      "you cannot reprogram the smartwatch // cannot install other software / apps",
+      "it would only have a microprocessor // it would not have a CPU"
+     ],
+     "source": "0478/12 November 2024 Q4(e)",
+     "ariaLabel": "Explain why the student's description is incorrect. (better answer)",
+     "context": "4 minutes. Cambridge IGCSE 0478/12, November 2024, Question 4(e). A student has a smartwatch. The smartwatch only displays the time and text messages. A student incorrectly describes this smartwatch as a general-purpose computer. Explain why the student's description is incorrect. A student wrote: \"The smartwatch is too small to be a general-purpose computer.\" This got 0 of 2 marks: size does not decide it; the answer must say how many functions each one can perform. The student now writes a better answer. Marking rule: Any two from, one mark for each point met, up to 2."
+    }
+   ]
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-r2",
+   "embedContainerId": "y10-31r2-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do questions keep coming back until you get them right three times in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right once can be luck. Three times in a row shows that you really know it.</p></div></details><p class=\"lesson-lead\"><strong>5 minutes.</strong> Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.</p><div id=\"y10-31r2-plenary\"></div>"
+  },
+  {
+   "id": "how-to-play",
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before it costs you marks in the exam.</p></div></details><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the exam questions</strong> on instruction sets and the FDE cycle to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
+  },
+  {
+   "id": "game",
+   "label": "Play: Data Bridge",
+   "type": "embedded-app",
+   "appId": "bridge-builder",
+   "embedContainerId": "y10-31r2-game",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Earn coins with real exam questions, then build.</p><div id=\"y10-31r2-game\"></div>",
+   "embedQuery": "set=y10-instruction-sets&goal=3"
+  }
+ ],
+ "validators": {
+  "y10_31r2_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|a\\s+)?(system\\s+|cpu\\s+)?clock\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which component sends out a regular pulse, one cycle on each pulse?"
+   }
+  ],
+  "y10_31r2_do_now_cache": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(c\\s*[.:)-]?\\s*)?(it\\s+)?stores?\\s+frequently\\s+used\\s+instructions\\s*\\.?\\s*$|^\\s*c\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Test each statement. Why is it faster to have some instructions close to the CPU?"
+   }
+  ],
+  "y10_31r2_do_now_3": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(list|set|collection|group|all)\\b)(?=.*\\b(commands?|instructions?|operations?|opcodes?)\\b)(?=.*\\b(cpu|processor|process\\w*|execut\\w*|run|carr\\w*\\s+out|understand\\w*|decod\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Say what kind of thing it is, what is in it, and which part can carry them out."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(many|multiple|lots\\s+of|several|different)\\s+(functions?|tasks?|jobs?|things)\\b)(?:.*\\b(dedicated|single|specific|one|limited|particular|special)\\s+(function|task|job|purpose)s?\\b|.*\\bmicroprocessors?\\b|.*\\bdedicated\\s+hardware\\b|(?=.*\\b(built\\s+in(to)?|inside|within|part\\s+of)\\b)(?=.*\\b(larger|bigger|another|machine|device|appliance)\\b)).*$",
+     "flags": "i"
+    },
+    "feedback": "How many tasks does it do, and where is it found?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
