@@ -508,7 +508,7 @@
       // at most 4 marks in a round: drop questions from the end until it fits
       var total = 0, keep = [];
       list.forEach(function (q) { var m = Number(q.marks) || 1; if (!keep.length || total + m <= 4) { keep.push(q); total += m; } });
-      r.qs = keep.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1 }; });
+      r.qs = keep.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1, blocks: q.blocks || null }; });
       r.items = r.qs.map(blankItem);
       r.pool = LV.pool;
       r.rate = r.pool / total;
@@ -523,6 +523,12 @@
 
   function roundTotal() { return S.exam.qs.reduce(function (a, q) { return a + q.marks; }, 0); }
   function canSend(it) { return !it.fb || it.open; }
+  // The question as the exam shows it (tables, gates, registers, sums: shared/exam-question.js), or its plain text.
+  function showQuestion(el, q) {
+    var blocks = q.blocks || (window.ExamGame && window.ExamGame.blocksFor ? window.ExamGame.blocksFor(q.qid) : null);
+    if (window.BCExamQuestion) window.BCExamQuestion.render(el, { text: q.text, blocks: blocks });
+    else el.textContent = q.text;
+  }
 
   function showRound() {
     var r = S.exam;
@@ -557,7 +563,7 @@
     ansBoxes = [];
     r.qs.forEach(function (q, i) {
       var it = r.items[i], edit = canSend(it);
-      $('qText' + i).textContent = q.text;
+      showQuestion($('qText' + i), q);
       ansBoxes[i] = window.BCAnswerBox.mount($('ans' + i), { doc: it.doc, text: it.answer || '', rows: 3, maxLength: 800,
         label: 'Your answer to question ' + (i + 1), readOnly: !edit || sending,
         placeholder: 'Type your final answer here. You can type working here too.',

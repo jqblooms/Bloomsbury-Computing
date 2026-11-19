@@ -1,6 +1,7 @@
 // Builds shared/exam-game-questions.json: the Exam Game question texts, so a game (TowerDefence/) shows a round at once
 // instead of asking the server. Reads the shell's ExamGame.gs and ExamGameSet*.gs in a node vm, as its tests do.
-// ONLY { setId, title, year, unit, questions: [{ qid, text, marks }] } is written (year and unit are set-level labels
+// ONLY { setId, title, year, unit, questions: [{ qid, text, marks, blocks? }] } is written (blocks: the question drawn as
+// in the exam, checked below so no answer can ride in them; shared/exam-question.js draws them; year and unit are set-level labels
 // for the topic pickers, and every set must have both): mark schemes, model answers, checks, points,
 // reveal and fallback stay on the server, and this script fails if any other field gets in.
 // It also writes the file's version into shared/exam-game-client.js (QFILE_G), so browsers load the new file.
@@ -32,12 +33,77 @@ const sets = listed.map(({ setId }) => ({
   title: String(all[setId].title),
   year: String(all[setId].year || ''),
   unit: String(all[setId].unit || ''),
-  questions: all[setId].questions.map((q) => ({ qid: String(q.qid), text: String(q.text), marks: Number(q.marks) }))
+  questions: all[setId].questions.map((q) => {
+    const o = { qid: String(q.qid), text: String(q.text), marks: Number(q.marks) };
+    if (q.blocks) o.blocks = JSON.parse(JSON.stringify(q.blocks));
+    return o;
+  })
 }));
 const data = { v: 1, sets };
 
 // Only these fields, ever.
 const fail = (m) => { console.error('FAIL ' + m); process.exit(1); };
+
+// Blocks (drawn by shared/exam-question.js): each type may carry only its own fields, of the right kind. A blank the
+// student works out is null (truth table) or simply absent (register bits, the sum's carry row and answer boxes), so
+// there is nowhere for an answer to sit; and no answer-like field name may appear anywhere inside.
+const ANSWER_KEYS = /^(model|ms|points|reveal|fallback|check|answer|answers|solution|correct|key|result|sum|carries|how|howText|guidance)$/i;
+const isStr = (v) => typeof v === 'string';
+const strs = (v) => Array.isArray(v) && v.every(isStr);
+const BLOCKS = {
+  para: { text: isStr },
+  table: { head: strs, rows: (v) => Array.isArray(v) && v.every(strs), caption: isStr,
+    highlight: (v) => Array.isArray(v) && v.every((x) => Array.isArray(x) && x.length === 2 && x.every(Number.isInteger)) },
+  truthTable: { inputs: strs, outputs: strs, caption: isStr,
+    rows: (v) => Array.isArray(v) && v.every((r) => Array.isArray(r) && r.every((c) => c === 0 || c === 1 || c === null)) },
+  gate: { gate: (v) => /^(NOT|AND|OR|NAND|NOR|XOR)$/.test(v), inputs: strs, output: isStr, showName: (v) => v === true },
+  register: { bits: (v) => /^[01]{4,16}$/.test(v), size: (v) => v === 8 || v === 16, caption: isStr,
+    heads: (v) => v === 'tc' || v === 'bin' || (Array.isArray(v) && v.every(Number.isFinite)) },
+  sum: { rows: (v) => Array.isArray(v) && v.length >= 2 && v.every((r) => /^[01]{1,16}$/.test(r)), carry: (v) => v === true, boxes: (v) => v === true },
+  code: { lines: strs, lang: (v) => v === 'python' || v === 'pseudocode', numbered: (v) => v === true },
+  options: { items: (v) => strs(v) && v.length >= 2 && v.length <= 8 }
+};
+const REQUIRED = { para: ['text'], table: ['head', 'rows'], truthTable: ['inputs', 'outputs', 'rows'], gate: ['gate'], register: [], sum: ['rows'], code: ['lines'], options: ['items'] };
+function walkKeys(v, where) {
+  if (Array.isArray(v)) v.forEach((x) => walkKeys(x, where));
+  else if (v && typeof v === 'object') for (const k of Object.keys(v)) { if (ANSWER_KEYS.test(k)) fail(where + ' has an answer-like field "' + k + '" in its blocks'); walkKeys(v[k], where); }
+}
+// The answers the server keeps for a question (the final bits, the sum and its carries): none may appear in its blocks.
+function answersOf(q) {
+  const out = [], add = (v) => { if (v != null && String(v).trim().length >= 4) out.push(String(v).trim()); };
+  add((q.check || {}).bin);
+  if (q.add) { add(q.add.sum); add(q.add.carries); }
+  return out;
+}
+function checkBlocks(q, srcQ) {
+  if (!Array.isArray(q.blocks) || !q.blocks.length) fail(q.qid + ' blocks must be a non-empty list');
+  walkKeys(q.blocks, q.qid);
+  q.blocks.forEach((b, i) => {
+    const where = q.qid + ' block ' + i + ' (' + (b && b.type) + ')';
+    const spec = b && BLOCKS[b.type];
+    if (!spec) fail(where + ': unknown block type');
+    for (const k of Object.keys(b)) if (k !== 'type' && !(k in spec)) fail(where + ': field "' + k + '" is not allowed');
+    for (const k of Object.keys(b)) if (k !== 'type' && !spec[k](b[k])) fail(where + ': bad ' + k);
+    for (const k of REQUIRED[b.type]) if (!(k in b)) fail(where + ': needs ' + k);
+    if (b.type === 'truthTable' && b.rows.some((r) => r.length !== b.inputs.length + b.outputs.length)) fail(where + ': row length');
+    if (b.type === 'truthTable' && b.rows.some((r) => r.slice(0, b.inputs.length).includes(null))) fail(where + ': input cells cannot be blank');
+    if (b.type === 'register' && b.bits && b.size && b.bits.length !== b.size) fail(where + ': bits and size differ');
+  });
+  const blob = JSON.stringify(q.blocks);
+  for (const a of answersOf(srcQ)) if (blob.includes(a)) fail(q.qid + ' blocks contain the answer ' + a);
+  // A truth table's blank output cells stand for the answer: a table may not be all blank in one column and also spell
+  // that column out somewhere else in the blocks (for example as a para or table cell).
+  for (const b of q.blocks.filter((x) => x.type === 'truthTable')) {
+    const n = b.inputs.length;
+    for (let c = n; c < n + b.outputs.length; c++) {
+      if (!b.rows.every((r) => r[c] === null)) continue;
+      const strings = [];
+      JSON.parse(blob, (k, v) => { if (typeof v === 'string') strings.push(v); return v; });
+      const m = String(srcQ.model || '').match(/\b[01]{3,}\b/g) || [];
+      if (m.some((bits) => bits.length === b.rows.length && strings.some((s) => s.includes(bits)))) fail(q.qid + ' blocks spell out a blank truth table column');
+    }
+  }
+}
 if (Object.keys(data).join() !== 'v,sets') fail('top-level fields');
 const qids = new Set();
 for (const s of sets) {
@@ -47,7 +113,9 @@ for (const s of sets) {
   if (!s.unit) fail(s.setId + ' needs unit');
   if (!s.questions.length) fail(s.setId + ' has no questions');
   for (const q of s.questions) {
-    if (Object.keys(q).join() !== 'qid,text,marks') fail(q.qid + ' fields');
+    const keys = Object.keys(q).join();
+    if (keys !== 'qid,text,marks' && keys !== 'qid,text,marks,blocks') fail(q.qid + ' fields');
+    if (q.blocks) checkBlocks(q, all[s.setId].questions.find((x) => x.qid === q.qid));
     if (!q.qid || !q.text || !(q.marks >= 1)) fail(q.qid + ' empty qid, text or marks');
     if (qids.has(q.qid)) fail(q.qid + ' duplicate qid');
     qids.add(q.qid);

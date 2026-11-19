@@ -577,7 +577,7 @@
       list = (list || []).filter(function (q) { return q && q.qid; });
       if (!list.length) throw new Error('No questions right now.');
       var total = list.reduce(function (a, q) { return a + (Number(q.marks) || 1); }, 0);
-      r.qs = list.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1 }; });
+      r.qs = list.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1, blocks: q.blocks || null }; });
       r.items = r.qs.map(blankItem);
       r.pool = D.roundPool(r.n, S.diff, farmIncome());
       r.rate = r.pool / total;
@@ -673,6 +673,12 @@
   function roundTotal() { return S.round.qs.reduce(function (a, q) { return a + q.marks; }, 0); }
   // A question can be sent while it has no mark yet, or while its second try is open.
   function canSend(it) { return !it.fb || it.open; }
+  // The question as the exam shows it (tables, gates, registers, sums: shared/exam-question.js), or its plain text.
+  function showQuestion(el, q) {
+    var blocks = q.blocks || (window.ExamGame && window.ExamGame.blocksFor ? window.ExamGame.blocksFor(q.qid) : null);
+    if (window.BCExamQuestion) window.BCExamQuestion.render(el, { text: q.text, blocks: blocks });
+    else el.textContent = q.text;
+  }
 
   function showRound() {
     var r = S.round;
@@ -712,7 +718,7 @@
     ansBoxes = [];
     r.qs.forEach(function (q, i) {
       var it = r.items[i], edit = canSend(it);
-      $('qText' + i).textContent = q.text;
+      showQuestion($('qText' + i), q);
       ansBoxes[i] = window.BCAnswerBox.mount($('ans' + i), { doc: it.doc, text: it.answer || '', rows: 3, maxLength: 800,
         label: 'Your answer to question ' + (i + 1), readOnly: !edit || sending,
         placeholder: 'Type your final answer here. You can type working here too.',

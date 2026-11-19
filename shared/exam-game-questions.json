@@ -9,13 +9,33 @@
    "questions": [
     {
      "qid": "tc-23j11-1c",
-     "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(c)\nBinary numbers are stored in registers.\nNegative denary numbers can be represented as binary using two's complement.\nComplete the binary register for the denary number -78\nYou must show all your working.",
-     "marks": 2
+     "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(c)\nBinary numbers are stored in registers.\nNegative denary numbers can be represented as binary using two's complement.\nComplete the binary register for the denary number -78\nYou must show all your working.\nRegister:\n(an empty 8-bit register)",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(c)\nBinary numbers are stored in registers.\nNegative denary numbers can be represented as binary using two's complement.\nComplete the binary register for the denary number -78\nYou must show all your working."
+      },
+      {
+       "type": "register",
+       "caption": "Register:"
+      }
+     ]
     },
     {
      "qid": "tc-23n12-2d",
-     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(d)\nThe negative denary number -99 needs to be stored in the register.\nComplete the register to show the binary number that would be stored, using two's complement. Show all your working.",
-     "marks": 2
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(d)\nThe negative denary number -99 needs to be stored in the register.\nComplete the register to show the binary number that would be stored, using two's complement. Show all your working.\nRegister:\n(an empty 8-bit register)",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(d)\nThe negative denary number -99 needs to be stored in the register.\nComplete the register to show the binary number that would be stored, using two's complement. Show all your working."
+      },
+      {
+       "type": "register",
+       "caption": "Register:"
+      }
+     ]
     },
     {
      "qid": "tc-23n13-2d",
@@ -85,7 +105,22 @@
     {
      "qid": "tc-26j12-1ci",
      "text": "Cambridge IGCSE 0478/12, June 2026, Question 1(c)(i)\nOne item of data displayed on the smartwatch is the current outdoor temperature. The temperature is stored in a register as a two's complement binary integer.\nShow whether two's complement is a base 2, base 8, base 10 or base 16 number system. Type one letter.\nA base 2\nB base 8\nC base 10\nD base 16",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2026, Question 1(c)(i)\nOne item of data displayed on the smartwatch is the current outdoor temperature. The temperature is stored in a register as a two's complement binary integer.\nShow whether two's complement is a base 2, base 8, base 10 or base 16 number system. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "base 2",
+        "base 8",
+        "base 10",
+        "base 16"
+       ]
+      }
+     ]
     },
     {
      "qid": "tc-26j12-1cii",
@@ -99,8 +134,31 @@
     },
     {
      "qid": "tc-26j13-8di",
-     "text": "Cambridge IGCSE 0478/13, June 2026, Question 8(d)(i)\nA display screen next to the keypad displays the current temperature inside the building.\nThe current temperature is stored as a two's complement binary integer and is displayed as a denary number.\nGive the denary number that would be displayed for each of the two's complement binary integers.\n00100011\n11101010",
-     "marks": 2
+     "text": "Cambridge IGCSE 0478/13, June 2026, Question 8(d)(i)\nA display screen next to the keypad displays the current temperature inside the building.\nThe current temperature is stored as a two's complement binary integer and is displayed as a denary number.\nGive the denary number that would be displayed for each of the two's complement binary integers.\nTwo's complement binary integer | Denary number\n00100011 | ........\n11101010 | ........",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2026, Question 8(d)(i)\nA display screen next to the keypad displays the current temperature inside the building.\nThe current temperature is stored as a two's complement binary integer and is displayed as a denary number.\nGive the denary number that would be displayed for each of the two's complement binary integers."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Two's complement binary integer",
+        "Denary number"
+       ],
+       "rows": [
+        [
+         "00100011",
+         ""
+        ],
+        [
+         "11101010",
+         ""
+        ]
+       ]
+      }
+     ]
     },
     {
      "qid": "tc-26j13-8dii",
@@ -137,13 +195,44 @@
    "questions": [
     {
      "qid": "ls-23j12-2bi",
-     "text": "Cambridge IGCSE 0478/12, June 2023, Question 2(b)(i)\nA value is stored as a binary number in a register.\n01111010\nA logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift.",
-     "marks": 1
+     "text": "Cambridge IGCSE 0478/12, June 2023, Question 2(b)(i)\nA value is stored as a binary number in a register.\n01111010\nA logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift.\n(an empty 8-bit register)",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2023, Question 2(b)(i)\nA value is stored as a binary number in a register."
+      },
+      {
+       "type": "register",
+       "bits": "01111010"
+      },
+      {
+       "type": "para",
+       "text": "A logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift."
+      },
+      {
+       "type": "register"
+      }
+     ]
     },
     {
      "qid": "ls-23j12-2bii",
      "text": "Cambridge IGCSE 0478/12, June 2023, Question 2(b)(ii)\nA value is stored as a binary number in a register.\n01111010\nA logical right shift of three places is performed on the binary number.\nState one effect this logical shift has on the binary number.",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2023, Question 2(b)(ii)\nA value is stored as a binary number in a register."
+      },
+      {
+       "type": "register",
+       "bits": "01111010"
+      },
+      {
+       "type": "para",
+       "text": "A logical right shift of three places is performed on the binary number.\nState one effect this logical shift has on the binary number."
+      }
+     ]
     },
     {
      "qid": "ls-23j13-1ci",
@@ -153,12 +242,44 @@
     {
      "qid": "ls-23j13-1cii",
      "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(c)(ii)\nThe binary number 10101110 is stored.\nA logical left shift of three places is performed on the binary number.\nShow which statement is true about the impact the logical left binary shift would have on the binary number. Type one letter.\nA The least significant bits are lost.\nB The most significant bits are lost.\nC The number has been divided by six.\nD The number stays the same.",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(c)(ii)\nThe binary number 10101110 is stored.\nA logical left shift of three places is performed on the binary number.\nShow which statement is true about the impact the logical left binary shift would have on the binary number. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "The least significant bits are lost.",
+        "The most significant bits are lost.",
+        "The number has been divided by six.",
+        "The number stays the same."
+       ]
+      }
+     ]
     },
     {
      "qid": "ls-23n12-2c",
-     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(c)\nA register stores the binary number:\n11100011\nA logical left shift of two places is performed on the binary number stored in the register.\nComplete the binary register to show its contents after this logical left shift.",
-     "marks": 1
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(c)\nA register stores the binary number:\n11100011\nA logical left shift of two places is performed on the binary number stored in the register.\nComplete the binary register to show its contents after this logical left shift.\n(an empty 8-bit register)",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(c)\nA register stores the binary number:"
+      },
+      {
+       "type": "register",
+       "bits": "11100011"
+      },
+      {
+       "type": "para",
+       "text": "A logical left shift of two places is performed on the binary number stored in the register.\nComplete the binary register to show its contents after this logical left shift."
+      },
+      {
+       "type": "register"
+      }
+     ]
     },
     {
      "qid": "ls-24j11-3a",
@@ -168,7 +289,22 @@
     {
      "qid": "ls-24j11-3b",
      "text": "Cambridge IGCSE 0478/11, June 2024, Question 3(b)\nThe binary number 10100011 is stored in random access memory (RAM).\nShow which statement about a logical left shift of two places is correct. Type one letter.\nA It would divide the binary number by 2.\nB It would multiply the binary number by 2.\nC It would divide the binary number by 4.\nD It would multiply the binary number by 4.",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2024, Question 3(b)\nThe binary number 10100011 is stored in random access memory (RAM).\nShow which statement about a logical left shift of two places is correct. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "It would divide the binary number by 2.",
+        "It would multiply the binary number by 2.",
+        "It would divide the binary number by 4.",
+        "It would multiply the binary number by 4."
+       ]
+      }
+     ]
     },
     {
      "qid": "ls-24m12-8c",
@@ -212,8 +348,25 @@
     },
     {
      "qid": "ls-own-register",
-     "text": "A register stores the binary number:\n11001000\nA logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift.",
-     "marks": 1
+     "text": "A register stores the binary number:\n11001000\nA logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift.\n(an empty 8-bit register)",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A register stores the binary number:"
+      },
+      {
+       "type": "register",
+       "bits": "11001000"
+      },
+      {
+       "type": "para",
+       "text": "A logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift."
+      },
+      {
+       "type": "register"
+      }
+     ]
     },
     {
      "qid": "ls-own-score",
@@ -250,23 +403,83 @@
     },
     {
      "qid": "ov-23j13-1d",
-     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 4
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working.\n  11101110\n+ 00110001",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "11101110",
+        "00110001"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-23n12-2e",
-     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(e)\nThe number 01001100 is added to 11100011\nAdd the two 8-bit binary numbers, using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 4
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(e)\nThe number 01001100 is added to 11100011\nAdd the two 8-bit binary numbers, using binary addition.\nGive your answer in binary. Show all your working.\n  01001100\n+ 11100011",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(e)\nThe number 01001100 is added to 11100011\nAdd the two 8-bit binary numbers, using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01001100",
+        "11100011"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-24n13-1d",
-     "text": "Cambridge IGCSE 0478/13, November 2024, Question 1(d)\nBinary integers can be added together.\nAdd the two binary integers 11100011 and 11001100 using binary addition. Show all your working. Give your answer in binary.",
-     "marks": 4
+     "text": "Cambridge IGCSE 0478/13, November 2024, Question 1(d)\nBinary integers can be added together.\nAdd the two binary integers 11100011 and 11001100 using binary addition. Show all your working. Give your answer in binary.\n  11100011\n+ 11001100",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2024, Question 1(d)\nBinary integers can be added together.\nAdd the two binary integers 11100011 and 11001100 using binary addition. Show all your working. Give your answer in binary."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "11100011",
+        "11001100"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-25m12-1c",
      "text": "Cambridge IGCSE 0478/12, March 2025, Question 1(c)\nBinary addition can result in overflow.\nShow the correct definition of overflow in binary addition. Type one letter.\nA The answer has created a negative number that cannot be represented in binary addition.\nB The answer is the result of a logical shift that cannot be performed in binary addition.\nC The answer is too large to represent in the number of bits available.\nD The answer is too small to represent in the number of bits available.",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2025, Question 1(c)\nBinary addition can result in overflow.\nShow the correct definition of overflow in binary addition. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "The answer has created a negative number that cannot be represented in binary addition.",
+        "The answer is the result of a logical shift that cannot be performed in binary addition.",
+        "The answer is too large to represent in the number of bits available.",
+        "The answer is too small to represent in the number of bits available."
+       ]
+      }
+     ]
     },
     {
      "qid": "ov-25j12-1f",
@@ -275,53 +488,215 @@
     },
     {
      "qid": "ov-25n12-2a",
-     "text": "Cambridge IGCSE 0478/12, November 2025, Question 2(a)\nTwo binary numbers are stored in a computer.\nAdd the two binary numbers 11110101 and 00111001 using binary addition.\nGive your answer in binary. Show all of your working.",
-     "marks": 4
+     "text": "Cambridge IGCSE 0478/12, November 2025, Question 2(a)\nTwo binary numbers are stored in a computer.\nAdd the two binary numbers 11110101 and 00111001 using binary addition.\nGive your answer in binary. Show all of your working.\n  11110101\n+ 00111001",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2025, Question 2(a)\nTwo binary numbers are stored in a computer.\nAdd the two binary numbers 11110101 and 00111001 using binary addition.\nGive your answer in binary. Show all of your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "11110101",
+        "00111001"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-26j11-3f",
-     "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 4
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working.\n  10011101\n+ 11110000",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10011101",
+        "11110000"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-own-score",
-     "text": "A games console stores each player's score in an 8-bit register.\nThe scores 10101010 and 01110111 are added together.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 4
+     "text": "A games console stores each player's score in an 8-bit register.\nThe scores 10101010 and 01110111 are added together.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  10101010\n+ 01110111",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A games console stores each player's score in an 8-bit register.\nThe scores 10101010 and 01110111 are added together.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10101010",
+        "01110111"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-own-steps",
-     "text": "A step counter stores numbers in 8-bit registers.\nAdd the two 8-bit binary numbers 11011011 and 00101101 using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 4
+     "text": "A step counter stores numbers in 8-bit registers.\nAdd the two 8-bit binary numbers 11011011 and 00101101 using binary addition.\nGive your answer in binary. Show all your working.\n  11011011\n+ 00101101",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A step counter stores numbers in 8-bit registers.\nAdd the two 8-bit binary numbers 11011011 and 00101101 using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "11011011",
+        "00101101"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-own-plain",
-     "text": "Add the two 8-bit binary numbers 01111000 and 10011100 using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 4
+     "text": "Add the two 8-bit binary numbers 01111000 and 10011100 using binary addition.\nGive your answer in binary. Show all your working.\n  01111000\n+ 10011100",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Add the two 8-bit binary numbers 01111000 and 10011100 using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01111000",
+        "10011100"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-own-carpark",
-     "text": "A car park counts the cars on each floor in 8-bit registers.\nThe two numbers 11001001 and 01100111 are added to give the total.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 4
+     "text": "A car park counts the cars on each floor in 8-bit registers.\nThe two numbers 11001001 and 01100111 are added to give the total.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  11001001\n+ 01100111",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A car park counts the cars on each floor in 8-bit registers.\nThe two numbers 11001001 and 01100111 are added to give the total.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "11001001",
+        "01100111"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-own-will-1",
-     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n10010110 + 01110101\nWill this addition cause overflow? Explain your answer. Show your working.",
-     "marks": 2
+     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n  10010110\n+ 01110101\nWill this addition cause overflow? Explain your answer. Show your working.",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Two 8-bit binary numbers are added in an 8-bit register:"
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10010110",
+        "01110101"
+       ],
+       "carry": true,
+       "boxes": true
+      },
+      {
+       "type": "para",
+       "text": "Will this addition cause overflow? Explain your answer. Show your working."
+      }
+     ]
     },
     {
      "qid": "ov-own-will-2",
-     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n10010110 + 01011010\nWill this addition cause overflow? Explain your answer. Show your working.",
-     "marks": 2
+     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n  10010110\n+ 01011010\nWill this addition cause overflow? Explain your answer. Show your working.",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Two 8-bit binary numbers are added in an 8-bit register:"
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10010110",
+        "01011010"
+       ],
+       "carry": true,
+       "boxes": true
+      },
+      {
+       "type": "para",
+       "text": "Will this addition cause overflow? Explain your answer. Show your working."
+      }
+     ]
     },
     {
      "qid": "ov-own-will-3",
-     "text": "A thermometer stores readings in 8-bit registers.\nTwo readings, 11000011 and 01000001, are added together.\nWill this addition cause overflow? Explain your answer. Show your working.",
-     "marks": 2
+     "text": "A thermometer stores readings in 8-bit registers.\nTwo readings, 11000011 and 01000001, are added together.\nWill this addition cause overflow? Explain your answer. Show your working.\n  11000011\n+ 01000001",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A thermometer stores readings in 8-bit registers.\nTwo readings, 11000011 and 01000001, are added together.\nWill this addition cause overflow? Explain your answer. Show your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "11000011",
+        "01000001"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-own-will-4",
-     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n01101110 + 10010001\nWill this addition cause overflow? Explain your answer. Show your working.",
-     "marks": 2
+     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n  01101110\n+ 10010001\nWill this addition cause overflow? Explain your answer. Show your working.",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Two 8-bit binary numbers are added in an 8-bit register:"
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01101110",
+        "10010001"
+       ],
+       "carry": true,
+       "boxes": true
+      },
+      {
+       "type": "para",
+       "text": "Will this addition cause overflow? Explain your answer. Show your working."
+      }
+     ]
     },
     {
      "qid": "ov-own-what",
@@ -340,13 +715,43 @@
     },
     {
      "qid": "ov-own-keeps",
-     "text": "The 8-bit binary numbers 10110100 and 10010110 are added in an 8-bit register. Overflow occurs.\nGive the 8-bit binary number that the register keeps, and its denary value.\nShow all your working.",
-     "marks": 3
+     "text": "The 8-bit binary numbers 10110100 and 10010110 are added in an 8-bit register. Overflow occurs.\nGive the 8-bit binary number that the register keeps, and its denary value.\nShow all your working.\n  10110100\n+ 10010110",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "The 8-bit binary numbers 10110100 and 10010110 are added in an 8-bit register. Overflow occurs.\nGive the 8-bit binary number that the register keeps, and its denary value.\nShow all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10110100",
+        "10010110"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "ov-own-tick",
      "text": "Each option shows two 8-bit binary numbers that are added in an 8-bit register.\nShow which addition will cause overflow. Type one letter.\nA 01111111 + 00000001\nB 11000000 + 01000000\nC 10000000 + 01111111\nD 00111111 + 01000000",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Each option shows two 8-bit binary numbers that are added in an 8-bit register.\nShow which addition will cause overflow. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "01111111 + 00000001",
+        "11000000 + 01000000",
+        "10000000 + 01111111",
+        "00111111 + 01000000"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -359,102 +764,402 @@
     {
      "qid": "add-23j11-1d",
      "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(d)\nTwo 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00110011\n+ 01100001",
-     "marks": 3
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(d)\nTwo 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00110011",
+        "01100001"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-24j12-3c",
-     "text": "Cambridge IGCSE 0478/12, June 2024, Question 3(c)\nThe two binary integers 00110000 and 01100110 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "Cambridge IGCSE 0478/12, June 2024, Question 3(c)\nThe two binary integers 00110000 and 01100110 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.\n  00110000\n+ 01100110",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2024, Question 3(c)\nThe two binary integers 00110000 and 01100110 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00110000",
+        "01100110"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-25j12-1e",
-     "text": "Adapted from Cambridge IGCSE 0478/12, June 2025, Question 1(e)\nThe 8-bit binary numbers 01100101 and 01110000 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. You must show all your working.",
-     "marks": 3
+     "text": "Adapted from Cambridge IGCSE 0478/12, June 2025, Question 1(e)\nThe 8-bit binary numbers 01100101 and 01110000 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. You must show all your working.\n  01100101\n+ 01110000",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Adapted from Cambridge IGCSE 0478/12, June 2025, Question 1(e)\nThe 8-bit binary numbers 01100101 and 01110000 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. You must show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01100101",
+        "01110000"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-23n13-2e",
-     "text": "Cambridge IGCSE 0478/13, November 2023, Question 2(e)\nAdd the binary values 00110011 and 01111000 using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "Cambridge IGCSE 0478/13, November 2023, Question 2(e)\nAdd the binary values 00110011 and 01111000 using binary addition.\nGive your answer in binary. Show all your working.\n  00110011\n+ 01111000",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2023, Question 2(e)\nAdd the binary values 00110011 and 01111000 using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00110011",
+        "01111000"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-25n11-1e",
-     "text": "Cambridge IGCSE 0478/11, November 2025, Question 1(e)\nA calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01110110 and 00110000\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary.",
-     "marks": 3
+     "text": "Cambridge IGCSE 0478/11, November 2025, Question 1(e)\nA calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01110110 and 00110000\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary.\n  01110110\n+ 00110000",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2025, Question 1(e)\nA calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01110110 and 00110000\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01110110",
+        "00110000"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-25m12-1b",
      "text": "Cambridge IGCSE 0478/12, March 2025, Question 1(b)\nTwo 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  10011011\n+ 00010011",
-     "marks": 3
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2025, Question 1(b)\nTwo 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10011011",
+        "00010011"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-24n11-3d",
-     "text": "Adapted from Cambridge IGCSE 0478/11, November 2024, Question 3(d)\nThe character 'T' is stored as the binary number 01010100.\nThe character 't' is stored as the binary number 01110100.\nAdd the two binary numbers using binary addition. Give your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "Adapted from Cambridge IGCSE 0478/11, November 2024, Question 3(d)\nThe character 'T' is stored as the binary number 01010100.\nThe character 't' is stored as the binary number 01110100.\nAdd the two binary numbers using binary addition. Give your answer in binary. Show all your working.\n  01010100\n+ 01110100",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Adapted from Cambridge IGCSE 0478/11, November 2024, Question 3(d)\nThe character 'T' is stored as the binary number 01010100.\nThe character 't' is stored as the binary number 01110100.\nAdd the two binary numbers using binary addition. Give your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01010100",
+        "01110100"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-26m12-6e",
      "text": "Cambridge IGCSE 0478/12, March 2026, Question 6(e)\nAdd the two binary integers using binary addition and give your answer in binary. Show all your working.\n  00011010\n+ 01101110",
-     "marks": 3
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2026, Question 6(e)\nAdd the two binary integers using binary addition and give your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00011010",
+        "01101110"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-23j13-1d",
-     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working.\n  11101110\n+ 00110001",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "11101110",
+        "00110001"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-26j11-3f",
-     "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working.\n  10011101\n+ 11110000",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10011101",
+        "11110000"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-1",
      "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00100100\n+ 01000110",
-     "marks": 3
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00100100",
+        "01000110"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-2",
-     "text": "A game stores the number of coins a player has as an 8-bit binary number.\nA player has 01001101 coins and then wins 00101010 more coins.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "A game stores the number of coins a player has as an 8-bit binary number.\nA player has 01001101 coins and then wins 00101010 more coins.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  01001101\n+ 00101010",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A game stores the number of coins a player has as an 8-bit binary number.\nA player has 01001101 coins and then wins 00101010 more coins.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01001101",
+        "00101010"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-3",
-     "text": "The two binary integers 01000011 and 00100101 are stored in registers.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "The two binary integers 01000011 and 00100101 are stored in registers.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.\n  01000011\n+ 00100101",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "The two binary integers 01000011 and 00100101 are stored in registers.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01000011",
+        "00100101"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-4",
-     "text": "A shop stores the number of items in stock as an 8-bit binary number.\nThere are 00110110 items in stock. A delivery brings 01010011 more items.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "A shop stores the number of items in stock as an 8-bit binary number.\nThere are 00110110 items in stock. A delivery brings 01010011 more items.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00110110\n+ 01010011",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A shop stores the number of items in stock as an 8-bit binary number.\nThere are 00110110 items in stock. A delivery brings 01010011 more items.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00110110",
+        "01010011"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-5",
      "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00101111\n+ 01001011",
-     "marks": 3
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00101111",
+        "01001011"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-6",
-     "text": "The 8-bit binary numbers 00011101 and 01010111 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "The 8-bit binary numbers 00011101 and 01010111 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00011101\n+ 01010111",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "The 8-bit binary numbers 00011101 and 01010111 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00011101",
+        "01010111"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-7",
-     "text": "A counter stores a value as an 8-bit binary number. The value is 00111111.\nThe binary number 00000011 is added to it.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "A counter stores a value as an 8-bit binary number. The value is 00111111.\nThe binary number 00000011 is added to it.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00111111\n+ 00000011",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A counter stores a value as an 8-bit binary number. The value is 00111111.\nThe binary number 00000011 is added to it.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "00111111",
+        "00000011"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-8",
      "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  10010111\n+ 00111001",
-     "marks": 3
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "10010111",
+        "00111001"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-9",
-     "text": "A calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01100111 and 00011101\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary.",
-     "marks": 3
+     "text": "A calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01100111 and 00011101\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary.\n  01100111\n+ 00011101",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01100111 and 00011101\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01100111",
+        "00011101"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     },
     {
      "qid": "add-own-10",
-     "text": "The two binary integers 01111011 and 00000101 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.",
-     "marks": 3
+     "text": "The two binary integers 01111011 and 00000101 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.\n  01111011\n+ 00000101",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "The two binary integers 01111011 and 00000101 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working."
+      },
+      {
+       "type": "sum",
+       "rows": [
+        "01111011",
+        "00000101"
+       ],
+       "carry": true,
+       "boxes": true
+      }
+     ]
     }
    ]
   },
@@ -467,17 +1172,62 @@
     {
      "qid": "y8t-23j23-1",
      "text": "Cambridge IGCSE 0478/23, June 2023, Question 1\nTick one box to complete the sentence. Type one letter.\nA constant\nA stores a value that can change at any time during the execution of a program.\nB stores a value that cannot change during the execution of a program.\nC stores values of multiple data types.\nD stores values that must be of the same data type.",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, June 2023, Question 1\nTick one box to complete the sentence. Type one letter.\nA constant"
+      },
+      {
+       "type": "options",
+       "items": [
+        "stores a value that can change at any time during the execution of a program.",
+        "stores a value that cannot change during the execution of a program.",
+        "stores values of multiple data types.",
+        "stores values that must be of the same data type."
+       ]
+      }
+     ]
     },
     {
      "qid": "y8t-23n23-2",
      "text": "Cambridge IGCSE 0478/23, November 2023, Question 2\nTick one box to show which library routine returns the remainder of a division. Type one letter.\nA DIV\nB MOD\nC RANDOM\nD ROUND",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, November 2023, Question 2\nTick one box to show which library routine returns the remainder of a division. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "DIV",
+        "MOD",
+        "RANDOM",
+        "ROUND"
+       ]
+      }
+     ]
     },
     {
      "qid": "y8t-26j23-2",
      "text": "Cambridge IGCSE 0478/23, June 2026, Question 2\nTick one box to identify a programming data type used to store any combination of letters and numbers. Type one letter.\nA char\nB Boolean\nC string\nD real",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, June 2026, Question 2\nTick one box to identify a programming data type used to store any combination of letters and numbers. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "char",
+        "Boolean",
+        "string",
+        "real"
+       ]
+      }
+     ]
     },
     {
      "qid": "y8t-own-real",
@@ -507,62 +1257,260 @@
     {
      "qid": "y8t-own-declare",
      "text": "A program stores the height of a plant in metres, like 0.45\nWhich line declares the variable for it? Type one letter.\nA DECLARE Height : INTEGER\nB DECLARE Height : REAL\nC DECLARE Height : STRING\nD DECLARE Height : BOOLEAN",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A program stores the height of a plant in metres, like 0.45\nWhich line declares the variable for it? Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "DECLARE Height : INTEGER",
+        "DECLARE Height : REAL",
+        "DECLARE Height : STRING",
+        "DECLARE Height : BOOLEAN"
+       ]
+      }
+     ]
     },
     {
      "qid": "y8t-own-constline",
      "text": "A program uses the number of days in a week, 7. It never changes.\nWhich line sets it as a constant? Type one letter.\nA DECLARE Days : INTEGER\nB Days <- 7\nC CONSTANT Days <- 7\nD CONSTANT Days : INTEGER",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A program uses the number of days in a week, 7. It never changes.\nWhich line sets it as a constant? Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "DECLARE Days : INTEGER",
+        "Days <- 7",
+        "CONSTANT Days <- 7",
+        "CONSTANT Days : INTEGER"
+       ]
+      }
+     ]
     },
     {
      "qid": "y8t-own-pickconst",
      "text": "A shop program has four values. Which one should be a constant? Type one letter.\nA The number of items a customer buys\nB The name a customer types in\nC The total cost of one order\nD The price of one bag, which is the same all day",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A shop program has four values. Which one should be a constant? Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "The number of items a customer buys",
+        "The name a customer types in",
+        "The total cost of one order",
+        "The price of one bag, which is the same all day"
+       ]
+      }
+     ]
     },
     {
      "qid": "y8t-own-libline",
      "text": "Which line calls a library function? Type one letter.\nA DECLARE Total : INTEGER\nB INPUT Total\nC OUTPUT Total * 2\nD OUTPUT MOD(Total, 4)",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Which line calls a library function? Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "DECLARE Total : INTEGER",
+        "INPUT Total",
+        "OUTPUT Total * 2",
+        "OUTPUT MOD(Total, 4)"
+       ]
+      }
+     ]
     },
     {
      "qid": "y8t-own-fix",
      "text": "This program stops with an error.\n1  DECLARE Name : STRING\n2  DECLARE Speed : INTEGER\n3  INPUT Name\n4  Speed <- 0.75\n(a) Which line declares the wrong data type? [1]\n(b) Which data type should Speed have? [1]",
-     "marks": 2
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program stops with an error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE Name : STRING",
+        "DECLARE Speed : INTEGER",
+        "INPUT Name",
+        "Speed <- 0.75"
+       ],
+       "numbered": true
+      },
+      {
+       "type": "para",
+       "text": "(a) Which line declares the wrong data type? [1]\n(b) Which data type should Speed have? [1]"
+      }
+     ]
     },
     {
      "qid": "y8t-own-error",
      "text": "DECLARE Age : INTEGER\nAge <- 12.5\nOUTPUT Age\n(a) What happens when this program runs? [1]\n(b) Which data type should Age have? [1]",
-     "marks": 2
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "Age <- 12.5",
+        "OUTPUT Age"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) What happens when this program runs? [1]\n(b) Which data type should Age have? [1]"
+      }
+     ]
     },
     {
      "qid": "y8t-own-trace1",
      "text": "CONSTANT Price <- 30\nDECLARE Tickets : INTEGER\nTickets <- 4\nOUTPUT Tickets * Price\nWhat is output?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "CONSTANT Price <- 30",
+        "DECLARE Tickets : INTEGER",
+        "Tickets <- 4",
+        "OUTPUT Tickets * Price"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is output?"
+      }
+     ]
     },
     {
      "qid": "y8t-own-trace2",
      "text": "CONSTANT Bonus <- 5\nDECLARE Score : INTEGER\nScore <- 12\nScore <- Score + Bonus\nOUTPUT Score\nOUTPUT Score * 2\nWhat is output? Give both lines.",
-     "marks": 2
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "CONSTANT Bonus <- 5",
+        "DECLARE Score : INTEGER",
+        "Score <- 12",
+        "Score <- Score + Bonus",
+        "OUTPUT Score",
+        "OUTPUT Score * 2"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is output? Give both lines."
+      }
+     ]
     },
     {
      "qid": "y8t-own-pass",
      "text": "CONSTANT PassMark <- 40\nDECLARE Mark : INTEGER\nINPUT Mark\nIF Mark >= PassMark THEN\n    OUTPUT \"Pass\"\nELSE\n    OUTPUT \"Try again\"\nENDIF\n35 is typed in. What is output?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "CONSTANT PassMark <- 40",
+        "DECLARE Mark : INTEGER",
+        "INPUT Mark",
+        "IF Mark >= PassMark THEN",
+        "    OUTPUT \"Pass\"",
+        "ELSE",
+        "    OUTPUT \"Try again\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "35 is typed in. What is output?"
+      }
+     ]
     },
     {
      "qid": "y8t-own-divmod",
      "text": "CONSTANT BoxSize <- 6\nDECLARE Eggs : INTEGER\nEggs <- 20\nOUTPUT DIV(Eggs, BoxSize)\nOUTPUT MOD(Eggs, BoxSize)\nWhat is output? Give both lines.",
-     "marks": 2
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "CONSTANT BoxSize <- 6",
+        "DECLARE Eggs : INTEGER",
+        "Eggs <- 20",
+        "OUTPUT DIV(Eggs, BoxSize)",
+        "OUTPUT MOD(Eggs, BoxSize)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is output? Give both lines."
+      }
+     ]
     },
     {
      "qid": "y8t-own-round",
      "text": "CONSTANT Teams <- 3\nDECLARE Points : INTEGER\nPoints <- 25\nOUTPUT ROUND(Points / Teams, 1)\nWhat is output?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "CONSTANT Teams <- 3",
+        "DECLARE Points : INTEGER",
+        "Points <- 25",
+        "OUTPUT ROUND(Points / Teams, 1)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is output?"
+      }
+     ]
     },
     {
      "qid": "y8t-own-length",
      "text": "DECLARE Place : STRING\nPlace <- \"Ko Samui\"\nOUTPUT LENGTH(Place)\nWhat is output?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE Place : STRING",
+        "Place <- \"Ko Samui\"",
+        "OUTPUT LENGTH(Place)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is output?"
+      }
+     ]
     },
     {
      "qid": "y8t-own-whyconst",
@@ -620,7 +1568,22 @@
     {
      "qid": "y7t-23j26-2",
      "text": "Cambridge IGCSE 0478/23, June 2026, Question 2\nTick one box to identify a programming data type used to store any combination of letters and numbers. Type one letter.\nA char\nB Boolean\nC string\nD real",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, June 2026, Question 2\nTick one box to identify a programming data type used to store any combination of letters and numbers. Type one letter."
+      },
+      {
+       "type": "options",
+       "items": [
+        "char",
+        "Boolean",
+        "string",
+        "real"
+       ]
+      }
+     ]
     },
     {
      "qid": "y7t-own-int",
@@ -640,7 +1603,21 @@
     {
      "qid": "y7t-own-phone",
      "text": "phone = int(input(\"Phone? \"))\nprint(phone)\nThe user types 0812345678. What is printed?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "phone = int(input(\"Phone? \"))",
+        "print(phone)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "The user types 0812345678. What is printed?"
+      }
+     ]
     },
     {
      "qid": "y7t-own-phonewhy",
@@ -650,27 +1627,103 @@
     {
      "qid": "y7t-own-times",
      "text": "price = 2.5\ncount = 4\nprint(price * count)\nWhat is printed?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "price = 2.5",
+        "count = 4",
+        "print(price * count)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is printed?"
+      }
+     ]
     },
     {
      "qid": "y7t-own-type",
      "text": "a = 2.5\nb = 3\nx = a * b\nWhat data type is x? Type Integer, Real or String.",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "a = 2.5",
+        "b = 3",
+        "x = a * b"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What data type is x? Type Integer, Real or String."
+      }
+     ]
     },
     {
      "qid": "y7t-own-typeint",
      "text": "a = 6\nb = 3\nx = a * b\nWhat data type is x? Type Integer, Real or String.",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "a = 6",
+        "b = 3",
+        "x = a * b"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What data type is x? Type Integer, Real or String."
+      }
+     ]
     },
     {
      "qid": "y7t-own-div",
      "text": "mins = 90\nhours = mins / 60\nprint(hours)\nWhat is printed?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "mins = 90",
+        "hours = mins / 60",
+        "print(hours)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is printed?"
+      }
+     ]
     },
     {
      "qid": "y7t-own-join",
      "text": "price = 1.5\ncount = 3\ntotal = price * count\nprint(\"Total: \" + str(total))\nWhat is printed?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "price = 1.5",
+        "count = 3",
+        "total = price * count",
+        "print(\"Total: \" + str(total))"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is printed?"
+      }
+     ]
     },
     {
      "qid": "y7t-own-strwhy",
@@ -680,22 +1733,83 @@
     {
      "qid": "y7t-own-case",
      "text": "score = 5\nscore = score + 1\nprint(Score)\nWhat happens when this program runs?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "score = 5",
+        "score = score + 1",
+        "print(Score)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What happens when this program runs?"
+      }
+     ]
     },
     {
      "qid": "y7t-own-casewhy",
      "text": "1  lives = 3\n2  lives = lives - 1\n3  print(Lives)\nThis program stops with an error on line 3. Explain why. [1]",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "lives = 3",
+        "lives = lives - 1",
+        "print(Lives)"
+       ],
+       "numbered": true
+      },
+      {
+       "type": "para",
+       "text": "This program stops with an error on line 3. Explain why. [1]"
+      }
+     ]
     },
     {
      "qid": "y7t-own-typo",
      "text": "coins = 10\ncoisn = coins + 5\nprint(coins)\nWhat is printed?",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "coins = 10",
+        "coisn = coins + 5",
+        "print(coins)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is printed?"
+      }
+     ]
     },
     {
      "qid": "y7t-own-typowhy",
      "text": "coins = 10\ncoisn = coins + 5\nprint(coins)\n(a) Which variable holds 15 at the end? [1]\n(b) Explain why Python shows no error message. [1]",
-     "marks": 2
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "python",
+       "lines": [
+        "coins = 10",
+        "coisn = coins + 5",
+        "print(coins)"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Which variable holds 15 at the end? [1]\n(b) Explain why Python shows no error message. [1]"
+      }
+     ]
     }
    ]
   },
@@ -727,8 +1841,27 @@
     },
     {
      "qid": "y10i-25j11-5a",
-     "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(a) (adapted: one row of the table)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nComplete the table with the missing term.\nTerm: ........\nDefinition: This is a list of all the commands that can be processed by the CPU. [1]",
-     "marks": 1
+     "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(a) (adapted: one row of the table)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nComplete the table with the missing term.\nTerm | Definition\n........ | This is a list of all the commands that can be processed by the CPU. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(a) (adapted: one row of the table)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nComplete the table with the missing term."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Term",
+        "Definition"
+       ],
+       "rows": [
+        [
+         "",
+         "This is a list of all the commands that can be processed by the CPU. [1]"
+        ]
+       ]
+      }
+     ]
     },
     {
      "qid": "y10i-25n11-6a",
@@ -762,13 +1895,91 @@
     },
     {
      "qid": "y10i-own-decode1",
-     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nDecode the instruction 0001 0110. Give the command and the operand in denary. [2]",
-     "marks": 2
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\nOpcode | Command\n0001 | LOAD\n0010 | ADD\n0011 | SUB\n0100 | STORE\n0101 | OUTPUT\nDecode the instruction 0001 0110. Give the command and the operand in denary. [2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:"
+      },
+      {
+       "type": "table",
+       "head": [
+        "Opcode",
+        "Command"
+       ],
+       "rows": [
+        [
+         "0001",
+         "LOAD"
+        ],
+        [
+         "0010",
+         "ADD"
+        ],
+        [
+         "0011",
+         "SUB"
+        ],
+        [
+         "0100",
+         "STORE"
+        ],
+        [
+         "0101",
+         "OUTPUT"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Decode the instruction 0001 0110. Give the command and the operand in denary. [2]"
+      }
+     ]
     },
     {
      "qid": "y10i-own-decode2",
-     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nDecode the instruction 0100 0111. Give the command and the operand in denary. [2]",
-     "marks": 2
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\nOpcode | Command\n0001 | LOAD\n0010 | ADD\n0011 | SUB\n0100 | STORE\n0101 | OUTPUT\nDecode the instruction 0100 0111. Give the command and the operand in denary. [2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:"
+      },
+      {
+       "type": "table",
+       "head": [
+        "Opcode",
+        "Command"
+       ],
+       "rows": [
+        [
+         "0001",
+         "LOAD"
+        ],
+        [
+         "0010",
+         "ADD"
+        ],
+        [
+         "0011",
+         "SUB"
+        ],
+        [
+         "0100",
+         "STORE"
+        ],
+        [
+         "0101",
+         "OUTPUT"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Decode the instruction 0100 0111. Give the command and the operand in denary. [2]"
+      }
+     ]
     },
     {
      "qid": "y10i-own-opcode",
@@ -782,23 +1993,206 @@
     },
     {
      "qid": "y10i-own-encode",
-     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nWrite the instruction ADD 9 as machine code. [2]",
-     "marks": 2
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:\nOpcode | Command\n0001 | LOAD\n0010 | ADD\n0011 | SUB\n0100 | STORE\n0101 | OUTPUT\nWrite the instruction ADD 9 as machine code. [2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand.\nThe instruction set:"
+      },
+      {
+       "type": "table",
+       "head": [
+        "Opcode",
+        "Command"
+       ],
+       "rows": [
+        [
+         "0001",
+         "LOAD"
+        ],
+        [
+         "0010",
+         "ADD"
+        ],
+        [
+         "0011",
+         "SUB"
+        ],
+        [
+         "0100",
+         "STORE"
+        ],
+        [
+         "0101",
+         "OUTPUT"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Write the instruction ADD 9 as machine code. [2]"
+      }
+     ]
     },
     {
      "qid": "y10i-own-trace1",
-     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nLOAD copies the value at the address into the accumulator (ACC). ADD adds the value at the address to the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0110, then 0010 0111.\nState the value in the ACC after both instructions. [1]",
-     "marks": 1
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:\nOpcode | Command\n0001 | LOAD\n0010 | ADD\n0011 | SUB\n0100 | STORE\n0101 | OUTPUT\nLOAD copies the value at the address into the accumulator (ACC). ADD adds the value at the address to the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0110, then 0010 0111.\nState the value in the ACC after both instructions. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:"
+      },
+      {
+       "type": "table",
+       "head": [
+        "Opcode",
+        "Command"
+       ],
+       "rows": [
+        [
+         "0001",
+         "LOAD"
+        ],
+        [
+         "0010",
+         "ADD"
+        ],
+        [
+         "0011",
+         "SUB"
+        ],
+        [
+         "0100",
+         "STORE"
+        ],
+        [
+         "0101",
+         "OUTPUT"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "LOAD copies the value at the address into the accumulator (ACC). ADD adds the value at the address to the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0110, then 0010 0111.\nState the value in the ACC after both instructions. [1]"
+      }
+     ]
     },
     {
      "qid": "y10i-own-trace2",
-     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:\n0001 LOAD\n0010 ADD\n0011 SUB\n0100 STORE\n0101 OUTPUT\nLOAD copies the value at the address into the accumulator (ACC). SUB takes the value at the address away from the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0111, then 0011 0110.\nState the value in the ACC after both instructions. [1]",
-     "marks": 1
+     "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:\nOpcode | Command\n0001 | LOAD\n0010 | ADD\n0011 | SUB\n0100 | STORE\n0101 | OUTPUT\nLOAD copies the value at the address into the accumulator (ACC). SUB takes the value at the address away from the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0111, then 0011 0110.\nState the value in the ACC after both instructions. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Each instruction is 8 bits: a 4-bit opcode, then a 4-bit operand (an address).\nThe instruction set:"
+      },
+      {
+       "type": "table",
+       "head": [
+        "Opcode",
+        "Command"
+       ],
+       "rows": [
+        [
+         "0001",
+         "LOAD"
+        ],
+        [
+         "0010",
+         "ADD"
+        ],
+        [
+         "0011",
+         "SUB"
+        ],
+        [
+         "0100",
+         "STORE"
+        ],
+        [
+         "0101",
+         "OUTPUT"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "LOAD copies the value at the address into the accumulator (ACC). SUB takes the value at the address away from the ACC.\nIn memory, address 6 holds 12 and address 7 holds 30.\nThe CPU runs 0001 0111, then 0011 0110.\nState the value in the ACC after both instructions. [1]"
+      }
+     ]
     },
     {
      "qid": "y10i-own-cpub",
-     "text": "A machine code program was made for CPU A.\nCPU A's instruction set: 0001 LOAD, 0010 ADD, 0011 SUB, 0100 STORE, 0101 OUTPUT\nCPU B's instruction set: 0001 OUTPUT, 0010 LOAD, 0011 ADD, 0100 STORE\nThe program is run on CPU B. Its next instruction is 0010 0111.\nState the command that CPU B carries out. [1]",
-     "marks": 1
+     "text": "A machine code program was made for CPU A.\nCPU A's instruction set\nOpcode | Command\n0001 | LOAD\n0010 | ADD\n0011 | SUB\n0100 | STORE\n0101 | OUTPUT\nCPU B's instruction set\nOpcode | Command\n0001 | OUTPUT\n0010 | LOAD\n0011 | ADD\n0100 | STORE\nThe program is run on CPU B. Its next instruction is 0010 0111.\nState the command that CPU B carries out. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A machine code program was made for CPU A."
+      },
+      {
+       "type": "table",
+       "caption": "CPU A's instruction set",
+       "head": [
+        "Opcode",
+        "Command"
+       ],
+       "rows": [
+        [
+         "0001",
+         "LOAD"
+        ],
+        [
+         "0010",
+         "ADD"
+        ],
+        [
+         "0011",
+         "SUB"
+        ],
+        [
+         "0100",
+         "STORE"
+        ],
+        [
+         "0101",
+         "OUTPUT"
+        ]
+       ]
+      },
+      {
+       "type": "table",
+       "caption": "CPU B's instruction set",
+       "head": [
+        "Opcode",
+        "Command"
+       ],
+       "rows": [
+        [
+         "0001",
+         "OUTPUT"
+        ],
+        [
+         "0010",
+         "LOAD"
+        ],
+        [
+         "0011",
+         "ADD"
+        ],
+        [
+         "0100",
+         "STORE"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "The program is run on CPU B. Its next instruction is 0010 0111.\nState the command that CPU B carries out. [1]"
+      }
+     ]
     },
     {
      "qid": "y10i-own-binary",
@@ -821,12 +2215,73 @@
     {
      "qid": "y11g-24n21-2",
      "text": "Cambridge IGCSE 0478/21, November 2024, Question 2\nTick one box to identify which option is used to show the inputs and output of a Boolean expression.\nA flowchart\nB trace table\nC truth table\nD variable\nType the letter or the option. [1]",
-     "marks": 1
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/21, November 2024, Question 2\nTick one box to identify which option is used to show the inputs and output of a Boolean expression."
+      },
+      {
+       "type": "options",
+       "items": [
+        "flowchart",
+        "trace table",
+        "truth table",
+        "variable"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Type the letter or the option. [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-23n23-6a",
-     "text": "Cambridge IGCSE 0478/23, November 2023, Question 6(a)\nA logic gate has two inputs A and B with one output X.\nThe only time the output is 1 is when both inputs are 1.\nIdentify the logic gate. Complete the truth table for this description.\nThe rows are in this order: A = 0, B = 0; A = 0, B = 1; A = 1, B = 0; A = 1, B = 1.\nType the gate, then the X column as one group, top row first (for example 1010). [2]",
-     "marks": 2
+     "text": "Cambridge IGCSE 0478/23, November 2023, Question 6(a)\nA logic gate has two inputs A and B with one output X.\nThe only time the output is 1 is when both inputs are 1.\nIdentify the logic gate. Complete the truth table for this description.\nA B | X\n0 0 | ?\n0 1 | ?\n1 0 | ?\n1 1 | ?\nType the gate, then the X column as one group, top row first (for example 1010). [2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, November 2023, Question 6(a)\nA logic gate has two inputs A and B with one output X.\nThe only time the output is 1 is when both inputs are 1.\nIdentify the logic gate. Complete the truth table for this description."
+      },
+      {
+       "type": "truthTable",
+       "inputs": [
+        "A",
+        "B"
+       ],
+       "outputs": [
+        "X"
+       ],
+       "rows": [
+        [
+         0,
+         0,
+         null
+        ],
+        [
+         0,
+         1,
+         null
+        ],
+        [
+         1,
+         0,
+         null
+        ],
+        [
+         1,
+         1,
+         null
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Type the gate, then the X column as one group, top row first (for example 1010). [2]"
+      }
+     ]
     },
     {
      "qid": "y11g-22m12-3a-11",
@@ -860,58 +2315,353 @@
     },
     {
      "qid": "y11g-21m12-5a-or",
-     "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table.\nA B | Output\n0 0 | 0\n0 1 | 1\n1 0 | 1\n1 1 | 1 [1]",
-     "marks": 1
+     "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table. [1]\nA B | Output\n0 0 | 0\n0 1 | 1\n1 0 | 1\n1 1 | 1",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table. [1]"
+      },
+      {
+       "type": "truthTable",
+       "inputs": [
+        "A",
+        "B"
+       ],
+       "outputs": [
+        "Output"
+       ],
+       "rows": [
+        [
+         0,
+         0,
+         0
+        ],
+        [
+         0,
+         1,
+         1
+        ],
+        [
+         1,
+         0,
+         1
+        ],
+        [
+         1,
+         1,
+         1
+        ]
+       ]
+      }
+     ]
     },
     {
      "qid": "y11g-21m12-5a-and",
-     "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table.\nA B | Output\n0 0 | 0\n0 1 | 0\n1 0 | 0\n1 1 | 1 [1]",
-     "marks": 1
+     "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table. [1]\nA B | Output\n0 0 | 0\n0 1 | 0\n1 0 | 0\n1 1 | 1",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2021, Question 5(a) (adapted: one truth table, for a gate from this lesson)\nState the single logic gate that produces this truth table. [1]"
+      },
+      {
+       "type": "truthTable",
+       "inputs": [
+        "A",
+        "B"
+       ],
+       "outputs": [
+        "Output"
+       ],
+       "rows": [
+        [
+         0,
+         0,
+         0
+        ],
+        [
+         0,
+         1,
+         0
+        ],
+        [
+         1,
+         0,
+         0
+        ],
+        [
+         1,
+         1,
+         1
+        ]
+       ]
+      }
+     ]
     },
     {
      "qid": "y11g-24n23-8-open",
-     "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off.\nA = 0: air conditioning off; A = 1: air conditioning on\nT = 0: not too high; T = 1: too high\nH = 0: heater off; H = 1: heater on\nW = 0: window closed; W = 1: window open\nComplete this row of the truth table: A = 0, T = 1, H = 0. What is W? [1]",
-     "marks": 1
+     "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off.\nParameter | 0 means | 1 means\nA | air conditioning off | air conditioning on\nT | not too high | too high\nH | heater off | heater on\nW | window closed | window open\nComplete this row of the truth table.\nA T H | W\n0 1 0 | ?\nWhat is W? [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Parameter",
+        "0 means",
+        "1 means"
+       ],
+       "rows": [
+        [
+         "A",
+         "air conditioning off",
+         "air conditioning on"
+        ],
+        [
+         "T",
+         "not too high",
+         "too high"
+        ],
+        [
+         "H",
+         "heater off",
+         "heater on"
+        ],
+        [
+         "W",
+         "window closed",
+         "window open"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Complete this row of the truth table."
+      },
+      {
+       "type": "truthTable",
+       "inputs": [
+        "A",
+        "T",
+        "H"
+       ],
+       "outputs": [
+        "W"
+       ],
+       "rows": [
+        [
+         0,
+         1,
+         0,
+         null
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is W? [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-24n23-8-shut",
-     "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off.\nA = 0: air conditioning off; A = 1: air conditioning on\nT = 0: not too high; T = 1: too high\nH = 0: heater off; H = 1: heater on\nW = 0: window closed; W = 1: window open\nComplete this row of the truth table: A = 1, T = 1, H = 0. What is W? [1]",
-     "marks": 1
+     "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off.\nParameter | 0 means | 1 means\nA | air conditioning off | air conditioning on\nT | not too high | too high\nH | heater off | heater on\nW | window closed | window open\nComplete this row of the truth table.\nA T H | W\n1 1 0 | ?\nWhat is W? [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, November 2024, Question 8 (adapted: one row of the truth table)\nA logic circuit is to be built to control the automatic opening of a window. The window W opens if the temperature T is too high, the heater H is off, and the air conditioning A is off."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Parameter",
+        "0 means",
+        "1 means"
+       ],
+       "rows": [
+        [
+         "A",
+         "air conditioning off",
+         "air conditioning on"
+        ],
+        [
+         "T",
+         "not too high",
+         "too high"
+        ],
+        [
+         "H",
+         "heater off",
+         "heater on"
+        ],
+        [
+         "W",
+         "window closed",
+         "window open"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Complete this row of the truth table."
+      },
+      {
+       "type": "truthTable",
+       "inputs": [
+        "A",
+        "T",
+        "H"
+       ],
+       "outputs": [
+        "W"
+       ],
+       "rows": [
+        [
+         1,
+         1,
+         0,
+         null
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What is W? [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-not1",
-     "text": "A NOT gate has the input A = 1.\nState the output X. [1]",
-     "marks": 1
+     "text": "Logic gate symbol (NOT): a triangle pointing right, with a small circle at its point, with one input (A) and the output X.\nA NOT gate has the input A = 1.\nState the output X. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "gate",
+       "gate": "NOT",
+       "output": "X",
+       "showName": true
+      },
+      {
+       "type": "para",
+       "text": "A NOT gate has the input A = 1.\nState the output X. [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-not0",
-     "text": "A NOT gate has the input A = 0.\nState the output X. [1]",
-     "marks": 1
+     "text": "Logic gate symbol (NOT): a triangle pointing right, with a small circle at its point, with one input (A) and the output X.\nA NOT gate has the input A = 0.\nState the output X. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "gate",
+       "gate": "NOT",
+       "output": "X",
+       "showName": true
+      },
+      {
+       "type": "para",
+       "text": "A NOT gate has the input A = 0.\nState the output X. [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-shape-not",
-     "text": "A logic gate symbol is a triangle pointing right, with a small circle at its point.\nIt has one input.\nState the name of this logic gate. [1]",
-     "marks": 1
+     "text": "Look at this logic gate symbol.\nLogic gate symbol: a triangle pointing right, with a small circle at its point, with one input (A) and the output X.\nState the name of this logic gate. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Look at this logic gate symbol."
+      },
+      {
+       "type": "gate",
+       "gate": "NOT",
+       "output": "X"
+      },
+      {
+       "type": "para",
+       "text": "State the name of this logic gate. [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-shape-and",
-     "text": "A logic gate symbol has a flat back and a round front, like the letter D.\nIt has two inputs.\nState the name of this logic gate. [1]",
-     "marks": 1
+     "text": "Look at this logic gate symbol.\nLogic gate symbol: a flat back and a round front, like the letter D, with two inputs (A, B) and the output X.\nState the name of this logic gate. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Look at this logic gate symbol."
+      },
+      {
+       "type": "gate",
+       "gate": "AND",
+       "output": "X"
+      },
+      {
+       "type": "para",
+       "text": "State the name of this logic gate. [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-shape-or",
-     "text": "A logic gate symbol has a curved back and a pointed front.\nIt has two inputs.\nState the name of this logic gate. [1]",
-     "marks": 1
+     "text": "Look at this logic gate symbol.\nLogic gate symbol: a curved back and a pointed front, with two inputs (A, B) and the output X.\nState the name of this logic gate. [1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Look at this logic gate symbol."
+      },
+      {
+       "type": "gate",
+       "gate": "OR",
+       "output": "X"
+      },
+      {
+       "type": "para",
+       "text": "State the name of this logic gate. [1]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-and01",
-     "text": "An AND gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]",
-     "marks": 2
+     "text": "Logic gate symbol (AND): a flat back and a round front, like the letter D, with two inputs (A, B) and the output X.\nAn AND gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "gate",
+       "gate": "AND",
+       "output": "X",
+       "showName": true
+      },
+      {
+       "type": "para",
+       "text": "An AND gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-or01",
-     "text": "An OR gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]",
-     "marks": 2
+     "text": "Logic gate symbol (OR): a curved back and a pointed front, with two inputs (A, B) and the output X.\nAn OR gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "gate",
+       "gate": "OR",
+       "output": "X",
+       "showName": true
+      },
+      {
+       "type": "para",
+       "text": "An OR gate has the inputs A = 0 and B = 1.\nState the output X. Explain why. [2]"
+      }
+     ]
     },
     {
      "qid": "y11g-own-car",

@@ -2,7 +2,8 @@
 // The game never sees answers or mark schemes: every call goes to the shell by postMessage
 // (BC_EXAM_GAME_REQUEST -> BC_EXAM_GAME_RESULT), which runs ExamGame.gs as the signed-in student.
 //   ExamGame.sets()                           -> Promise [{ setId, title, year, unit, count }]
-//   ExamGame.next(setId, { count, maxMarks }) -> Promise [{ qid, text, marks }]  (picked here from the questions file)
+//   ExamGame.next(setId, { count, maxMarks }) -> Promise [{ qid, text, marks, blocks? }]  (picked here from the questions file;
+//     blocks: the question drawn as in the exam, by shared/exam-question.js; text stays the plain version)
 //   ExamGame.warm(setId)                      -> starts the one history read for the set (also warms the relay)
 //   ExamGame.submit(qid, answer, attempt, image) -> Promise { marks, max, feedback, canRetry, attempt, full }
 //     image: optional pen working, a base64 PNG without the data: prefix ('' for none). AI marking only.
@@ -119,7 +120,7 @@
   // sets and texts at once, so a round needs no server call. The student's history comes ONCE per set from the server
   // ('history'), with a copy kept in localStorage per set as the fallback; each submit result updates it. The pick
   // follows the server's rules (examGameNext_ in ExamGame.gs): no repeats until the pool is used up, then weakest first.
-  var QFILE_G = '9b1d93c5';
+  var QFILE_G = 'e74af573';
   var base = (function () {
     var s = document.currentScript && document.currentScript.src;
     return s ? s.replace(/[^\/]*$/, '') : '../shared/';
@@ -135,7 +136,7 @@
         return r.json();
       }).then(function (d) {
         if (!d || !Array.isArray(d.sets) || !d.sets.length) throw new Error('questions file empty');
-        return d;
+        return noteBlocks(d);
       });
       filePromise.catch(function () { filePromise = null; });
     }
@@ -191,8 +192,15 @@
       picked = picked.concat(weakFirst(pool.filter(function (q) { return ids.indexOf(q.qid) < 0; })).slice(0, count - picked.length));
     }
     picked.forEach(function (q) { h.seen[q.qid] = 1; });
-    return picked.map(function (q) { return { qid: q.qid, text: q.text, marks: q.marks }; });
+    return picked.map(function (q) {
+      var o = { qid: q.qid, text: q.text, marks: q.marks };
+      if (q.blocks) o.blocks = q.blocks;
+      return o;
+    });
   }
+  // The exam-style blocks of a question in the loaded file (shared/exam-question.js draws them), or null.
+  var fileBlocks = {};
+  function noteBlocks(d) { d.sets.forEach(function (s) { s.questions.forEach(function (q) { if (q.blocks) fileBlocks[q.qid] = q.blocks; }); }); return d; }
 
   var qidSet = {};
   // A mark updates the history copy here, so the next round's pick follows it.
@@ -355,6 +363,8 @@
     // Stub only: the next n submit requests fail like a network error; stubFailed() counts the failures so far.
     stubFail: function (n) { stubFails = Math.max(0, Number(n) || 0); },
     stubFailed: function () { return stubFailed; },
+    // A saved round from before blocks were kept: its questions' blocks from the questions file, once it has loaded.
+    blocksFor: function (qid) { return fileBlocks[qid] || null; },
     newRid: function () { return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); },
     useStub: function (on) { stub = on !== false; },
     isStub: function () { return stub; },

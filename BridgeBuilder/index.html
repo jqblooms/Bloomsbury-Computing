@@ -9,7 +9,7 @@
   (function () {
     var p = new URLSearchParams(location.search), v = p.get('bcv') || '20261118d';
     if (p.get('embed') === '1') document.documentElement.classList.add('is-embed');
-    document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(v) + '&g=5">');
+    document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(v) + '&g=6">');
     window.BB_VERSION = v;
   })();
 </script>
@@ -31,13 +31,14 @@
 </main>
 <script src="../shared/bc-clicker.js?v=20260929c"></script>
 <script>
-  document.write('<script src="../shared/exam-game-client.js?v=20261118t"><\/script>');
+  document.write('<script src="../shared/exam-game-client.js?v=20261119q"><\/script>');
   document.write('<script src="../shared/answer-box.js?v=20261117a"><\/script>');
-  document.write('<script src="js/physics.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=5"><\/script>');
-  document.write('<script src="js/art.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=5"><\/script>');
-  document.write('<script src="js/solutions.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=5"><\/script>');
-  document.write('<script src="js/teacher.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=5"><\/script>');
-  document.write('<script src="js/game.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=5"><\/script>');
+  document.write('<script src="../shared/exam-question.js?v=20261119q"><\/script>');
+  document.write('<script src="js/physics.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=6"><\/script>');
+  document.write('<script src="js/art.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=6"><\/script>');
+  document.write('<script src="js/solutions.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=6"><\/script>');
+  document.write('<script src="js/teacher.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=6"><\/script>');
+  document.write('<script src="js/game.js?v=' + encodeURIComponent(window.BB_VERSION) + '&g=6"><\/script>');
 </script>
 </body>
 </html>

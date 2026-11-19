@@ -8,16 +8,21 @@ Folder: `TowerDefence/` (entry `TowerDefence/index.html`). Lesson slide embeds i
 Load the client (answers and mark schemes stay on the server):
 
 ```html
-<script src="../shared/exam-game-client.js?v=20261118b"></script>
+<script src="../shared/exam-game-client.js?v=20261119q"></script>
+<script src="../shared/exam-question.js?v=20261119q"></script>
 ```
 
 All calls return Promises.
 
 - `ExamGame.sets()` -> `[{ setId, title, count }]`
-- `ExamGame.next(setId, { count, maxMarks })` -> `[{ qid, text, marks }]`
+- `ExamGame.next(setId, { count, maxMarks })` -> `[{ qid, text, marks, blocks? }]`
   - `count`: how many questions (default 1, max 10). `maxMarks`: skip questions worth more than this.
   - No repeats for a student until they have seen the whole pool, then their weakest come first.
   - `text` is plain text with `\n` line breaks (show it in a `white-space: pre-wrap` box).
+  - `blocks` (on most questions): the question as the exam draws it (tables, truth tables, gate symbols, registers,
+    binary sums in columns, code, tick-box options). Show the question with
+    `BCExamQuestion.render(el, { text, blocks })`: it draws the blocks, or the plain text when there are none. Keep
+    `blocks` with the round you save; `ExamGame.blocksFor(qid)` finds them for an older saved round once the file has loaded.
 - `ExamGame.submit(qid, answer, attempt, image)` -> `{ marks, max, feedback, canRetry, attempt, full }`
   - `answer`: the student's working and answer, typed in ONE text box (textarea). Required: the final answer mark comes only from this text.
   - `image` (optional): pen working as a base64 PNG string WITHOUT the `data:` prefix, or `''`. Haiku sees it with the text and gives working marks for it; the keyword fallback ignores it.
