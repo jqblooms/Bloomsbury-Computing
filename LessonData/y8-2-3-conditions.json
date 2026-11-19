@@ -74,262 +74,91 @@
    "type": "embedded-app",
    "appId": "drill-y8-2-2-data-types",
    "embedContainerId": "y823-do-now-ext",
-   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on data types and constants from 2.2. Stuck? Switch on <strong>I need help</strong> for a nudge or a similar question worked through.</p><div id=\"y823-do-now-ext\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card use new values?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise the method, not one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on data types and constants from 2.2. Stuck? Switch on <strong>I need help</strong> for a nudge or a similar question worked through.</p><div id=\"y823-do-now-ext\"></div>"
   },
   {
    "id": "title",
    "label": "2.3: Conditional Statements",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Programming, Logic and Testing</p><h2 class=\"lesson-h2\">2.3: Conditional Statements</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> write programs that choose what to do, predict which lines run, and test that they choose right.</li><li><strong>The big question:</strong> how does a program decide, and how do we know it decides correctly?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A lift door opens when a button is pressed. A game says \"Game over\" when lives run out. How can a program do different things at different times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It asks a question about a value, like \"Are the lives 0?\". The answer decides which lines run.</p></div></details>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Programming, Logic and Testing</p><h2 class=\"lesson-h2\">2.3: Conditional Statements</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> about 20 minutes of notes. Then use your notes in <strong>Data Bridge</strong>.</li><li><strong>The big question:</strong> how does a program decide what to do, and how do we know it decides correctly?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A game says \"Game over\" when your lives run out. What does the game need to check, and how often?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Collect ideas: it checks the number of lives, again and again. Today shows how a program asks a question like this and chooses what to do.</p></div></details>"
   },
   {
    "id": "condition",
-   "label": "What Is a Condition?",
-   "content": "<h2 class=\"lesson-h2\">What Is a Condition?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: 12 is typed in. What is output? Why does the other OUTPUT line never run?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>Not yet</strong>.</p><p><strong>Why?</strong> 12 &gt;= 13 is FALSE, so the program jumps to ELSE. Only one of the two branches runs each time.</p></div></details><p class=\"lesson-lead\">A <strong>condition</strong> is a question with only two answers: TRUE or FALSE.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Age</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Age &gt;= 13 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Join the club\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not yet\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div><ul class=\"lesson-facts\"><li>Line 3 holds the condition: Age &gt;= 13.</li><li>TRUE: the <strong>THEN branch</strong> runs (line 4).</li><li>FALSE: the <strong>ELSE branch</strong> runs (line 6).</li><li>A <strong>branch</strong> is the lines for one answer. Only one branch runs.</li></ul></div></div>"
+   "label": "IF, THEN and ELSE",
+   "content": "<h2 class=\"lesson-h2\">IF, THEN and ELSE</h2><div style=\"display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:start\"><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Age</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Age &gt;= 13 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Join the club\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not yet\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><ul class=\"lesson-facts\"><li>Line 3 holds the <strong>condition</strong>: Age &gt;= 13.</li><li>TRUE: the <strong>THEN branch</strong> runs (line 4).</li><li>FALSE: the <strong>ELSE branch</strong> runs (line 6).</li><li>14 typed in: Join the club. 12 typed in: Not yet.</li></ul></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Condition:</b> a question with only two answers, TRUE or FALSE.</div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Selection:</b> an IF statement selects which <b>branch</b> (group of lines) runs. Only one branch runs.</div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> A condition cannot be TRUE and FALSE at the same time, so the program never runs both branches.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A lift door opens when a button is pressed. Why does a program need a question with only two answers to decide this?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: the button is pressed or it is not. Two answers means the program always knows exactly which lines to run.</p></div></details>"
+  },
+  {
+   "id": "notes-condition",
+   "label": "Your Notes: IF, THEN and ELSE",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: IF, THEN and ELSE</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Condition</b><br>A question with only two answers: TRUE or FALSE. Example: Age &gt;= 13.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Selection</b><br>An IF statement is a selection statement. TRUE: the THEN branch runs. FALSE: the ELSE branch runs.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY only one branch runs</b><br>A condition cannot be TRUE and FALSE at the same time.</div>"
   },
   {
    "id": "operators",
    "label": "Six Comparison Operators",
-   "content": "<h2 class=\"lesson-h2\">Six Comparison Operators</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Score is 10. Why is Score &gt; 10 FALSE, but Score &gt;= 10 TRUE?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>10 is not more than 10. But 10 is equal to 10, and &gt;= lets in \"equal to\" as well. One symbol changes the answer for that exact number.</p></div></details><p class=\"lesson-lead\">A <strong>comparison operator</strong> compares two values. Here Score is 10.</p><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Operator</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Meaning</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Example</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Answer</th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>=</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score = 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">TRUE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&lt;&gt;</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is not equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &lt;&gt; 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">FALSE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&lt;</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is less than</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &lt; 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">FALSE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&lt;=</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is less than or equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &lt;= 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">TRUE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&gt;</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is more than</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &gt; 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">FALSE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&gt;=</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is more than or equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &gt;= 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">TRUE</td></tr></table>"
+   "content": "<h2 class=\"lesson-h2\">Six Comparison Operators</h2><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Comparison operator:</b> a symbol that compares two values. The answer is TRUE or FALSE. Here Score is 10.</div><div style=\"margin-top:10px\"><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Operator</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Meaning</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Example</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Answer</th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>=</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score = 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">TRUE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&lt;&gt;</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is not equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &lt;&gt; 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">FALSE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&lt;</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is less than</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &lt; 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">FALSE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&lt;=</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is less than or equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &lt;= 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">TRUE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&gt;</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is more than</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &gt; 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">FALSE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>&gt;=</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">is more than or equal to</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><code>Score &gt;= 10</code></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">TRUE</td></tr></table></div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> Put the value into the condition first, then say the symbol in words: \"10 is more than or equal to 10\" is TRUE.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does = in a condition need a different symbol from the &lt;- that stores a value?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: &lt;- changes a variable. = only asks a question and changes nothing.</p></div></details>"
   },
   {
-   "id": "operators-check",
-   "label": "Your Turn: TRUE or FALSE?",
-   "type": "short-answer-validation",
-   "validatorId": "y823-operators-check",
-   "validatorKey": "y823_operators_check",
-   "content": "<h2 class=\"lesson-h2\">Your Turn: TRUE or FALSE?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write the value of Coins into each condition before you decide?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you compare two numbers you can see, and nothing is kept only in your head.</p></div></details><p class=\"lesson-lead\">Coins is 7. Type TRUE or FALSE for each condition.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y823-operators-check-a\">(a) Coins &lt;&gt; 7 [1]</label><input id=\"y823-operators-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"operators-check-a\" aria-label=\"Your Turn: TRUE or FALSE? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y823-operators-check-b\">(b) Coins &lt;= 7 [1]</label><input id=\"y823-operators-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"operators-check-b\" aria-label=\"Your Turn: TRUE or FALSE? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y823-operators-check-c\">(c) Coins &gt; 7 [1]</label><input id=\"y823-operators-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"operators-check-c\" aria-label=\"Your Turn: TRUE or FALSE? part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y823-operators-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y823-operators-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+   "id": "notes-operators",
+   "label": "Your Notes: Comparison Operators",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Comparison Operators</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Comparison operator</b><br>A symbol that compares two values. The answer is TRUE or FALSE.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Copy the six operators</b><br><code>=</code> equal to &nbsp; <code>&lt;&gt;</code> not equal to &nbsp; <code>&lt;</code> less than<br><code>&lt;=</code> less than or equal to &nbsp; <code>&gt;</code> more than &nbsp; <code>&gt;=</code> more than or equal to</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY say it in words</b><br>Put the value in, then read the symbol in words. Then you can see if it is TRUE or FALSE.</div>"
   },
   {
-   "id": "compare-edge",
+   "id": "edge",
    "label": "Compare: > and >=",
-   "content": "<h2 class=\"lesson-h2\">Compare: &gt; and &gt;=</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: 13 is typed into both programs. Which one lets the pupil join? Which program follows the rule?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A outputs <strong>Not yet</strong>. B outputs <strong>Join the club</strong>.</p><p><strong>Why?</strong> 13 &gt; 13 is FALSE, but 13 &gt;= 13 is TRUE. The rule says 13 or older, so B is right. For 12 or 14 the two programs give the same answer. Only 13 shows the difference.</p></div></details><p class=\"lesson-lead\">The rule: pupils aged <strong>13 or older</strong> can join the club.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">INPUT Age</div><div class=\"lesson-code-line wt-hl\">IF Age &gt; 13 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Join the club\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not yet\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">INPUT Age</div><div class=\"lesson-code-line wt-hl\">IF Age &gt;= 13 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Join the club\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not yet\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div></div>"
+   "content": "<h2 class=\"lesson-h2\">Compare: &gt; and &gt;=</h2><p class=\"lesson-lead\">The rule: pupils aged <strong>13 or older</strong> can join the club. Two programmers wrote line 3 differently.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: IF Age &gt; 13 THEN</p><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: IF Age &gt;= 13 THEN</p><div class=\"wt-note\">13 &gt; 13 is FALSE. 13 &gt;= 13 is TRUE.</div></div><div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Age typed in</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>A outputs</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>B outputs</b></th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">12</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Not yet</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Not yet</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><span class=\"wt-hl\">13</span></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><span class=\"wt-hl\">Not yet</span></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><span class=\"wt-hl\">Join the club</span></td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">14</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Join the club</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Join the club</td></tr></table></div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Rule words:</b> \"or more\" is &gt;=. \"more than\" is &gt;. \"or less\" is &lt;=. \"less than\" and \"under\" are &lt;.</div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> Only 13, the number written in the condition, gives a different answer. B follows the rule.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do 12 and 14 not show which program is wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Both programs give the same output for them. Only one value makes the two programs disagree.</p></div></details>"
   },
   {
-   "id": "predict-edge",
-   "label": "Predict: Which Branch Runs? (1 of 2)",
-   "type": "multiple-choice",
-   "containerId": "y823-predict-edge",
-   "content": "<h2 class=\"lesson-h2\">Predict: Which Branch Runs? (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why put the typed value into the IF line before you choose?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The IF line is where the program decides. Your answer depends on what that line gives.</p></div></details><p class=\"lesson-lead\">Read the program. Choose the output. The answer shows after you choose.</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Mark &gt; 50 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div id=\"y823-predict-edge\"></div>",
-   "items": [
-    {
-     "prompt": "50 is typed in. What is output?",
-     "options": [
-      "Pass",
-      "Fail",
-      "Pass, then Fail",
-      "Nothing"
-     ],
-     "correct": 1,
-     "explain": "50 > 50 is FALSE: 50 is not more than itself. So the ELSE branch runs."
-    }
-   ]
-  },
-  {
-   "id": "predict-edge-2",
-   "label": "Predict: Which Branch Runs? (2 of 2)",
-   "type": "multiple-choice",
-   "containerId": "y823-predict-edge-2",
-   "content": "<h2 class=\"lesson-h2\">Predict: Which Branch Runs? (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the symbol matter as much as the number in an IF line?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two IF lines with the same number but different symbols can choose different branches.</p></div></details><p class=\"lesson-lead\">Read the program. Choose the output. The answer shows after you choose.</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &lt;= 90 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"OK\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Too fast\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div id=\"y823-predict-edge-2\"></div>",
-   "items": [
-    {
-     "prompt": "90 is typed in. What is output?",
-     "options": [
-      "OK",
-      "Too fast",
-      "OK, then Too fast",
-      "Nothing"
-     ],
-     "correct": 0,
-     "explain": "90 <= 90 is TRUE: <= lets in \"equal to\". So the THEN branch runs."
-    }
-   ]
+   "id": "notes-edge",
+   "label": "Your Notes: > and >=",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: > and >=</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>&gt; and &gt;=</b><br>&gt; means more than: 13 &gt; 13 is FALSE. &gt;= means more than or equal to: 13 &gt;= 13 is TRUE.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Rule words</b><br>\"or more\": &gt;=. \"more than\": &gt;. \"or less\": &lt;=. \"less than\" or \"under\": &lt;.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY check the number in the condition</b><br>It is the only value where &gt; and &gt;= give different answers.</div>"
   },
   {
    "id": "nested",
    "label": "Three Outcomes: An IF Inside an IF",
-   "content": "<h2 class=\"lesson-h2\">Three Outcomes: An IF Inside an IF</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: 65 is typed in. Which line is output? Why does line 6 get checked at all?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>Silver</strong>.</p><p><strong>Why?</strong> 65 &gt;= 80 is FALSE, so the program goes to the ELSE branch. The ELSE branch holds a second IF. 65 &gt;= 50 is TRUE, so Silver is output.</p></div></details><p class=\"lesson-lead\">One IF has two branches. For three outcomes, put a second IF inside the ELSE. This is a <strong>nested</strong> IF.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div></div><div><ul class=\"lesson-facts\"><li>80 or more: Gold.</li><li>50 to 79: Silver.</li><li>Under 50: Bronze.</li><li>Each IF needs its own ENDIF.</li></ul></div></div>"
+   "content": "<h2 class=\"lesson-h2\">Three Outcomes: An IF Inside an IF</h2><div style=\"display:grid;grid-template-columns:0.9fr 1.1fr;gap:16px;align-items:start\"><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Score</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Conditions checked</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Output</b></th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">85</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">85 &gt;= 80 is TRUE</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Gold</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">65</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">65 &gt;= 80 is FALSE, 65 &gt;= 50 is TRUE</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Silver</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">30</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">30 &gt;= 80 is FALSE, 30 &gt;= 50 is FALSE</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Bronze</td></tr></table><ul class=\"lesson-facts\"><li>Each IF needs its own ENDIF.</li></ul></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:8px 14px;margin:10px 0 0;font-size:20px\"><b>Nested IF:</b> an IF inside the ELSE branch of another IF. It gives three outcomes.</div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> One IF has only two branches. The second IF splits the ELSE branch into two more.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">For 85, why is line 6 never checked?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: 85 &gt;= 80 is TRUE, so the THEN branch runs and the whole ELSE branch is skipped.</p></div></details>"
   },
   {
-   "id": "watch",
-   "label": "Watch the Program Choose",
-   "type": "stepper",
-   "stepperId": "y823-watch",
-   "content": "<h2 class=\"lesson-h2\">Watch the Program Choose</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why say the next line out loud before you press Next?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Predicting first shows you if you really know the rule. A wrong prediction tells you what to look at again.</p></div></details><p class=\"lesson-lead\">Press <strong>Next step</strong>. Before each press, say which line runs next.</p><div id=\"y823-watch\"></div>",
-   "stepperSteps": [
-    {
-     "title": "85 is typed in",
-     "html": "<div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line wt-hl\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Score = 85</div>",
-     "note": "Which IF is checked first?"
-    },
-    {
-     "title": "The first condition",
-     "html": "<div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">85 &gt;= 80 is <span class=\"wt-hl\">TRUE</span></div>",
-     "note": "TRUE: the THEN branch runs."
-    },
-    {
-     "title": "Gold, then the end",
-     "html": "<div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line wt-hl\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line wt-hl\">11&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Output: Gold. The whole ELSE branch is skipped.</div>",
-     "note": "Line 6 is never checked for 85."
-    },
-    {
-     "title": "65 is typed in",
-     "html": "<div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line wt-hl\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">65 &gt;= 80 is <span class=\"wt-hl\">FALSE</span>, so go to ELSE</div>",
-     "note": "Now the second IF is checked."
-    },
-    {
-     "title": "The second condition",
-     "html": "<div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line wt-hl\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">65 &gt;= 50 is <span class=\"wt-hl\">TRUE</span>. Output: Silver</div>",
-     "note": "Only one line is output."
-    },
-    {
-     "title": "30 is typed in",
-     "html": "<div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line wt-hl\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">30 &gt;= 80 is FALSE. 30 &gt;= 50 is FALSE. Output: Bronze</div>",
-     "note": "Both conditions are FALSE."
-    }
-   ]
-  },
-  {
-   "id": "explain-skip",
-   "label": "Explain It: Why Only Gold?",
-   "type": "self-marked-response",
-   "containerId": "y823-explain-skip",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Why Only Gold?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it useful to trace a program with your finger, one line at a time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You see each line the computer really reaches, in order, and you do not guess.</p></div></details><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">INPUT Score</div><div class=\"lesson-code-line\">IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">ENDIF</div></div><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y823-explain-skip\"></div>",
-   "items": [
-    {
-     "id": "explain-skip-q",
-     "aiModel": "haiku",
-     "context": "Year 8 pseudocode lesson on IF statements. The program is the nested IF: IF Score >= 80 THEN OUTPUT \"Gold\" ELSE (IF Score >= 50 THEN OUTPUT \"Silver\" ELSE OUTPUT \"Bronze\" ENDIF) ENDIF. The class watched 85, 65 and 30 traced through it line by line. 85 is typed in. 85 is also 50 or more. Explain why the program outputs Gold only, and not Silver as well.",
-     "prompt": "85 is typed in. 85 is also 50 or more. Explain why the program outputs Gold only, and not Silver as well.",
-     "marks": 2,
-     "modelAnswer": "85 >= 80 is TRUE, so the THEN branch runs and outputs Gold (1). The ELSE branch is skipped, so the Score >= 50 check is never made (1).",
-     "scheme": [
-      "The first condition (Score >= 80 / 85 >= 80) is TRUE, so the THEN branch runs / Gold is output",
-      "The ELSE branch is skipped / the second IF (Score >= 50) is never checked / only one branch runs"
-     ],
-     "guidance": "Credit the idea in the student's own words. Point 2 needs the idea that the second check is skipped or not reached; \"only one branch runs\" alone earns it. Do not award point 2 for just restating that Gold is output."
-    }
-   ]
+   "id": "notes-nested",
+   "label": "Your Notes: Nested IF",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Nested IF</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Nested IF</b><br>An IF inside the ELSE branch of another IF. It gives three outcomes, like Gold, Silver and Bronze.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>How to trace it</b><br>Check the first IF. TRUE: its THEN branch runs and the whole ELSE is skipped. FALSE: go to the ELSE and check the second IF.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY each IF needs its own ENDIF</b><br>The computer must know where each IF ends.</div>"
   },
   {
    "id": "order",
    "label": "Compare: Which IF Comes First?",
-   "content": "<h2 class=\"lesson-h2\">Compare: Which IF Comes First?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: 85 is typed into both. What does each one output? Can A ever output Gold?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A outputs <strong>Silver</strong>. B outputs <strong>Gold</strong>.</p><p><strong>Why?</strong> In A, 85 &gt;= 50 is TRUE first, so the ELSE branch, with the Gold check, is skipped. Every score of 80 or more is also 50 or more, so A can never output Gold. Check the biggest group first.</p></div></details><p class=\"lesson-lead\">Same rule: 80 or more is Gold, 50 or more is Silver. The checks are in a different order.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: 50 first</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">INPUT Score</div><div class=\"lesson-code-line wt-hl\">IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: 80 first</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">INPUT Score</div><div class=\"lesson-code-line wt-hl\">IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">ENDIF</div></div></div></div>"
+   "content": "<h2 class=\"lesson-h2\">Compare: Which IF Comes First?</h2><p class=\"lesson-lead\">Same rule: 80 or more is Gold, 50 to 79 is Silver. The checks are in a different order. 85 is typed in.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: 50 first. Output: Silver</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">INPUT Score</div><div class=\"lesson-code-line wt-hl\">IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: 80 first. Output: Gold</p><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">INPUT Score</div><div class=\"lesson-code-line wt-hl\">IF Score &gt;= 80 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Gold\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Silver\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Bronze\"</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">ENDIF</div></div></div></div><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> Every score of 80 or more is also 50 or more. In A, the 50 check is TRUE first, so the Gold check is skipped. A can never output Gold.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is A wrong even though it runs with no error message?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: the computer runs what is written, not what the programmer meant. Only the output shows the mistake.</p></div></details>"
   },
   {
-   "id": "order-check",
-   "label": "Your Turn: Check the Order",
-   "type": "short-answer-validation",
-   "validatorId": "y823-order-check",
-   "validatorKey": "y823_order_check",
-   "content": "<h2 class=\"lesson-h2\">Your Turn: Check the Order</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read the rule above the program before you trace it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The rule says what should happen. The trace shows what does happen. You need both to spot a mistake.</p></div></details><p class=\"lesson-lead\">The rule: 30 or more is Hot, 20 to 29 is Warm, under 20 is Cold.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Temp &gt;= 20 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Warm\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt;= 30 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Hot\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Cold\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y823-order-check-a\">(a) 35 is typed in. What is output? [1]</label><input id=\"y823-order-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"order-check-a\" aria-label=\"Your Turn: Check the Order part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y823-order-check-b\">(b) 10 is typed in. What is output? [1]</label><input id=\"y823-order-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"order-check-b\" aria-label=\"Your Turn: Check the Order part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y823-order-check-c\">(c) Can this program ever output Hot? Type yes or no. [1]</label><input id=\"y823-order-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"order-check-c\" aria-label=\"Your Turn: Check the Order part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y823-order-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y823-order-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+   "id": "notes-order",
+   "label": "Your Notes: The Order of the Checks",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: The Order of the Checks</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Order of the checks</b><br>With &gt;=, check the highest number first: IF Score &gt;= 80, then IF Score &gt;= 50 inside the ELSE.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY 80 must come first</b><br>A score of 80 or more is also 50 or more. If the 50 check comes first, it is TRUE, the 80 check is skipped, and Gold is never output.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>No error message</b><br>A program can run with no error message and still give the wrong output.</div>"
   },
   {
-   "id": "explain-order",
-   "label": "Explain It: Why Check 80 First?",
-   "type": "self-marked-response",
-   "containerId": "y823-explain-order",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Why Check 80 First?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why say your explanation to a partner before you type it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Saying it out loud shows the gaps. Your partner can ask what you mean.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y823-explain-order\"></div>",
-   "items": [
-    {
-     "id": "explain-order-q",
-     "aiModel": "haiku",
-     "context": "Year 8 pseudocode lesson on nested IF statements. Program A checked Score >= 50 first and Score >= 80 inside its ELSE, so 85 gave Silver and Gold was never output. Program B checked Score >= 80 first and gave Gold. Explain why the Score >= 80 check must come before the Score >= 50 check.",
-     "prompt": "Explain why the Score >= 80 check must come before the Score >= 50 check.",
-     "marks": 2,
-     "modelAnswer": "A score of 80 or more is also 50 or more, so if the 50 check came first it would be TRUE (1). Then the ELSE branch with the 80 check is skipped, so Gold would never be output (1).",
-     "scheme": [
-      "A score of 80 or more is also 50 or more / the >= 50 condition is TRUE for high scores too",
-      "So the 80 check would be skipped / never reached, and Gold would never be output / high scores get Silver"
-     ],
-     "guidance": "Credit the idea in the student's own words, with any example score of 80 or more. Point 2 follows on from point 1."
-    }
-   ]
-  },
-  {
-   "id": "activity-1",
-   "label": "Activity 1: Which Branch Runs?",
-   "type": "embedded-app",
-   "appId": "drill-y8-2-3-branch",
-   "embedContainerId": "y823-activity-1",
-   "content": "<h2 class=\"lesson-h2\">Activity 1: Which Branch Runs?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict first, then check?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A wrong prediction shows you which rule to look at again.</p></div></details><p class=\"lesson-lead\">Predict each answer, then check. The programs and values change every time, and they get harder: TRUE or FALSE, one IF, a nested IF, then choose the operator.</p><div id=\"y823-activity-1\"></div>"
-  },
-  {
-   "id": "pyscratch-1",
-   "label": "Activity: PyScratch Task 1",
-   "type": "embedded-app",
-   "appId": "pyscratch-task",
-   "embedContainerId": "y823-pyscratch-1",
-   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 1 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why type in more than one value when you test your fix?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A fix for one value can break another. Each value tries a different part of the program.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> fix or write the program in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>. Task 1 of 3: fix one line.</p><div id=\"y823-pyscratch-1\"></div>",
-   "embedQuery": "task=y8-2-3-ride"
-  },
-  {
-   "id": "test-paths",
+   "id": "testing",
    "label": "Test Every Branch",
-   "content": "<h2 class=\"lesson-h2\">Test Every Branch</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Sam tested 30 and 70, and both outputs were right. He says the program works. Is he right? Which age would you test?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>No. Type <strong>65</strong>: the program outputs 100, but the rule says 40.</p><p><strong>Why?</strong> 65 &gt; 65 is FALSE. The IF line should use &gt;=. Sam tested each branch once, but not the number written in the condition, where &gt; and &gt;= give different answers.</p></div></details><p class=\"lesson-lead\">The rule: a cinema ticket costs 40 baht for people aged <strong>65 or older</strong>, and 100 baht for everyone else.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Age</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Age &gt; 65 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT 40</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT 100</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Age typed</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Expected</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Output</th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">30</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">100</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">100</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">70</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">40</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">40</td></tr></table></div><div><ul class=\"lesson-facts\"><li>Test one value for <strong>each branch</strong>.</li><li>Also test the <strong>number in the condition</strong> itself.</li><li>Write the expected output <strong>before</strong> you run it.</li><li>A test passes only if the output matches.</li></ul></div></div>"
+   "content": "<h2 class=\"lesson-h2\">Test Every Branch</h2><p class=\"lesson-lead\">The rule: a cinema ticket costs 40 baht for people aged <strong>65 or older</strong>, and 100 baht for everyone else.</p><div style=\"display:grid;grid-template-columns:0.9fr 1.1fr;gap:16px;align-items:start\"><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Age</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Age &gt; 65 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT 40</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT 100</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Age typed in</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Expected</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Output</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Result</b></th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">30</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">100</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">100</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Pass</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">70</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">40</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">40</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Pass</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">65</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">40</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">100</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Fail</b></td></tr></table></div><ul class=\"lesson-facts\"><li>Test one value for <strong>each branch</strong>: 30 and 70 both pass.</li><li>Also test the <strong>number in the condition</strong>: 65 fails. Line 3 should use &gt;=.</li><li>Write the <strong>expected</strong> output before you run the program.</li></ul><p style=\"margin:10px 0 0;font-size:20px\"><b>WHY?</b> A test passes only if the output matches the expected output. Without the expected output, a wrong answer can look fine.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"it gave an answer\" not enough to say a program works?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas: the answer must match the rule. You need to know what it should be before you look.</p></div></details>"
   },
   {
-   "id": "test-check",
-   "label": "Your Turn: Find the Test That Fails",
-   "type": "short-answer-validation",
-   "validatorId": "y823-test-check",
-   "validatorKey": "y823_test_check",
-   "content": "<h2 class=\"lesson-h2\">Your Turn: Find the Test That Fails</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a tester write down the expected output before running the program?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So the real output can be compared with it. Without it, a wrong output can look fine.</p></div></details><p class=\"lesson-lead\">The rule: a bag of <strong>20 kg or more</strong> must pay extra. Lighter bags are free. Weights are whole numbers.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Weight : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Weight</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Weight &gt; 20 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pay extra\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Free\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y823-test-check-a\">(a) Which weight, typed in, shows the mistake? [1]</label><input id=\"y823-test-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"test-check-a\" aria-label=\"Your Turn: Find the Test That Fails part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y823-test-check-b\">(b) What does the program output for that weight? [1]</label><input id=\"y823-test-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"test-check-b\" aria-label=\"Your Turn: Find the Test That Fails part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y823-test-check-c\">(c) What should it output, by the rule? [1]</label><input id=\"y823-test-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"test-check-c\" aria-label=\"Your Turn: Find the Test That Fails part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y823-test-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y823-test-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+   "id": "notes-testing",
+   "label": "Your Notes: Test Every Branch",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Test Every Branch</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). Write the heading and the notes below. <strong>You will use these notes in Data Bridge.</strong></p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Test every branch</b><br>Use at least one value for each branch. Three outcomes need at least three values.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>Test the number in the condition</b><br>For IF Age &gt; 65, also type in 65. That shows a &gt; and &gt;= mix-up.</div><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:6px 14px;margin:7px 0;font-size:20px\"><b>WHY write the expected output first</b><br>Then you can compare the real output with it and spot a mistake.</div>"
   },
   {
-   "id": "activity-2",
-   "label": "Activity 2: Write the IF",
-   "type": "embedded-app",
-   "appId": "drill-y8-2-3-code",
-   "embedContainerId": "y823-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: Write the IF</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill type in new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program must work for any value it is given, not just one.</p></div></details><p class=\"lesson-lead\">Write each program from the rule. New values are typed in every time, often the number in the condition, so &gt; and &gt;= matter.</p><div id=\"y823-activity-2\"></div>"
-  },
-  {
-   "id": "pyscratch-2",
-   "label": "Activity: PyScratch Task 2",
-   "type": "embedded-app",
-   "appId": "pyscratch-task",
-   "embedContainerId": "y823-pyscratch-2",
-   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 2 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the program still right for a score of 60 after your change?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Your change must only add a new outcome. The old ones must still work the same way.</p></div></details><p class=\"lesson-lead\">Task 2 of 3: change a program that already works.</p><div id=\"y823-pyscratch-2\"></div>",
-   "embedQuery": "task=y8-2-3-gold"
-  },
-  {
-   "id": "pyscratch-3",
-   "label": "Activity: PyScratch Task 3",
-   "type": "embedded-app",
-   "appId": "pyscratch-task",
-   "embedContainerId": "y823-pyscratch-3",
-   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 3 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Check my program change Limit and run your program again?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If the result changes too, the IF really uses the constant. A number typed into the IF would not change.</p></div></details><p class=\"lesson-lead\">Task 3 of 3: write the whole program yourself.</p><div id=\"y823-pyscratch-3\"></div>",
-   "embedQuery": "task=y8-2-3-camera"
-  },
-  {
-   "id": "practice",
-   "label": "Practice: Find and Fix",
-   "type": "short-answer-validation",
-   "validatorId": "y823-practice",
-   "validatorKey": "y823_practice",
-   "content": "<h2 class=\"lesson-h2\">Practice: Find and Fix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a program have no error message and still be wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The computer runs what is written, not what the programmer meant.</p></div></details><p class=\"lesson-lead\">The rule: <strong>90 or more</strong> gets a Star, 60 to 89 gets a Tick, under 60 gets Keep going.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Mark &gt;= 60 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Tick\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Mark &gt; 90 THEN</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Star\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Keep going\"</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y823-practice-a\">(a) 95 is typed in. What is output? [1]</label><input id=\"y823-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Find and Fix part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y823-practice-b\">(b) The fix checks for a Star first. Which comparison operator should the Star condition use? [1]</label><input id=\"y823-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Find and Fix part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y823-practice-c\">(c) At least how many values must you test to try every branch once? [1]</label><input id=\"y823-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Find and Fix part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y823-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y823-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+   "id": "notes-ready",
+   "label": "Your Notes: Ready for Data Bridge",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Ready for Data Bridge</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the pen icon at the top). You should have these six headings. Missing one? Go back to its slide and write it. <strong>You will use these notes in Data Bridge.</strong></p><ul class=\"lesson-facts\"><li><strong>IF, THEN and ELSE</strong>: condition, selection and WHY only one branch runs.</li><li><strong>Comparison Operators</strong>: the six operators and what they mean.</li><li><strong>&gt; and &gt;=</strong>: the rule words and WHY to check the number in the condition.</li><li><strong>Nested IF</strong>: three outcomes and how to trace it.</li><li><strong>The Order of the Checks</strong>: WHY the highest number comes first.</li><li><strong>Test Every Branch</strong>: one value for each branch, the number in the condition, and the expected output.</li></ul>"
   },
   {
    "id": "how-to-play",
-   "label": "Circuit Siege: How to Play",
-   "content": "<h2 class=\"lesson-h2\">Circuit Siege: How to Play</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the questions come between the waves?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You need coins for towers, and right answers earn them. Thinking well keeps your base safe.</p></div></details><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Build towers</strong> on the path.</li><li><strong>Stop the bugs</strong> before they reach your base.</li><li><strong>Between waves</strong>, answer questions from 2.1 and 2.2 to earn coins: data types, constants and library functions. Some have an IF to trace.</li></ol>"
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the questions</strong> to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
   },
   {
    "id": "game",
-   "label": "Play: Circuit Siege",
+   "label": "Play: Data Bridge",
    "type": "embedded-app",
-   "appId": "tower-defence",
+   "appId": "bridge-builder",
    "embedContainerId": "y823-game",
-   "content": "<h2 class=\"lesson-h2\">Play: Circuit Siege</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read the whole program before you answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One line at the top, like a DECLARE or a CONSTANT, changes what every later line can do.</p></div></details><div id=\"y823-game\"></div>",
-   "embedQuery": "set=y8-data-types&goal=3"
-  },
-  {
-   "id": "plenary",
-   "label": "Plenary: Conditional Statements",
-   "type": "embedded-app",
-   "appId": "drill-y8-2-3-conditions",
-   "embedContainerId": "y823-plenary",
-   "content": "<h2 class=\"lesson-h2\">Plenary: Conditional Statements</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can trace any value, you really know how the IF chooses.</p></div></details><p class=\"lesson-lead\">Conditions, which branch runs, nested IFs, the order of the checks, and testing. Your progress is saved.</p><div id=\"y823-plenary\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><div id=\"y823-game\"></div>",
+   "embedQuery": "set=y8-conditions&goal=3"
   }
  ],
  "validators": {
@@ -380,122 +209,6 @@
      "flags": "i"
     },
     "feedback": "Every line that uses TeamSize changes. How many are left over after teams of 5?"
-   }
-  ],
-  "y823_operators_check": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*false\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "The symbol &lt;&gt; means \"is not equal to\". Is 7 not equal to 7?"
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*true\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "The symbol &lt;= means \"is less than or equal to\". Is 7 equal to 7?"
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*false\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "The symbol &gt; means \"is more than\". Is 7 more than 7?"
-   }
-  ],
-  "y823_order_check": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*warm\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Start at line 3. Is that condition TRUE for 35? If it is, the ELSE branch is skipped."
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*cold\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Line 3 first, then the IF inside the ELSE."
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(no|nope|never|it\\s+(can\\s*not|can'?t|can\\s+never|never|will\\s+not|won'?t)\\b.*|not\\s+ever)\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "To reach line 7, line 3 must be FALSE. Can a number be under 20 and 30 or more at once?"
-   }
-  ],
-  "y823_test_check": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*20(\\.0+)?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Bags far above or below the limit give the right answer. Try the number written in the condition."
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*free\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Put that weight into line 3. Is the condition TRUE or FALSE?"
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*pay\\s+extra\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Read the rule again: \"or more\"."
-   }
-  ],
-  "y823_practice": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*tick\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Start at line 3. Is it TRUE for 95? Then which branch is skipped?"
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*>\\s*=\\s*$",
-     "flags": ""
-    },
-    "feedback": "Read the rule: \"90 or more\". Should 90 itself get a Star?"
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*3(\\.0+)?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Count the outcomes. Each one needs its own value."
    }
   ]
  },

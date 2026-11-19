@@ -4297,6 +4297,753 @@
      "marks": 1
     }
    ]
+  },
+  {
+   "setId": "y8-conditions",
+   "title": "Conditional Statements",
+   "year": "Year 8",
+   "unit": "Unit 2 Programming",
+   "questions": [
+    {
+     "qid": "y8c-23n21-1",
+     "text": "Cambridge IGCSE 0478/21, November 2023, Question 1\nTick (✓) one box to show which operator means less than or equal to.\nA <\nB <=\nC >=\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/21, November 2023, Question 1\nTick (✓) one box to show which operator means less than or equal to."
+      },
+      {
+       "type": "options",
+       "items": [
+        "<",
+        "<=",
+        ">="
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-24n22-2",
+     "text": "Cambridge IGCSE 0478/22, November 2024, Question 2\nTick (✓) one box to complete this sentence.\nA pseudocode example of a selection statement is\nA CALL Sorting(Value1, Value2)\nB DECLARE Count : INTEGER\nC IF X = 7 THEN Y <- 21 ENDIF\nD WHILE X <> -1 DO\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/22, November 2024, Question 2\nTick (✓) one box to complete this sentence.\nA pseudocode example of a selection statement is"
+      },
+      {
+       "type": "options",
+       "items": [
+        "CALL Sorting(Value1, Value2)",
+        "DECLARE Count : INTEGER",
+        "IF X = 7 THEN Y <- 21 ENDIF",
+        "WHILE X <> -1 DO"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-21j22-3b",
+     "text": "Cambridge IGCSE 0478/22, June 2021, Question 3(b)\nState the type of each pseudocode statement.\nPseudocode statement | Type\nIF Number = 20 | ........\nPRINT Number | ........\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/22, June 2021, Question 3(b)\nState the type of each pseudocode statement."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Pseudocode statement",
+        "Type"
+       ],
+       "rows": [
+        [
+         "IF Number = 20",
+         ""
+        ],
+        [
+         "PRINT Number",
+         ""
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-age13",
+     "text": "1  DECLARE Age : INTEGER\n2  INPUT Age\n3  IF Age >= 13 THEN\n4      OUTPUT \"Join the club\"\n5  ELSE\n6      OUTPUT \"Not yet\"\n7  ENDIF\nState the output when 13 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "INPUT Age",
+        "IF Age >= 13 THEN",
+        "    OUTPUT \"Join the club\"",
+        "ELSE",
+        "    OUTPUT \"Not yet\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 13 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-branch50",
+     "text": "1  DECLARE Mark : INTEGER\n2  INPUT Mark\n3  IF Mark > 50 THEN\n4      OUTPUT \"Pass\"\n5  ELSE\n6      OUTPUT \"Fail\"\n7  ENDIF\n50 is input. State which branch runs: the THEN branch or the ELSE branch.\nBranch ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Mark : INTEGER",
+        "INPUT Mark",
+        "IF Mark > 50 THEN",
+        "    OUTPUT \"Pass\"",
+        "ELSE",
+        "    OUTPUT \"Fail\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "50 is input. State which branch runs: the THEN branch or the ELSE branch."
+      },
+      {
+       "type": "line",
+       "label": "Branch"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-speed90",
+     "text": "1  DECLARE Speed : INTEGER\n2  INPUT Speed\n3  IF Speed <= 90 THEN\n4      OUTPUT \"OK\"\n5  ELSE\n6      OUTPUT \"Too fast\"\n7  ENDIF\nState the output when 90 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Speed : INTEGER",
+        "INPUT Speed",
+        "IF Speed <= 90 THEN",
+        "    OUTPUT \"OK\"",
+        "ELSE",
+        "    OUTPUT \"Too fast\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 90 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-code",
+     "text": "1  DECLARE Code : INTEGER\n2  INPUT Code\n3  IF Code <> 2580 THEN\n4      OUTPUT \"Locked\"\n5  ELSE\n6      OUTPUT \"Open\"\n7  ENDIF\nState the output when 2580 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Code : INTEGER",
+        "INPUT Code",
+        "IF Code <> 2580 THEN",
+        "    OUTPUT \"Locked\"",
+        "ELSE",
+        "    OUTPUT \"Open\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 2580 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-medal65",
+     "text": "1  DECLARE Score : INTEGER\n2  INPUT Score\n3  IF Score >= 80 THEN\n4      OUTPUT \"Gold\"\n5  ELSE\n6      IF Score >= 50 THEN\n7          OUTPUT \"Silver\"\n8      ELSE\n9          OUTPUT \"Bronze\"\n10      ENDIF\n11  ENDIF\nState the output when 65 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Score : INTEGER",
+        "INPUT Score",
+        "IF Score >= 80 THEN",
+        "    OUTPUT \"Gold\"",
+        "ELSE",
+        "    IF Score >= 50 THEN",
+        "        OUTPUT \"Silver\"",
+        "    ELSE",
+        "        OUTPUT \"Bronze\"",
+        "    ENDIF",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 65 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-temp20",
+     "text": "1  DECLARE Temp : INTEGER\n2  INPUT Temp\n3  IF Temp >= 30 THEN\n4      OUTPUT \"Hot\"\n5  ELSE\n6      IF Temp >= 20 THEN\n7          OUTPUT \"Warm\"\n8      ELSE\n9          OUTPUT \"Cold\"\n10      ENDIF\n11  ENDIF\nState the output when 20 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Temp : INTEGER",
+        "INPUT Temp",
+        "IF Temp >= 30 THEN",
+        "    OUTPUT \"Hot\"",
+        "ELSE",
+        "    IF Temp >= 20 THEN",
+        "        OUTPUT \"Warm\"",
+        "    ELSE",
+        "        OUTPUT \"Cold\"",
+        "    ENDIF",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 20 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-points80",
+     "text": "1  DECLARE Points : INTEGER\n2  INPUT Points\n3  IF Points > 80 THEN\n4      OUTPUT \"Gold\"\n5  ELSE\n6      IF Points > 50 THEN\n7          OUTPUT \"Silver\"\n8      ELSE\n9          OUTPUT \"Bronze\"\n10      ENDIF\n11  ENDIF\nState the output when 80 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Points : INTEGER",
+        "INPUT Points",
+        "IF Points > 80 THEN",
+        "    OUTPUT \"Gold\"",
+        "ELSE",
+        "    IF Points > 50 THEN",
+        "        OUTPUT \"Silver\"",
+        "    ELSE",
+        "        OUTPUT \"Bronze\"",
+        "    ENDIF",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 80 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-order35",
+     "text": "This program should output Hot for 30 or more, Warm for 20 to 29 and Cold for under 20.\n1  DECLARE Temp : INTEGER\n2  INPUT Temp\n3  IF Temp >= 20 THEN\n4      OUTPUT \"Warm\"\n5  ELSE\n6      IF Temp >= 30 THEN\n7          OUTPUT \"Hot\"\n8      ELSE\n9          OUTPUT \"Cold\"\n10      ENDIF\n11  ENDIF\nState the output when 35 is input.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should output Hot for 30 or more, Warm for 20 to 29 and Cold for under 20."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Temp : INTEGER",
+        "INPUT Temp",
+        "IF Temp >= 20 THEN",
+        "    OUTPUT \"Warm\"",
+        "ELSE",
+        "    IF Temp >= 30 THEN",
+        "        OUTPUT \"Hot\"",
+        "    ELSE",
+        "        OUTPUT \"Cold\"",
+        "    ENDIF",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output when 35 is input."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-neverhot",
+     "text": "This program should output Hot for 30 or more, Warm for 20 to 29 and Cold for under 20.\n1  DECLARE Temp : INTEGER\n2  INPUT Temp\n3  IF Temp >= 20 THEN\n4      OUTPUT \"Warm\"\n5  ELSE\n6      IF Temp >= 30 THEN\n7          OUTPUT \"Hot\"\n8      ELSE\n9          OUTPUT \"Cold\"\n10      ENDIF\n11  ENDIF\nExplain why this program can never output Hot.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should output Hot for 30 or more, Warm for 20 to 29 and Cold for under 20."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Temp : INTEGER",
+        "INPUT Temp",
+        "IF Temp >= 20 THEN",
+        "    OUTPUT \"Warm\"",
+        "ELSE",
+        "    IF Temp >= 30 THEN",
+        "        OUTPUT \"Hot\"",
+        "    ELSE",
+        "        OUTPUT \"Cold\"",
+        "    ENDIF",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Explain why this program can never output Hot."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-onlygold",
+     "text": "1  DECLARE Score : INTEGER\n2  INPUT Score\n3  IF Score >= 80 THEN\n4      OUTPUT \"Gold\"\n5  ELSE\n6      IF Score >= 50 THEN\n7          OUTPUT \"Silver\"\n8      ELSE\n9          OUTPUT \"Bronze\"\n10      ENDIF\n11  ENDIF\n85 is input. 85 is also 50 or more.\nExplain why the program outputs Gold only, and not Silver as well.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Score : INTEGER",
+        "INPUT Score",
+        "IF Score >= 80 THEN",
+        "    OUTPUT \"Gold\"",
+        "ELSE",
+        "    IF Score >= 50 THEN",
+        "        OUTPUT \"Silver\"",
+        "    ELSE",
+        "        OUTPUT \"Bronze\"",
+        "    ENDIF",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "85 is input. 85 is also 50 or more.\nExplain why the program outputs Gold only, and not Silver as well."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-opunder",
+     "text": "A ticket is free for children aged under 5.\n1  DECLARE Age : INTEGER\n2  INPUT Age\n3  IF Age ..... 5 THEN\n4      OUTPUT \"Free\"\n5  ELSE\n6      OUTPUT \"Pay\"\n7  ENDIF\nTick (✓) one box to identify the comparison operator that completes line 3.\nA <\nB <=\nC >\nD >=\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A ticket is free for children aged under 5."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "INPUT Age",
+        "IF Age ..... 5 THEN",
+        "    OUTPUT \"Free\"",
+        "ELSE",
+        "    OUTPUT \"Pay\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to identify the comparison operator that completes line 3."
+      },
+      {
+       "type": "options",
+       "items": [
+        "<",
+        "<=",
+        ">",
+        ">="
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-opmore",
+     "text": "A player wins a prize with 100 points or more.\n1  DECLARE Points : INTEGER\n2  INPUT Points\n3  IF Points ..... 100 THEN\n4      OUTPUT \"Prize\"\n5  ELSE\n6      OUTPUT \"No prize\"\n7  ENDIF\nTick (✓) one box to identify the comparison operator that completes line 3.\nA <\nB <=\nC >\nD >=\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A player wins a prize with 100 points or more."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Points : INTEGER",
+        "INPUT Points",
+        "IF Points ..... 100 THEN",
+        "    OUTPUT \"Prize\"",
+        "ELSE",
+        "    OUTPUT \"No prize\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to identify the comparison operator that completes line 3."
+      },
+      {
+       "type": "options",
+       "items": [
+        "<",
+        "<=",
+        ">",
+        ">="
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-meaning",
+     "text": "State the meaning of the comparison operator <>\nMeaning ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "State the meaning of the comparison operator <>"
+      },
+      {
+       "type": "line",
+       "label": "Meaning"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-tf",
+     "text": "DECLARE Coins : INTEGER\nCoins <- 7\nState whether the condition Coins <= 7 is TRUE or FALSE.\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "lines": [
+        "DECLARE Coins : INTEGER",
+        "Coins <- 7"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State whether the condition Coins <= 7 is TRUE or FALSE."
+      },
+      {
+       "type": "line",
+       "label": "Answer"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-smallest",
+     "text": "1  DECLARE Speed : INTEGER\n2  INPUT Speed\n3  IF Speed > 90 THEN\n4      OUTPUT \"Too fast\"\n5  ELSE\n6      OUTPUT \"OK\"\n7  ENDIF\nState the smallest whole number that can be input for the program to output Too fast.\nNumber ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Speed : INTEGER",
+        "INPUT Speed",
+        "IF Speed > 90 THEN",
+        "    OUTPUT \"Too fast\"",
+        "ELSE",
+        "    OUTPUT \"OK\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the smallest whole number that can be input for the program to output Too fast."
+      },
+      {
+       "type": "line",
+       "label": "Number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-cinema",
+     "text": "A cinema ticket costs 40 baht for people aged 65 or older, and 100 baht for everyone else. This program has one error.\n1  DECLARE Age : INTEGER\n2  INPUT Age\n3  IF Age > 65 THEN\n4      OUTPUT 40\n5  ELSE\n6      OUTPUT 100\n7  ENDIF\n(a) Identify the line number that contains the error.\nLine number ........\n[1]\n(b) Write the correct line.\nCorrect line ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A cinema ticket costs 40 baht for people aged 65 or older, and 100 baht for everyone else. This program has one error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Age : INTEGER",
+        "INPUT Age",
+        "IF Age > 65 THEN",
+        "    OUTPUT 40",
+        "ELSE",
+        "    OUTPUT 100",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line number that contains the error."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) Write the correct line."
+      },
+      {
+       "type": "line",
+       "label": "Correct line"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-bag",
+     "text": "A bag of 20 kg or more must pay extra. Lighter bags are free. Weights are whole numbers.\n1  DECLARE Weight : INTEGER\n2  INPUT Weight\n3  IF Weight > 20 THEN\n4      OUTPUT \"Pay extra\"\n5  ELSE\n6      OUTPUT \"Free\"\n7  ENDIF\n(a) Give the weight that shows the program does not follow the rule.\nWeight ........\n[1]\n(b) State the output for that weight.\nOutput ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A bag of 20 kg or more must pay extra. Lighter bags are free. Weights are whole numbers."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Weight : INTEGER",
+        "INPUT Weight",
+        "IF Weight > 20 THEN",
+        "    OUTPUT \"Pay extra\"",
+        "ELSE",
+        "    OUTPUT \"Free\"",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Give the weight that shows the program does not follow the rule."
+      },
+      {
+       "type": "line",
+       "label": "Weight"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) State the output for that weight."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y8c-own-count",
+     "text": "1  DECLARE Score : INTEGER\n2  INPUT Score\n3  IF Score >= 80 THEN\n4      OUTPUT \"Gold\"\n5  ELSE\n6      IF Score >= 50 THEN\n7          OUTPUT \"Silver\"\n8      ELSE\n9          OUTPUT \"Bronze\"\n10      ENDIF\n11  ENDIF\nState the least number of values that must be input to test every branch of this program.\nNumber of values ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Score : INTEGER",
+        "INPUT Score",
+        "IF Score >= 80 THEN",
+        "    OUTPUT \"Gold\"",
+        "ELSE",
+        "    IF Score >= 50 THEN",
+        "        OUTPUT \"Silver\"",
+        "    ELSE",
+        "        OUTPUT \"Bronze\"",
+        "    ENDIF",
+        "ENDIF"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the least number of values that must be input to test every branch of this program."
+      },
+      {
+       "type": "line",
+       "label": "Number of values"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    }
+   ]
   }
  ]
 }
