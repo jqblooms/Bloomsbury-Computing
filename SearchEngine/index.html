@@ -77,7 +77,7 @@
   </section>
 </main>
 <script src="../shared/bc-clicker.js?v=20260929c"></script>
-<script src="engine.js?v=1"></script>
+<script src="engine.js?v=2"></script>
 <script>
 (function () {
   'use strict';
@@ -133,8 +133,8 @@
     { who: 'Ana', bad: 'mouse', want: 'Her computer mouse stopped working. She wants to fix it.', id: 'fixmouse', fault: 'meaning' },
     { who: 'Ben', bad: 'mouse', want: 'He wants to buy a computer mouse.', id: 'buymouse', fault: 'meaning' },
     { who: 'Chi', bad: 'vulcano facts', want: 'She wants facts about volcanoes.', id: 'volcano', fault: 'spelling' },
-    { who: 'Mrs Park', bad: 'dentis opening times', want: 'She wants the dentist\'s opening times.', id: 'dentist', fault: 'spelling' },
-    { who: 'Sam', bad: 'tigre weight', want: 'He wants to know how heavy a tiger is.', id: 'tiger', fault: 'spelling' },
+    { who: 'Mrs Park', bad: 'dentsit opening times', want: 'She wants the dentist\'s opening times.', id: 'dentist', fault: 'spelling' },
+    { who: 'Sam', bad: 'tigre', want: 'He wants to know how heavy a tiger is.', id: 'tiger', fault: 'spelling' },
   ];
 
   // ---------------------------------------------------------------- saved progress and results for the teacher
@@ -182,14 +182,14 @@
   function searchNote(rd) {
     var bits = [];
     if (rd.small.length) bits.push('Left out the small words <b>' + rd.small.map(esc).join(', ') + '</b>: they are on almost every page, so they do not help.');
-    if (rd.unknown.length) bits.push('No page in the list has the word <b>' + rd.unknown.map(esc).join(', ') + '</b>. Check the spelling.');
+    if (rd.unknown.length) bits.push('No page in the list has the word <b>' + rd.unknown.map(esc).join(', ') + '</b>. Check the spelling, or use another word.');
     return bits.join(' ');
   }
   // the rules for a clear search (Find It and Fix the Search)
   function searchProblem(rd) {
     if (!rd.keys.length) return 'Type some key words first.';
     if (rd.small.length) return 'Leave out small words like <b>' + rd.small.map(esc).join(', ') + '</b>. They do not help.';
-    if (rd.unknown.length) return 'No page has the word <b>' + rd.unknown.map(esc).join(', ') + '</b>. Check the spelling.';
+    if (rd.unknown.length) return 'No page has the word <b>' + rd.unknown.map(esc).join(', ') + '</b>. Check the spelling, or use another word.';
     if (rd.typed.length > 4) return 'Use at most 4 key words. Pick the words that only the page you want has.';
     return '';
   }

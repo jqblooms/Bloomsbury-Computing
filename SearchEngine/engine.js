@@ -6,7 +6,8 @@
 //   2. A page is in the results if it has at least one search term.
 //   3. Rank: pages with more of the search terms come first; then a term in the title counts 3, in the text 1;
 //      then the search engine's own list order.
-//   4. A word that is on no page at all is spelt wrong or not in the list: the engine says so.
+//   4. A search word matches a page word that is the same or the same plus a short ending (same()).
+//   5. A word that is on no page at all is spelt wrong or not in the list: the engine says so.
 (function (root) {
   'use strict';
   var PAGES = [
@@ -39,6 +40,14 @@
   var SMALL = ['a', 'an', 'the', 'how', 'do', 'does', 'did', 'i', 'is', 'are', 'was', 'what', 'when', 'where', 'who', 'why', 'which', 'can', 'could', 'you', 'your', 'my', 'me', 'we', 'to', 'of', 'for', 'in', 'on', 'at', 'by', 'it', 'its', 'and', 'or', 'please', 'want', 'need', 'find', 'tell', 'about', 'there', 'this', 'that', 'with', 'from', 'be', 'some', 'any', 'much', 'many', 'help'];
 
   function stem(w) { return w.length > 3 ? w.replace(/ies$/, 'y').replace(/(s|x|ch|sh)es$/, '$1').replace(/([^s])s$/, '$1') : w; }
+  // a search word matches a page word when they are the same, or one is the other plus a short ending (close, closed;
+  // open, opening; weigh, weight), for words of 4 letters or more
+  function same(a, b) {
+    if (a === b) return true;
+    var s = a.length < b.length ? a : b, l = a.length < b.length ? b : a;
+    return s.length >= 4 && l.length - s.length <= 3 && l.indexOf(s) === 0;
+  }
+  function has(list, k) { for (var i = 0; i < list.length; i++) if (same(list[i], k)) return true; return false; }
   function words(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(Boolean); }
   var INDEX = PAGES.map(function (p) {
     return { title: words(p.title).map(stem), text: words(p.text).map(stem) };
@@ -53,7 +62,7 @@
       var s = stem(w);
       if (keys.indexOf(s) >= 0) return;
       keys.push(s);
-      if (!INDEX.some(function (ix) { return ix.title.indexOf(s) >= 0 || ix.text.indexOf(s) >= 0; })) unknown.push(w);
+      if (!INDEX.some(function (ix) { return has(ix.title, s) || has(ix.text, s); })) unknown.push(w);
     });
     return { typed: typed, keys: keys, small: small, unknown: unknown };
   }
@@ -65,8 +74,8 @@
     PAGES.forEach(function (p, i) {
       var inTitle = [], inText = [];
       r.keys.forEach(function (k) {
-        if (INDEX[i].title.indexOf(k) >= 0) inTitle.push(k);
-        else if (INDEX[i].text.indexOf(k) >= 0) inText.push(k);
+        if (has(INDEX[i].title, k)) inTitle.push(k);
+        else if (has(INDEX[i].text, k)) inText.push(k);
       });
       var matched = inTitle.length + inText.length;
       if (matched) out.push({ page: p, order: i, matched: matched, score: inTitle.length * 3 + inText.length, inTitle: inTitle, inText: inText });
@@ -81,7 +90,7 @@
   }
   function page(id) { for (var i = 0; i < PAGES.length; i++) if (PAGES[i].id === id) return PAGES[i]; return null; }
 
-  var api = { PAGES: PAGES, SMALL: SMALL, read: read, search: search, rankOf: rankOf, page: page, words: words, stem: stem };
+  var api = { PAGES: PAGES, SMALL: SMALL, read: read, search: search, rankOf: rankOf, page: page, words: words, stem: stem, same: same };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.SearchEngine = api;
 })(this);

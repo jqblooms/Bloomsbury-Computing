@@ -274,7 +274,7 @@ DrillData.register("y6-3-4-isearch", {
   {
    "id": "t-spell",
    "category": "terms",
-   "prompt": "Sam searched for tigre weight and got no results. What is wrong?",
+   "prompt": "Sam searched for tigre and got no results. What is wrong?",
    "answers": [
     "A word is spelt wrong"
    ],
@@ -287,7 +287,7 @@ DrillData.register("y6-3-4-isearch", {
     "Look at each word.",
     "Is every word spelt right?"
    ],
-   "note": "No page has the word tigre. Spelt right, tiger weight finds a page."
+   "note": "No page has the word tigre. Spelt right, tiger finds a page."
   },
   {
    "id": "t-meaning",
