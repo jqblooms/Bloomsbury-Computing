@@ -279,6 +279,8 @@ let body = '// Year 9, 3.1 Pseudocode: Data Bridge Questions (Drills library onl
   '  subtitle: "Every Data Bridge question from lesson 3.1, step by step",\n' +
   '  // Haiku second check on typed answers the keyword check rejects; each card waits for Next question.\n' +
   '  aiFallback: true,\n  waitForNext: true,\n' +
+  '  // The slides\' "I need help" chat on every card (Haiku, three questions per card, never the answer).\n' +
+  '  aiHelp: true,\n' +
   '  categories: [\n' + CATS.map((c) => '    ' + JSON.stringify(c)).join(',\n') + '\n  ],\n' +
   '  cards: [\n' + cards.map((c) => '    ' + ser(c)).join(',\n') + '\n  ]\n});\n';
 assert(!/[–—]|&mdash;|&ndash;/.test(body), 'em or en dash');

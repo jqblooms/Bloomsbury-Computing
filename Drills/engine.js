@@ -65,6 +65,13 @@
   // waitForNext: true (James, 2026-11-20): a marked card shows the model answer and its note and stays until the
   // student presses Next question (or Enter), never moving on by itself.
   var waitForNext = !!drill.waitForNext;
+  // aiHelp: true (James, 2026-11-20, first used by the Y9 Data Bridge drills): every question card gets the slides'
+  // "I need help" chat (shared/exam-help.js): up to three questions to Haiku about this card, never the answer. The shell
+  // (SlideHelp.gs, ops drillHelpGet / drillHelp) keeps the limits, checks each reply against the card's answers and note,
+  // and logs it in the Slide Help list as drill <id>, card <cardId>.
+  var aiHelp = !!drill.aiHelp && !noHelp && !!window.BCExamHelp && !!window.DrillAiCheck && !!window.DrillAiCheck.helpApi;
+  var aiHelpCards = {};
+  var aiHelpApi = aiHelp ? window.DrillAiCheck.helpApi(drillId, function (qid) { return aiHelpCards[qid]; }) : null;
   var CODE_MASTERY_STREAK = 3;
 
   var els = {
@@ -930,9 +937,10 @@
       (learn && !noHelp ? '<button type="button" class="help-toggle" id="help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
-      "</div></div>";
+      "</div>" + (aiHelp ? '<div id="ai-help"></div>' : "") + "</div>";
 
     renderCardBlocks(els.stage);
+    if (aiHelp) mountAiHelp(card, set, textMode);
     if (textMode) {
       var textInput = els.stage.querySelector("#text-answer");
       textInput.addEventListener("keydown", function (e) {
@@ -975,6 +983,25 @@
       toast("Run restarted.");
       nextCard();
     });
+  }
+
+  // The chat-style "I need help" (aiHelp drills). The card's answers and note go to the shell for its reveal check only.
+  function mountAiHelp(card, set, textMode) {
+    var box = els.stage.querySelector("#ai-help");
+    if (!box) return;
+    var qid = String(current.cardId);
+    aiHelpCards[qid] = { cardId: qid, prompt: card.prompt,
+      answers: [set.correct && set.correct[0]].concat(card.answers || [], set.multi ? set.correct || [] : [])
+        .filter(function (a, i, all) { return a && all.indexOf(a) === i; }),
+      note: card.note || "", hint: card.hint || "" };
+    window.BCExamHelp.mount(box, { qid: qid, api: aiHelpApi,
+      label: run.mode === "learn" ? "Ask for help" : "I need help",
+      answer: function () {
+        if (textMode) { var t = els.stage.querySelector("#text-answer"); return t ? t.value.trim() : ""; }
+        return Array.prototype.map.call(els.stage.querySelectorAll(".opt.is-picked, .opt input:checked"), function (el) {
+          var opt = el.closest(".opt"); return opt ? opt.textContent.trim() : "";
+        }).filter(function (a, i, all) { return a && all.indexOf(a) === i; }).join("; ");
+      } });
   }
 
   // "I need help" (Learn mode) is a switch: on shows this card's help, off

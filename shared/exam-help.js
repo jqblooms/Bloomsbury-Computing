@@ -6,6 +6,8 @@
 //
 //   BCExamHelp.mount(el, { qid, answer })   draws the button (and the panel, if it was open) into el.
 //     answer: the student's answer that did not earn full marks (sent so help can point to the step that went wrong).
+//     api: optional { helpGet(qid), help(qid, question, answer) } in place of window.ExamGame (the Drills engine sends
+//       its own ops, drillHelpGet / drillHelp). label: optional button text (default "I need help").
 //   The conversation, the open panel and an unsent question are kept per qid, so a game may redraw freely.
 (function () {
   'use strict';
@@ -16,7 +18,7 @@
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
   }
-  function api() { return window.ExamGame; }
+  function api(qid) { var m = qid != null && mounted[qid]; return (m && m.opts.api) || window.ExamGame; }
 
   function style() {
     if (document.getElementById('egHelpStyle')) return;
@@ -72,7 +74,8 @@
   var mounted = {};   // qid -> { el, opts }
 
   function mount(el, opts) {
-    if (!el || !opts || !opts.qid || !api() || !api().help) return null;
+    var a = opts && opts.api || window.ExamGame;
+    if (!el || !opts || !opts.qid || !a || !a.help) return null;
     style();
     var qid = String(opts.qid);
     mounted[qid] = { el: el, opts: opts };
@@ -86,7 +89,7 @@
     var c = state(qid), el = m.el, v = view(c);
     var keepFocus = document.activeElement && el.contains(document.activeElement) && document.activeElement.classList.contains('eg-help-input');
     var h = '<div class="eg-help">';
-    if (!c.open) h += '<button type="button" class="eg-help-btn">' + ICON + '<span>I need help</span></button>';
+    if (!c.open) h += '<button type="button" class="eg-help-btn">' + ICON + '<span>' + esc(m.opts.label || 'I need help') + '</span></button>';
     else {
       h += '<div class="eg-help-panel" role="dialog" aria-label="Help with this question">' +
         '<div class="eg-help-titlebar"><span class="eg-help-title">Help with this question</span>' +
@@ -121,7 +124,7 @@
     c.open = true; c.focus = true;
     if (!c.loaded && !c.loading) {
       c.loading = true;
-      api().helpGet(qid).then(function (res) {
+      api(qid).helpGet(qid).then(function (res) {
         c.loading = false;
         if (res && res.ok) { c.loaded = true; c.turns = res.turns || []; c.left = res.left; if (!res.available) c.error = 'Help is not available just now.'; }
         else if (res && res.message) c.error = res.message;
@@ -153,7 +156,7 @@
       c.focus = true;
       draw(qid);
     };
-    api().help(qid, q, answer || '').then(function (res) { finish(res); }, function (e) { finish(null, e); });
+    api(qid).help(qid, q, answer || '').then(function (res) { finish(res); }, function (e) { finish(null, e); });
   }
 
   window.BCExamHelp = { mount: mount, view: view };
