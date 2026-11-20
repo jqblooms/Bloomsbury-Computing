@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Network Help Desk</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    [hidden] { display: none !important; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: var(--font-body); overflow: hidden; }
+    html.embed, html.embed body { background: transparent; }
+    #office { position: fixed; inset: 0; }
+    #office canvas { display: block; width: 100%; height: 100%; }
+    #hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); background: var(--surface-2); color: var(--ink); border: 1px solid var(--line-strong); padding: 8px 16px; border-radius: 999px; font: 500 15px var(--font-body); pointer-events: none; white-space: nowrap; box-shadow: var(--shadow-2); }
+    .bar { position: fixed; left: 50%; bottom: 60px; transform: translateX(-50%); width: min(720px, 92vw); display: flex; gap: 10px; z-index: 20; }
+    .bar input { flex: 1; min-width: 0; height: 56px; padding: 0 18px; font: 500 21px var(--font-body); color: var(--ink); background: var(--surface); border: 2px solid var(--brand); border-radius: var(--radius-lg); outline: none; box-shadow: var(--shadow-3); }
+    .bar input:focus { border-color: var(--accent); }
+    .bar button { height: 56px; padding: 0 24px; font: 600 20px var(--font-display); color: #fff; background: var(--brand-solid); border: none; border-radius: var(--radius-lg); cursor: pointer; box-shadow: var(--shadow-3); }
+    .bar button:disabled { background: var(--surface-4); color: var(--muted); cursor: default; }
+    #guide { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+    #guide .g-block { position: fixed; background: var(--scrim); pointer-events: auto; }
+    #guide .g-ring { position: fixed; border: 4px solid var(--accent); border-radius: 14px; box-shadow: 0 0 0 4px rgba(251, 188, 4, 0.3), 0 0 24px rgba(251, 188, 4, 0.7); animation: g-flash 0.9s ease-in-out infinite; }
+    #guide .g-arrow { position: fixed; width: 60px; height: 66px; animation: g-bob 0.9s ease-in-out infinite; }
+    #guide .g-arrow::before { content: ""; position: absolute; left: 18px; width: 24px; height: 34px; background: var(--accent); }
+    #guide .g-arrow::after { content: ""; position: absolute; left: 0; border-left: 30px solid transparent; border-right: 30px solid transparent; }
+    #guide .g-arrow.down::before { top: 0; } #guide .g-arrow.down::after { top: 34px; border-top: 32px solid var(--accent); }
+    #guide .g-arrow.up::before { bottom: 0; } #guide .g-arrow.up::after { bottom: 34px; border-bottom: 32px solid var(--accent); }
+    #guide .g-card { position: fixed; left: 50%; transform: translateX(-50%); width: min(640px, 90vw); background: var(--surface-2); color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-lg); padding: 14px 20px; box-shadow: var(--shadow-3); pointer-events: auto; }
+    #guide .g-title { font: 600 13px var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand); margin-bottom: 4px; }
+    #guide .g-text { font: 500 20px/1.4 var(--font-body); }
+    #guide .g-card.g-new { animation: g-pop 0.35s ease-out; }
+    @keyframes g-flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    @keyframes g-bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 10px; } }
+    @keyframes g-pop { from { scale: 0.94; } to { scale: 1; } }
+    @media (prefers-reduced-motion: reduce) { #guide .g-ring, #guide .g-arrow, #guide .g-card.g-new { animation: none; } }
+    .panel { position: fixed; inset: 0; z-index: 40; overflow: auto; background: var(--scrim); display: grid; place-items: center; padding: 16px; }
+    .panel .bc-card { width: min(640px, 100%); display: grid; gap: 14px; padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-3); }
+    .panel.wide .bc-card { width: min(980px, 100%); }
+    .panel h1 { margin: 0; font: 600 28px var(--font-display); }
+    .panel h2 { margin: 8px 0 0; font: 600 18px var(--font-display); }
+    .panel p { margin: 0; color: var(--ink-soft); line-height: 1.5; }
+    .panel .note { color: var(--muted); font-size: 14px; }
+    .lessons { display: grid; gap: 8px; }
+    .lessons button { text-align: left; padding: 12px 14px; border-radius: var(--radius); border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); font: 500 16px var(--font-body); cursor: pointer; }
+    .lessons button[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft); }
+    .lessons small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .bc-btn.big { font-size: 17px; padding: 10px 22px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+    td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <div id="office"></div>
+  <div id="hint" hidden></div>
+  <div id="searchbar" class="bar" hidden><input id="searchIn" maxlength="120" autocomplete="off" aria-label="Your search terms" placeholder="Type your search terms..."><button id="searchBtn" type="button">Search</button></div>
+  <div id="typebar" class="bar" hidden><input id="typing" maxlength="240" autocomplete="off" aria-label="Type your message"><button id="sendBtn" type="button">Send</button></div>
+  <div id="start" class="panel">
+    <div class="bc-card">
+      <h1>Network Help Desk</h1>
+      <p>Customers phone the help desk with a problem. Ask them questions, phone for what you need, fix it on your computer, then tell the customer what was wrong. Calling Alex, the Tech Lead, helps when you are stuck, but each call lowers the points for that job.</p>
+      <div class="lessons" id="lessons"></div>
+      <div class="row"><button type="button" class="bc-btn big" id="go">Start</button><button type="button" class="bc-btn is-tonal" id="resultsBtn" hidden>Class results</button></div>
+      <p class="note" id="startNote"></p>
+    </div>
+  </div>
+  <div id="results" class="panel wide" hidden>
+    <div class="bc-card">
+      <div class="row" style="justify-content: space-between"><h1>Network Help Desk results</h1><button type="button" class="bc-btn is-tonal" id="resultsClose">Close</button></div>
+      <div id="resultsBody"><p>Loading...</p></div>
+    </div>
+  </div>
+  <div id="fail" class="panel" hidden><div class="bc-card"><h1>Network Help Desk</h1><p>This computer could not start the 3D office. Try another browser, or ask your teacher.</p></div></div>
+<script src="../SearchEngine/engine.js?v=2"></script>
+<script>
+// Network Help Desk (registry id network-help-desk): Year 6 lessons 2.1, 2.2 and 2.4 (?lesson=2.1|2.2|2.4).
+// The rules are model.js (an exact copy of the shell's NetworkDeskModel.gs); every module is loaded with the page's
+// bcv through an import map; three.js is NetLab3D's vendored copy.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = encodeURIComponent(params.get('bcv') || '1');
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  var model = document.createElement('script');
+  model.src = 'model.js?v=' + v;
+  model.onload = function () {
+    var imports = { three: '../NetLab3D/lib/three.module.min.js' };
+    ['main', 'office3d', 'art', 'guide', 'desk'].forEach(function (n) { imports['./js/' + n + '.js'] = './js/' + n + '.js?v=' + v; });
+    var map = document.createElement('script');
+    map.type = 'importmap';
+    map.textContent = JSON.stringify({ imports: imports });
+    document.head.appendChild(map);
+    var boot = document.createElement('script');
+    boot.type = 'module';
+    boot.textContent = "import('./js/main.js').catch(function (e) { console.error(e); document.getElementById('fail').hidden = false; });";
+    document.body.appendChild(boot);
+  };
+  document.body.appendChild(model);
+  if (params.get('embed') === '1' && window.parent !== window) {
+    try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: 640 }, '*'); } catch (e) {}
+  }
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>
