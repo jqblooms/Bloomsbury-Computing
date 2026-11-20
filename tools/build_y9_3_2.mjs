@@ -7,6 +7,9 @@
 // OUTPUT, FOR ... TO ... NEXT, IF ... THEN ... ENDIF (THEN on the IF line), LENGTH, UCASE, LCASE. No WHILE or REPEAT.
 // Every program on a slide is run in shared/pseudocode-engine.js, and every flowchart is run by flowRun below.
 // Activities: two Trace Tables traces (a loop that outputs every pass, then a loop with an IF and inputs).
+// Ends with Data Bridge: Use Your Notes and Play: Data Bridge (Exam Game set y9-loops). Minutes: Do Now 6, Watch 4,
+// Explain 2, Check 4, Hinge 3, Activity 1 5, Check 4, Activity 2 5, Exam-Style 4, Plenary 4, Data Bridge 1 + 6, with
+// the title, compare and trace slides about 7: 55.
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -221,10 +224,10 @@ const watchSteps = [
 steps.push({ id: 'watch', label: 'Watch a Flowchart Loop', type: 'stepper', stepperId: `${P}-watch`, stepperSteps: watchSteps,
   content: '<h2 class="lesson-h2">Watch a Flowchart Loop</h2>' +
     why('Predict before you start: how many times will the arrow go back up? Why?', 'Three times. Count is 1, 2 and 3 when the answer is Yes. When Count is 4 the answer is No, so it leaves the loop.') +
-    `<p class="lesson-lead">${mins(5, 'press <strong>Next step</strong>. Before each press, say what happens next.')}</p><div id="${P}-watch"></div>` });
+    `<p class="lesson-lead">${mins(4, 'press <strong>Next step</strong>. Before each press, say what happens next.')}</p><div id="${P}-watch"></div>` });
 
 // ---------------------------------------------------------------- explain it (Haiku)
-steps.push(selfMarked('explain-loop', 'Explain It: How a Flowchart Loops', 'Explain It: How a Flowchart Loops', mins(3, 'answer in your own words. Use Check my answer, improve it, then check again.'), [
+steps.push(selfMarked('explain-loop', 'Explain It: How a Flowchart Loops', 'Explain It: How a Flowchart Loops', mins(2, 'answer in your own words. Use Check my answer, improve it, then check again.'), [
   { id: 'explain-flow-loop', prompt: 'Explain how this flowchart repeats its steps, and how it knows when to stop. [2]', marks: 2, aiModel: 'haiku',
     scheme: ['After the last box in the loop the arrow goes back (up) to the decision, so the boxes run again / repeat',
       'The decision checks Count each time; while the answer is Yes it repeats, and when the answer is No (Count is more than 3 / Count is 4) it leaves the loop / stops'],
@@ -302,7 +305,7 @@ steps.push({ id: 'activity-1', label: 'Activity 1: Trace Every Pass', type: 'emb
   },
   content: '<h2 class="lesson-h2">Activity 1: Trace Every Pass</h2>' +
     why('Why does this trace table have four values in the Output column, not one?', 'The OUTPUT line is inside the loop, so it runs on every pass.') +
-    `<p class="lesson-lead">${mins(7, 'fill in the trace table, then check it. <strong>Done</strong> when every row is right.')}</p><div id="${P}-embed-1" class="lesson-embed"></div>` });
+    `<p class="lesson-lead">${mins(5, 'fill in the trace table, then check it. <strong>Done</strong> when every row is right.')}</p><div id="${P}-embed-1" class="lesson-embed"></div>` });
 
 // ---------------------------------------------------------------- check: a loop with an IF inside
 const IFP = ['DECLARE Count : INTEGER', 'DECLARE Total : INTEGER', 'Total <- 0', 'FOR Count <- 1 TO 6', '    IF Count > 3 THEN', '        Total <- Total + Count', '    ENDIF', 'NEXT Count', 'OUTPUT Total'];
@@ -339,7 +342,7 @@ steps.push({ id: 'activity-2', label: 'Activity 2: Trace the Hot Days', type: 'e
   },
   content: '<h2 class="lesson-h2">Activity 2: Trace the Hot Days</h2>' +
     why('Why must you check the IF line on every pass, even when the last answer was No?', 'Each pass has a new input, so the condition can give a different answer each time.') +
-    `<p class="lesson-lead">${mins(6, 'harder: an IF and five inputs. Fill in the trace table, then check it. <strong>Done</strong> when every row is right.')}</p><div id="${P}-embed-2" class="lesson-embed"></div>` });
+    `<p class="lesson-lead">${mins(5, 'harder: an IF and five inputs. Fill in the trace table, then check it. <strong>Done</strong> when every row is right.')}</p><div id="${P}-embed-2" class="lesson-embed"></div>` });
 
 // ---------------------------------------------------------------- exam-style question
 const F4 = { pre: [T('Start'), B('Total <- 0'), B('Count <- 1')], dec: 'Count <= 5?', body: [IO('INPUT Mark'), B('Total <- Total + Mark'), B('Count <- Count + 1')], post: [IO('OUTPUT Total'), T('Stop')] };
@@ -359,8 +362,21 @@ steps.push(selfMarked('exam-flow-2', 'Exam-Style Question: A Flowchart Loop (2 o
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Algorithms with Loops Drill', 'drill-y9-3-2-loops', 'Plenary: Algorithms with Loops Drill',
-  mins(6, 'answer every card. Get each card right 3 times in a row. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.'),
+  mins(4, 'answer every card. Get each card right 3 times in a row. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.'),
   ['Why do the cards ask for a value after one pass, not just the output?', 'You must see what every pass does. A wrong value in one pass makes every value after it wrong.']));
+
+// ---------------------------------------------------------------- Data Bridge (Exam Game set y9-loops)
+steps.push({ id: 'how-to-play', label: 'Data Bridge: Use Your Notes',
+  content: '<h2 class="lesson-h2">Data Bridge: Use Your Notes</h2>' +
+    why('Why answer from your notes, and not from memory alone?', 'Checking your notes while you answer fixes a gap before it costs you marks in the exam.') +
+    '<ol class="lesson-facts" style="font-size:22px;line-height:1.6">' +
+    '<li><strong>Open your notes</strong> with the pen icon at the top.</li>' +
+    '<li><strong>Answer the exam questions</strong> on loops, flowcharts and trace tables to earn coins, then build a bridge to get the truck across.</li>' +
+    '<li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>' });
+steps.push({ id: 'game', label: 'Play: Data Bridge', type: 'embedded-app', appId: 'bridge-builder', embedContainerId: `${P}-game`,
+  content: '<h2 class="lesson-h2">Play: Data Bridge</h2>' + why('Why keep your notes open while you play?', 'The questions use the same ideas. Your notes help you answer them right the first time.') +
+    `<p class="lesson-lead">${mins(6, 'earn coins with real exam questions, then build. Play until the end of the lesson.')}</p><div id="${P}-game"></div>`,
+  embedQuery: 'set=y9-loops&goal=3' });
 
 // ---------------------------------------------------------------- lesson self-checks
 const V = (k, i, s) => { const v = validators[`${P}_${k}`.replace(/-/g, '_')][i].pattern; return new RegExp(v.source, v.flags).test(s); };
@@ -378,6 +394,8 @@ const firstAt = (rx) => steps.findIndex((s) => rx.test(text(s)));
 const at = (id) => steps.findIndex((s) => s.id === id);
 assert(firstAt(/decision/i) === at('watch'), 'decision before it is taught');
 assert(firstAt(/flowchart/i) >= at('title'), 'flowchart in the Do Now');
+assert(!/mario|data bridge/i.test('3.2: Algorithms with Loops'), 'title');
+assert(steps.at(-1).appId === 'bridge-builder' && steps.at(-2).label === 'Data Bridge: Use Your Notes', 'ends with Data Bridge');
 const all = JSON.stringify(steps) + JSON.stringify(validators);
 assert(!/\b(WHILE|ENDWHILE|REPEAT|UNTIL|STEP|MOD|DIV|SUBSTRING)\b/.test(all), 'a construct Year 9 has not met');
 assert(!/[–—]|&mdash;|&ndash;/.test(all), 'em or en dash');

@@ -7239,6 +7239,692 @@
    ]
   },
   {
+   "setId": "y9-loops",
+   "title": "Algorithms with Loops",
+   "year": "Year 9",
+   "unit": "Unit 3 Pseudocode and Software Development",
+   "questions": [
+    {
+     "qid": "y9l-25n23-2",
+     "text": "Cambridge IGCSE 0478/23, November 2025, Question 2\nThree descriptions of programming techniques are given.\nTick (✓) one box in each row to show the programming technique each description matches.\nDescription | output | selection | iteration\ndisplaying the result of a calculation | [ ] | [ ] | [ ]\nexecuting a set of instructions based on a condition | [ ] | [ ] | [ ]\nexecuting the same set of instructions multiple times | [ ] | [ ] | [ ]\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/23, November 2025, Question 2\nThree descriptions of programming techniques are given.\nTick (✓) one box in each row to show the programming technique each description matches."
+      },
+      {
+       "type": "tickGrid",
+       "head": [
+        "Description",
+        "output",
+        "selection",
+        "iteration"
+       ],
+       "rows": [
+        [
+         "displaying the result of a calculation"
+        ],
+        [
+         "executing a set of instructions based on a condition"
+        ],
+        [
+         "executing the same set of instructions multiple times"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-hello",
+     "text": "1  DECLARE Count : INTEGER\n2  FOR Count ← 3 TO 8\n3      OUTPUT \"Hello\"\n4  NEXT Count\nState how many times Hello is output.\nNumber of times ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 3 TO 8",
+        "    OUTPUT \"Hello\"",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State how many times Hello is output."
+      },
+      {
+       "type": "line",
+       "label": "Number of times"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-zero",
+     "text": "1  DECLARE Count : INTEGER\n2  FOR Count ← 0 TO 5\n3      OUTPUT \"Go\"\n4  NEXT Count\nState how many times Go is output.\nNumber of times ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 0 TO 5",
+        "    OUTPUT \"Go\"",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State how many times Go is output."
+      },
+      {
+       "type": "line",
+       "label": "Number of times"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-flow-lt",
+     "text": "A flowchart has these boxes, in order:\nStart\nCount ← 1\nDecision: Count < 6?\n    Yes: OUTPUT \"Hi\", then Count ← Count + 1, then the arrow goes back to the decision.\n    No: Stop.\nState how many times the answer to the decision is Yes.\nNumber of times ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A flowchart has these boxes, in order:\nStart\nCount ← 1\nDecision: Count < 6?\n    Yes: OUTPUT \"Hi\", then Count ← Count + 1, then the arrow goes back to the decision.\n    No: Stop."
+      },
+      {
+       "type": "para",
+       "text": "State how many times the answer to the decision is Yes."
+      },
+      {
+       "type": "line",
+       "label": "Number of times"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-flow-stop",
+     "text": "A flowchart has these boxes, in order:\nStart\nTotal ← 0\nCount ← 1\nDecision: Count <= 4?\n    Yes: Total ← Total + 5, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: OUTPUT Total, then Stop.\nState the value of Count when the loop stops.\nCount ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A flowchart has these boxes, in order:\nStart\nTotal ← 0\nCount ← 1\nDecision: Count <= 4?\n    Yes: Total ← Total + 5, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: OUTPUT Total, then Stop."
+      },
+      {
+       "type": "para",
+       "text": "State the value of Count when the loop stops."
+      },
+      {
+       "type": "line",
+       "label": "Count"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-flow-total",
+     "text": "A flowchart has these boxes, in order:\nStart\nTotal ← 0\nCount ← 1\nDecision: Count <= 3?\n    Yes: Total ← Total + 10, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: OUTPUT Total, then Stop.\nState the output.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A flowchart has these boxes, in order:\nStart\nTotal ← 0\nCount ← 1\nDecision: Count <= 3?\n    Yes: Total ← Total + 10, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: OUTPUT Total, then Stop."
+      },
+      {
+       "type": "para",
+       "text": "State the output."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-flow-inputs",
+     "text": "A flowchart has these boxes, in order:\nStart\nTotal ← 0\nCount ← 1\nDecision: Count <= 8?\n    Yes: INPUT Mark, then Total ← Total + Mark, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: OUTPUT Total, then Stop.\nState how many marks are input.\nNumber of marks ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A flowchart has these boxes, in order:\nStart\nTotal ← 0\nCount ← 1\nDecision: Count <= 8?\n    Yes: INPUT Mark, then Total ← Total + Mark, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: OUTPUT Total, then Stop."
+      },
+      {
+       "type": "para",
+       "text": "State how many marks are input."
+      },
+      {
+       "type": "line",
+       "label": "Number of marks"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-flow-for-le",
+     "text": "A flowchart has these boxes, in order:\nStart\nCount ← 4\nDecision: Count <= 9?\n    Yes: OUTPUT Count, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: Stop.\nTick (✓) one box to identify the FOR line that makes a loop with the same passes.\nA FOR Count ← 4 TO 10\nB FOR Count ← 4 TO 9\nC FOR Count ← 1 TO 9\nD FOR Count ← 4 TO 8\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A flowchart has these boxes, in order:\nStart\nCount ← 4\nDecision: Count <= 9?\n    Yes: OUTPUT Count, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: Stop."
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to identify the FOR line that makes a loop with the same passes."
+      },
+      {
+       "type": "options",
+       "items": [
+        "FOR Count ← 4 TO 10",
+        "FOR Count ← 4 TO 9",
+        "FOR Count ← 1 TO 9",
+        "FOR Count ← 4 TO 8"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-flow-for-lt",
+     "text": "A flowchart has these boxes, in order:\nStart\nCount ← 1\nDecision: Count < 8?\n    Yes: OUTPUT Count, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: Stop.\nTick (✓) one box to identify the FOR line that makes a loop with the same passes.\nA FOR Count ← 1 TO 8\nB FOR Count ← 0 TO 7\nC FOR Count ← 1 TO 7\nD FOR Count ← 2 TO 8\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A flowchart has these boxes, in order:\nStart\nCount ← 1\nDecision: Count < 8?\n    Yes: OUTPUT Count, then Count ← Count + 1, then the arrow goes back to the decision.\n    No: Stop."
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to identify the FOR line that makes a loop with the same passes."
+      },
+      {
+       "type": "options",
+       "items": [
+        "FOR Count ← 1 TO 8",
+        "FOR Count ← 0 TO 7",
+        "FOR Count ← 1 TO 7",
+        "FOR Count ← 2 TO 8"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-trace-total",
+     "text": "1  DECLARE Total : INTEGER\n2  DECLARE Count : INTEGER\n3  Total ← 5\n4  FOR Count ← 1 TO 3\n5      Total ← Total + Count\n6  NEXT Count\n7  OUTPUT Total\nComplete the trace table with the value of Total after each pass, and state the output.\nCount | Total\n1 | ........\n2 | ........\n3 | ........\nOutput ........\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Total ← 5",
+        "FOR Count ← 1 TO 3",
+        "    Total ← Total + Count",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Complete the trace table with the value of Total after each pass, and state the output."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Count",
+        "Total"
+       ],
+       "rows": [
+        [
+         "1",
+         ""
+        ],
+        [
+         "2",
+         ""
+        ],
+        [
+         "3",
+         ""
+        ]
+       ]
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-trace-out",
+     "text": "1  DECLARE Number : INTEGER\n2  DECLARE Count : INTEGER\n3  Number ← 2\n4  FOR Count ← 1 TO 4\n5      Number ← Number + 3\n6      OUTPUT Number\n7  NEXT Count\nComplete the trace table with the value output on each pass.\nCount | Output\n1 | ........\n2 | ........\n3 | ........\n4 | ........\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Number : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Number ← 2",
+        "FOR Count ← 1 TO 4",
+        "    Number ← Number + 3",
+        "    OUTPUT Number",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Complete the trace table with the value output on each pass."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Count",
+        "Output"
+       ],
+       "rows": [
+        [
+         "1",
+         ""
+        ],
+        [
+         "2",
+         ""
+        ],
+        [
+         "3",
+         ""
+        ],
+        [
+         "4",
+         ""
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-last-out",
+     "text": "1  DECLARE Count : INTEGER\n2  FOR Count ← 5 TO 8\n3      OUTPUT Count + 10\n4  NEXT Count\nState the last value output.\nLast value ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 5 TO 8",
+        "    OUTPUT Count + 10",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the last value output."
+      },
+      {
+       "type": "line",
+       "label": "Last value"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-if-big",
+     "text": "1  DECLARE Count : INTEGER\n2  FOR Count ← 1 TO 8\n3      IF Count > 5 THEN\n4          OUTPUT \"Big\"\n5      ENDIF\n6  NEXT Count\nState how many times Big is output.\nNumber of times ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 1 TO 8",
+        "    IF Count > 5 THEN",
+        "        OUTPUT \"Big\"",
+        "    ENDIF",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State how many times Big is output."
+      },
+      {
+       "type": "line",
+       "label": "Number of times"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-if-total",
+     "text": "1  DECLARE Total : INTEGER\n2  DECLARE Count : INTEGER\n3  Total ← 0\n4  FOR Count ← 2 TO 6\n5      IF Count < 4 THEN\n6          Total ← Total + Count\n7      ENDIF\n8  NEXT Count\n9  OUTPUT Total\nState the output.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Total ← 0",
+        "FOR Count ← 2 TO 6",
+        "    IF Count < 4 THEN",
+        "        Total ← Total + Count",
+        "    ENDIF",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-pass-count",
+     "text": "1  DECLARE Mark : INTEGER\n2  DECLARE Count : INTEGER\n3  DECLARE Pass : INTEGER\n4  Pass ← 0\n5  FOR Count ← 1 TO 5\n6      INPUT Mark\n7      IF Mark >= 50 THEN\n8          Pass ← Pass + 1\n9      ENDIF\n10  NEXT Count\n11  OUTPUT Pass\nThe user inputs 45, 50, 72, 49 and 61. State the output.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Mark : INTEGER",
+        "DECLARE Count : INTEGER",
+        "DECLARE Pass : INTEGER",
+        "Pass ← 0",
+        "FOR Count ← 1 TO 5",
+        "    INPUT Mark",
+        "    IF Mark >= 50 THEN",
+        "        Pass ← Pass + 1",
+        "    ENDIF",
+        "NEXT Count",
+        "OUTPUT Pass"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "The user inputs 45, 50, 72, 49 and 61. State the output."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-counter",
+     "text": "1  DECLARE Times : INTEGER\n2  DECLARE Count : INTEGER\n3  Times ← 0\n4  FOR Count ← 4 TO 10\n5      Times ← Times + 1\n6  NEXT Count\n7  OUTPUT Times\nState the output.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Times : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Times ← 0",
+        "FOR Count ← 4 TO 10",
+        "    Times ← Times + 1",
+        "NEXT Count",
+        "OUTPUT Times"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-error-to",
+     "text": "This program must output the numbers 1 to 10. It has one error.\n1  DECLARE Count : INTEGER\n2  FOR Count ← 1 TO 9\n3      OUTPUT Count\n4  NEXT Count\n(a) Identify the line number that contains the error.\nLine number ........\n[1]\n(b) Write the correct line.\nCorrect line ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program must output the numbers 1 to 10. It has one error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 1 TO 9",
+        "    OUTPUT Count",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line number that contains the error."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) Write the correct line."
+      },
+      {
+       "type": "line",
+       "label": "Correct line"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-error-total",
+     "text": "This program must output the total of the numbers 1 to 5. It has one error.\n1  DECLARE Total : INTEGER\n2  DECLARE Count : INTEGER\n3  Total ← 0\n4  FOR Count ← 1 TO 5\n5      Total ← Count\n6  NEXT Count\n7  OUTPUT Total\n(a) Identify the line number that contains the error.\nLine number ........\n[1]\n(b) Write the correct line.\nCorrect line ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program must output the total of the numbers 1 to 5. It has one error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Total ← 0",
+        "FOR Count ← 1 TO 5",
+        "    Total ← Count",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line number that contains the error."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) Write the correct line."
+      },
+      {
+       "type": "line",
+       "label": "Correct line"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-purpose",
+     "text": "1  DECLARE Number : INTEGER\n2  DECLARE Total : INTEGER\n3  DECLARE Count : INTEGER\n4  Total ← 0\n5  FOR Count ← 1 TO 10\n6      INPUT Number\n7      Total ← Total + Number\n8  NEXT Count\n9  OUTPUT Total\nDescribe the purpose of this algorithm.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Number : INTEGER",
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Total ← 0",
+        "FOR Count ← 1 TO 10",
+        "    INPUT Number",
+        "    Total ← Total + Number",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Describe the purpose of this algorithm."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y9l-own-why-next",
+     "text": "1  DECLARE Count : INTEGER\n2  FOR Count ← 1 TO 5\n3      OUTPUT Count\n4  NEXT Count\nA flowchart for the same loop needs the box Count ← Count + 1.\nExplain why this program does not need the line Count ← Count + 1.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 1 TO 5",
+        "    OUTPUT Count",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "A flowchart for the same loop needs the box Count ← Count + 1.\nExplain why this program does not need the line Count ← Count + 1."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "setId": "y10-unit3-1-practice",
    "title": "Unit 3.1 Revision: All Topics",
    "year": "Year 10",
