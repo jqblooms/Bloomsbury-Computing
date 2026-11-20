@@ -4,6 +4,9 @@
 DrillData.register("y10-3-1-r2", {
   title: "Year 10, 3.1.R: Performance, Instruction Sets and Embedded Systems Exam Drill",
   subtitle: "Cambridge IGCSE Computer Science 0478",
+  // Haiku second check on typed answers the keyword check rejects; each card waits for Next question (James 2026-11-20).
+  aiFallback: true,
+  waitForNext: true,
   categories: [
     ["pl-perf","CPU Performance"],
     ["pl-isa","Instruction Sets"],

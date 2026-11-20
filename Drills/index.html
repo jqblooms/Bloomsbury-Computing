@@ -374,7 +374,7 @@
       drills: {},
       register: function (drillId, def) { this.drills[drillId] = def; }
     };
-    ["../shared/pseudocode-engine.js", "../shared/bc-support.js", "helpers.js", "flowchart-core.js", "exam-widgets.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
+    ["../shared/pseudocode-engine.js", "../shared/bc-support.js", "helpers.js", "flowchart-core.js", "exam-widgets.js", "ai-check.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + v + '"><\/script>');
     });
   })();

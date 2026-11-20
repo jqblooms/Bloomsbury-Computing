@@ -59,6 +59,12 @@
   // No "I need help" switch, the right option is never marked after a miss and the answer is never shown: a wrong
   // answer names the lesson slide to go back to (card.goBack) and waits for Next. Every other drill is unchanged.
   var noHelp = !!drill.noHelp;
+  // aiFallback: true (James, 2026-11-20, first used by the Y10 3.1.R exam drills): a typed answer the keyword check
+  // rejects goes to Haiku (Drills/ai-check.js) before it is marked wrong; only a Haiku "no" is wrong.
+  var aiFallback = !!drill.aiFallback && !!window.DrillAiCheck;
+  // waitForNext: true (James, 2026-11-20): a marked card shows the model answer and its note and stays until the
+  // student presses Next question (or Enter), never moving on by itself.
+  var waitForNext = !!drill.waitForNext;
   var CODE_MASTERY_STREAK = 3;
 
   var els = {
@@ -1041,11 +1047,35 @@
       current.checked = true;
       input.disabled = true;
       fb = els.stage.querySelector("#fb");
-      fb.className = "feedback show " + (right ? "ok" : "no");
-      if (noHelp) fb.innerHTML = right ? "Correct." + (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "") : goBackHtml(card);
-      else fb.innerHTML = (right ? "Correct." : "Not quite." + nearMissReason(set.correct[0], value) +
-          '<span class="compare"><span>You typed: <code>' + escapeHtml(value.trim()) + '</code></span><span>The answer: <code>' + escapeHtml(set.correct[0]) + "</code></span></span>") +
-        (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+      var showTyped = function (ok) {
+        var noteOn = card.note && (run.mode === "learn" || waitForNext);
+        fb.className = "feedback show " + (ok ? "ok" : "no");
+        if (noHelp) fb.innerHTML = ok ? "Correct." + (noteOn ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "") : goBackHtml(card);
+        else fb.innerHTML = (ok ? "Correct." + (waitForNext ? '<span class="compare"><span>You typed: <code>' + escapeHtml(value.trim()) + '</code></span><span>Model answer: <code>' + escapeHtml(set.correct[0]) + "</code></span></span>" : "") :
+            "Not quite." + nearMissReason(set.correct[0], value) +
+            '<span class="compare"><span>You typed: <code>' + escapeHtml(value.trim()) + '</code></span><span>The answer: <code>' + escapeHtml(set.correct[0]) + "</code></span></span>") +
+          (noteOn ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+      };
+      if (!right && aiFallback) {
+        // The keyword check said no: ask Haiku before marking it wrong. A card left meanwhile (restart, new run) is ignored.
+        var token = current, askCardId = current.cardId;
+        fb.className = "feedback show";
+        fb.textContent = "Checking your answer...";
+        var sb0 = els.stage.querySelector("#submit-btn"), hb0 = els.stage.querySelector("#help-btn");
+        if (sb0) sb0.disabled = true;
+        if (hb0) hb0.disabled = true;
+        window.DrillAiCheck.decide(false, true, function () {
+          return window.DrillAiCheck.ask({ drillId: drillId, cardId: askCardId, prompt: card.prompt,
+            answers: [set.correct[0]].concat(card.answers || []).filter(function (a, i, all) { return a && all.indexOf(a) === i; }),
+            note: card.note || "", hint: card.hint || "", answer: value.trim() });
+        }).then(function (ok) {
+          if (current !== token) return;
+          showTyped(ok);
+          afterMark(ok);
+        });
+        return;
+      }
+      showTyped(right);
     } else {
       var picked = [];
       Array.prototype.forEach.call(els.stage.querySelectorAll("input"), function (inp, idx) {
@@ -1074,11 +1104,15 @@
 
       fb = els.stage.querySelector("#fb");
       fb.className = "feedback show " + (right ? "ok" : "no");
-      if (noHelp) fb.innerHTML = right ? "Correct." + (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "") : goBackHtml(card);
+      var mcNote = card.note && (run.mode === "learn" || waitForNext);
+      if (noHelp) fb.innerHTML = right ? "Correct." + (mcNote ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "") : goBackHtml(card);
       else fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
-        (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+        (mcNote ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
     }
+    afterMark(right);
 
+    // Scoring and moving on, once the card is marked (after the Haiku check when there is one).
+    function afterMark(right) {
     var submitBtn = els.stage.querySelector("#submit-btn");
     if (submitBtn) submitBtn.disabled = true;
     var helpBtn = els.stage.querySelector("#help-btn");
@@ -1094,7 +1128,8 @@
         if (run.streak[current.cardId] >= MASTERY_STREAK) {
           run.masteredThisRun[current.cardId] = true;
           if (!everMastered[current.cardId]) { everMastered[current.cardId] = true; saveEver(everMastered); }
-          fb.innerHTML = "Mastered! Three in a row - this card is done for this run." +
+          if (waitForNext) fb.innerHTML = fb.innerHTML.replace(/^Correct\./, "Mastered! Three in a row: this card is done for this run.");
+          else fb.innerHTML = "Mastered! Three in a row - this card is done for this run." +
             (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
         }
       } else {
@@ -1112,15 +1147,23 @@
     var delay = (textMode && !right) ? TEXT_WRONG_ADVANCE_MS : ADVANCE_MS;
     // An exam-format card shows the mark scheme: it waits for Next instead of moving on by itself.
     // A noHelp miss waits too, so the student can go back to the slide it names.
-    if (set.widget || (run.ladder && current.ladderStop) || (noHelp && !right)) {
+    if (set.widget || (run.ladder && current.ladderStop) || (noHelp && !right) || waitForNext) {
       var actions = els.stage.querySelector(".actions"), next = document.createElement("button");
-      next.type = "button"; next.className = "btn"; next.textContent = "Next";
-      next.addEventListener("click", function () { if (current.advanceTimer) clearTimeout(current.advanceTimer); advance(); });
+      var shownAt = Date.now(), here = current;
+      next.type = "button"; next.className = "btn"; next.id = "next-btn"; next.textContent = waitForNext ? "Next question" : "Next";
+      next.addEventListener("click", function () {
+        // The Enter that checked the answer must not also skip the answer it shows.
+        if (Date.now() - shownAt < 350 || current !== here) return;
+        if (current.advanceTimer) clearTimeout(current.advanceTimer);
+        advance();
+      });
       if (actions) actions.insertBefore(next, actions.firstChild);
-      if (right && !current.ladderStop) { current.advanceTimer = setTimeout(advance, ADVANCE_MS); }
+      if (waitForNext) { try { next.focus({ preventScroll: true }); } catch (e) { next.focus(); } }
+      else if (right && !current.ladderStop) { current.advanceTimer = setTimeout(advance, ADVANCE_MS); }
       return;
     }
     current.advanceTimer = setTimeout(advance, delay);
+    }
   }
 
   function advance() {
