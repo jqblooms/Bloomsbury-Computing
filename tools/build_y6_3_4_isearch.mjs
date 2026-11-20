@@ -218,17 +218,23 @@ const CQ = 'greenhill zoo ticket';
   assert(r[0].matched > r[1].matched && r[1].matched === r[2].matched && r[1].score > r[2].score, 'check ranks decided by the rules');
 }
 const CHK_TERMS = '^(?!.*\\b(a|an|the|how|do|does|when|what|is|are|i|it|please|to|at|for|of|in|on|time\\s+does)\\b)(?=.*\\bzoo\\b)(?=.*\\b(open|opens|opening|times?|hours?|closes?|closing)\\b)\\s*[a-z]+(\\s+[a-z]+){0,3}\\s*$';
-steps.push(checkStep('check-search', 'Check: Read and Search', '', [
-  { label: 'What rank is the page Greenhill Bus Times? Type a number.', answer: num(3), feedback: 'Count from the top: the page at the top is ranked 1st.' },
-  { label: 'Type clear search terms to find when Greenhill Zoo opens. Use at most 4 words.', text: true, answer: CHK_TERMS,
-    feedback: 'Use key words the zoo page has, like the name of the place and a word about opening. Leave out small words like when, does and the.' },
-], ['Why might a page be ranked lower even when it has a word you typed?', 'Other pages may have more of your search terms, or have them in the title.'], results(CQ, 3, '', { small: true })));
+// ---------------------------------------------------------------- Try it on the real web (James 2026-11-20: simple, hands-on)
+steps.push({ id: 'real-search', label: 'Try It: Search the Real Web',
+  content: '<h2 class="lesson-h2">Try It: Search the Real Web</h2>' +
+    why('Why write down the number of results for each search?', 'So you can compare your searches and see what changed.') +
+    '<p class="lesson-lead"><strong>About 6 minutes.</strong> Open a new tab and use the school search engine. Write the answers in your notes (the pen icon at the top).</p>' +
+    '<ol class="lesson-facts" style="font-size:21px;line-height:1.55">' + "<li><strong>Search:</strong> tigers. Under the search box it says <em>About ... results</em>. Write the number in your notes.</li>" + "<li><strong>Search:</strong> tigers facts for kids. Write the number of results. Is it bigger or smaller?</li>" + "<li><strong>Search:</strong> tigrs (spelt wrong). What does the search engine do? Write it down.</li>" + "<li><strong>Your turn:</strong> search for something you like. Write your search terms and the number of results.</li>" + '</ol>' });
+steps.push({ id: 'real-picture', label: 'Try It: Find a Picture for Your Notes',
+  content: '<h2 class="lesson-h2">Try It: Find a Picture for Your Notes</h2>' +
+    why('Why add the search terms you used under your picture?', 'So you, or a friend, can find the same picture again.') +
+    '<p class="lesson-lead"><strong>About 5 minutes.</strong> Find a picture of an animal and put it in your notes.</p>' +
+    '<ol class="lesson-facts" style="font-size:21px;line-height:1.55">' + "<li>Search for an animal, for example <strong>red panda</strong>. Click <strong>Images</strong>.</li>" + "<li>Right-click a picture and choose <strong>Copy image</strong>.</li>" + "<li>Open your notes (the pen icon at the top). Press <strong>Ctrl + V</strong> to paste the picture.</li>" + "<li>Under the picture, type the search terms you used.</li>" + '</ol>' });
 
 // ---------------------------------------------------------------- Network Help Desk (party server on the class network)
 steps.push({ id: 'help-desk', label: 'Network Help Desk: Search Calls',
   content: '<h2 class="lesson-h2">Network Help Desk: Search Calls</h2>' +
     why('Why tell the customer better search terms, and not only the answer?', 'Next time they can find it on their own.') +
-    '<p class="lesson-lead"><strong>About 15 minutes.</strong> Customers phone you. They cannot find something on the web. Use today\'s lesson to help them.</p>' +
+    '<p class="lesson-lead"><strong>About 12 minutes.</strong> Customers phone you. They cannot find something on the web. Use today\'s lesson to help them.</p>' +
     '<ol class="lesson-facts" style="font-size:20px;line-height:1.5">' +
     '<li><strong>Open a new tab.</strong> Type the class game address your teacher shows on the board. Type your name.</li>' +
     '<li><strong>Take the two training calls first.</strong> Do what the arrow shows.</li>' +
@@ -281,9 +287,9 @@ const T = (k, i, s) => new RegExp(V(k)[i].pattern.source, 'i').test(s);
 const ok = (k, i, yes, no) => { yes.forEach((s) => assert(T(k, i, s), `${k}[${i}] rejects "${s}"`)); no.forEach((s) => assert(!T(k, i, s), `${k}[${i}] accepts "${s}"`)); };
 ok('do-now-2', 0, ['10.0.0.9', ' 10.0.0.200 ', '10.0.0.1', '10.0.0.44'], ['10.0.0.4', '10.0.0.6', '10.0.0.0', '10.0.0.255', '10.0.0.300', '10.0.1.9', '192.168.1.9', '10.0.0']);
 ok('do-now-2', 1, ['web server', 'a web server', 'Web Server', 'webserver', 'web servers'], ['server', 'router', 'website', 'web']);
-ok('check-search', 0, ['3', ' 3 '], ['2', '1', '13']);
-ok('check-search', 1, ['zoo opening times', 'Greenhill zoo opening times', 'zoo open', 'greenhill zoo times', 'zoo hours'],
-  ['when does the zoo open', 'zoo', 'opening times', 'greenhill zoo opening times today please', 'zoo ticket', 'library opening times']);
+// removed with the check slide: ok('check-search', 0, ['3', ' 3 '], ['2', '1', '13']);
+// removed with the check slide: ok('check-search', 1, ['zoo opening times', 'Greenhill zoo opening times', 'zoo open', 'greenhill zoo times', 'zoo hours'],
+// removed with the check slide:   ['when does the zoo open', 'zoo', 'opening times', 'greenhill zoo opening times today please', 'zoo ticket', 'library opening times']);
 // the typed search answers really work in the engine
 ['zoo opening times', 'Greenhill zoo opening times', 'zoo open', 'greenhill zoo times'].forEach((q) => assert(E.rankOf(q, 'zoo') === 1, 'check answer ranks the zoo 1st: ' + q));
 // the Do Now walkthroughs never highlight the Do Now's own answers or use its names
