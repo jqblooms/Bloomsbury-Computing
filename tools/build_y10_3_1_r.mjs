@@ -12,7 +12,8 @@
 // (3 right in a row), then Data Bridge: Use Your Notes and Play: Data Bridge.
 // Lesson 1 plays the y10-cpu Exam Game set (shell ExamGameSetY10Cpu.gs); Lesson 2 plays y10-instruction-sets.
 // None of the exam paper's parts is used here: the list is kept by the exam builder, and EXAM_PARTS below fails the build
-// if one appears. The exam's adapted bus tick table and decode paragraph have no copy here either.
+// if one appears. 0478/12 March 2025 Q3(d) is left off: the exam repeats it from the y10-3-1-r2 drill (every real
+// instruction set part is used somewhere).
 // Lesson 1 Do Now: 0478/11 November 2022 Q2(b), 0478/13 November 2023 Q3(d), 0478/11 June 2022 Q2(a)(i); then
 // 0478/11 June 2026 Q2(a)(i) and 0478/13 June 2024 Q8(b)(i). Extension: drill-y10-3-1-l3 (3.1.3 plenary).
 // Lesson 2 Do Now: 0478/13 November 2023 Q3(c), 0478/13 November 2025 Q2(c)(i); then 0478/12 June 2024 Q5(b) and
@@ -394,9 +395,9 @@ for (const L of [L1, L2]) L.steps.filter((s) => s.type === 'self-marked-response
   assert(/^0478\/1[123] /.test(it.source), `${s.id}/${it.id} source`);
 }));
 // None of the Unit 3.1 exam paper's parts (the exam builder's list) appears in either lesson.
-const EXAM_PARTS = ['0478/13, June 2026, Question 4', '0478/13, June 2024, Question 8(a)', '0478/13, June 2021, Question 10(b)', '0478/13, June 2025, Question 3(a)',
-  '0478/11, November 2024, Question 5(a)', '0478/13, November 2024, Question 5(b)', '0478/12, November 2022, Question 2(a)', '0478/13, June 2021, Question 9(b)', '0478/11, November 2021, Question 6(a)',
-  '0478/12, June 2024, Question 5(a)', '0478/12, March 2024, Question 2(a)', '0478/12, March 2025, Question 3(c)', '0478/13, November 2025, Question 1(f)',
+const EXAM_PARTS = ['0478/13, June 2026, Question 4', '0478/13, June 2024, Question 8(a)', '0478/13, June 2022, Question 5(b)(i)', '0478/13, June 2025, Question 3(a)',
+  '0478/13, June 2025, Question 3(c)', '0478/11, November 2024, Question 5(a)', '0478/11, November 2024, Question 5(d)', '0478/11, November 2024, Question 5(e)', '0478/11, November 2025, Question 6(a)',
+  '0478/13, June 2026, Question 3(c)(ii)', '0478/13, June 2021, Question 9(b)', '0478/13, November 2025, Question 1(e)', '0478/13, November 2025, Question 1(f)',
   '0478/12, November 2023, Question 4(b)', '0478/12, June 2025, Question 4(b)'];
 for (const L of [L1, L2]) { const t = JSON.stringify(L.steps); EXAM_PARTS.forEach((r) => assert(!t.includes(r), `${L.id} uses exam part ${r}`)); }
 

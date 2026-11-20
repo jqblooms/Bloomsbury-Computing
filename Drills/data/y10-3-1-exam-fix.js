@@ -58,11 +58,11 @@
     t1("cpu-1c", "cpu", "A sensor sends data to a microprocessor. What does the microprocessor compare the data with?", "A stored value",
       /stored|preset|pre-set|set value|range/i,
       ["The actuator", "The screen", "The cache", "The keyboard", "The previous instruction"],
-      "Mark scheme point: the microprocessor compares the data to a stored value (or a range of values). 0478/13, June 2021, Question 9(b), Question 10 of your exam.", EX_CPU1B, W_CPU1),
+      "Mark scheme point: the microprocessor compares the data to a stored value (or a range of values). 0478/13, June 2021, Question 9(b), Question 9 of your exam.", EX_CPU1B, W_CPU1),
     t1("cpu-1d", "cpu", "After it compares the data, what does the microprocessor send to make something happen, for example to turn a light on?", "A signal",
       /signal/i,
       ["A packet", "An address", "A parity bit", "A password", "A file"],
-      "Mark scheme point: the microprocessor sends a signal (to an actuator) to trigger an action. 0478/13, November 2024, Question 5(b), Question 9 of your exam.", EX_CPU1B, W_CPU1),
+      "Mark scheme point: the microprocessor sends a signal (to an actuator) to trigger an action. 0478/13, November 2025, Question 1(e)(ii), Question 10 of your exam.", EX_CPU1B, W_CPU1),
     t1("cpu-1e", "cpu", "What changes the sensor's analogue data into digital data?", "An ADC",
       /\bADC\b|analogue\W*(to\W*)?digital/i,
       ["A DAC", "An actuator", "The ALU", "The clock", "The cache"],
@@ -102,13 +102,17 @@
     t3("cpu-3b", "cpu", Q_MP_ROLE,
       ["It receives data from the sensors", "It checks if the data is out of range", "It sends signals to trigger actions"],
       ["It measures the ground", "It digs the ground", "It stores the data on a hard disk", "It is the brain of the plough", "It is a small computer", "It moves the plough by itself"],
-      "The three mark scheme points of 0478/13, November 2024, Question 5(b), Question 9 of your exam.", EX_CPU2B, W_CPU3),
+      "The three mark scheme points of 0478/13, November 2024, Question 5(b).", EX_CPU2B, W_CPU3),
     t3("cpu-3c", "cpu", Q_CAR,
       ["The sensor sends data to the microprocessor", "The data is converted from analogue to digital", "The microprocessor compares the data to a stored value",
         "If a car is detected, it sends a signal to turn the red light on and the green light off", "An actuator turns the lights on and off", "The process is continuous"],
       ["The sensor decides which light to turn on", "The microprocessor stores the data on a hard disk", "The sensor converts digital data to analogue", "The light turns itself on",
         "The process happens once only", "The sensor sends a signal straight to the light"],
-      "Six mark scheme points of 0478/13, June 2021, Question 9(b), Question 10 of your exam.", EX_CPU2B, W_CPU3)
+      "Six mark scheme points of 0478/13, June 2021, Question 9(b), Question 9 of your exam.", EX_CPU2B, W_CPU3),
+    t3("cpu-3d", "cpu", "An air-conditioning system uses a temperature sensor and a microprocessor to keep the temperature of the room at a constant level.\nThe temperature sensor continuously sends analogue data to the microprocessor. This data is then converted to digital.\nExplain how the microprocessor keeps the temperature of the room at a constant level. [3]",
+      ["The microprocessor compares the value from the sensor to a stored value", "If the values do not match, it sends a signal to increase or decrease the temperature", "If the values match, no action is taken"],
+      ["The sensor compares the value to a stored value", "The microprocessor heats the room itself", "The microprocessor stores the temperature on a hard disk", "If the values match, it turns the heater on", "The sensor sends a signal to the heater", "The process happens once only"],
+      "The three mark scheme points of 0478/13, November 2025, Question 1(e)(ii), Question 10(e)(ii) of your exam.", EX_CPU2B, W_CPU3)
   );
 
   // =====================================================================
@@ -156,7 +160,7 @@
       "Mark scheme point: a component in the CPU that manages the flow of data around the CPU. 0478/13, June 2025, Question 3(a).", EX_COMP2, W_COMP2),
     t2("comp-2d", "comp", Q_VN + WHICH, "Memory address register (MAR)",
       ["Arithmetic logic unit (ALU)", "Control unit (CU)", "Accumulator (ACC)", "Random access memory (RAM)", "Cache"],
-      "Any two from MAR, MDR, PC and CIR. The ALU and CU are not registers, and the accumulator is given in the question. 0478/13, June 2021, Question 10(b), Question 3 of your exam.", EX_COMP2, W_COMP2)
+      "Any two from MAR, MDR, PC and CIR. The ALU and CU are not registers, and the accumulator is given in the question. 0478/13, June 2021, Question 10(b).", EX_COMP2, W_COMP2)
   );
 
   var W_COMP3 = "A register holds something. A unit does something. Check each line names the right kind of part.";
@@ -164,7 +168,7 @@
     t3("comp-3a", "comp", Q_VN,
       ["Program counter (PC)", "Current instruction register (CIR)"],
       ["Accumulator (ACC)", "Arithmetic logic unit (ALU)", "Control unit (CU)", "Random access memory (RAM)", "Cache", "Clock"],
-      "Any two from MAR, MDR, PC and CIR. 0478/13, June 2021, Question 10(b), Question 3 of your exam.", EX_COMP2, W_COMP3),
+      "Any two from MAR, MDR, PC and CIR. 0478/13, June 2021, Question 10(b).", EX_COMP2, W_COMP3),
     t3("comp-3b", "comp", "A computer has a central processing unit (CPU).\nIdentify three components that are built into the CPU. [3]",
       ["Accumulator (ACC)", "Control unit (CU)", "Program counter (PC)"],
       ["Random access memory (RAM)", "Hard disk drive (HDD)", "Graphics card", "Motherboard", "Read only memory (ROM)", "Monitor"],
@@ -196,7 +200,7 @@
     t1("bus-1d", "bus", "Which bus only transmits in one direction, out of the CPU?", "Address bus",
       /^(?!.*\b(data|control)\b).*address/i,
       ["Data bus", "Control bus", "Universal serial bus (USB)", "Cache", "Clock"],
-      "Only the CPU chooses an address, so the address bus only goes out of the CPU. The data and control buses go both ways. Question 5 of your exam.", EX_BUS1, W_BUS1),
+      "Only the CPU chooses an address, so the address bus only goes out of the CPU. The data and control buses go both ways.", EX_BUS1, W_BUS1),
     t1("bus-1e", "bus", "Which two buses can transmit in both directions?", "Data bus and control bus",
       /^(?!.*address)(?=.*\bdata\b)(?=.*\bcontrol\b)/i,
       ["Address bus and data bus", "Address bus and control bus", "Only the address bus", "All three buses", "No bus"],
@@ -281,10 +285,9 @@
     t2("fde-2c", "fde", Q_DEC + WHICH, "The instruction is sent from the MDR to the CIR",
       ["The instruction is sent from the CIR to the MDR", "The address is sent from the PC to the MAR", "The instruction is sent to RAM", "The ALU sends the instruction to the PC", "The instruction is sent from the ACC to the PC"],
       "Mark scheme point: the instruction is sent to the CIR, from the MDR. 0478/11, June 2026, Question 2(a)(ii).", EX_FDE2, W_FDE2),
-    t2("fde-2d", "fde", Q_CORR + WHICH, "MAR sends the address it holds to RAM using the address bus",
-      ["MDR sends the address it holds to RAM using the data bus", "MAR sends the data it holds to RAM using the data bus", "PC sends the address it holds to RAM using the data bus",
-        "MAR sends the address it holds to the ALU using the address bus", "MAR sends the address it holds to RAM using the control bus"],
-      "Addresses travel on the address bus. Question 8 of your exam, statement B.", EX_FDE2, W_FDE2)
+    t2("fde-2d", "fde", "Complete the statement about the operation of the CPU.\nThe instruction is retrieved from RAM and immediately stored in the .... . [1]" + WHICH, "Memory data register",
+      ["Memory address register", "Current instruction register", "Program counter", "Memory instruction register", "Next instruction register"],
+      "Mark scheme: memory data register. 0478/11, November 2025, Question 6(a), Question 6 of your exam.", EX_FDE2, W_FDE2)
   );
 
   var W_FDE3 = "Put the instruction's journey in order: MDR, then CIR, then the CU decodes it.";
@@ -296,11 +299,13 @@
     t3("fde-3b", "fde", "A central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle.\nGive the name of two registers that are used in the fetch stage of the cycle. [2]",
       ["Program counter (PC)", "Memory address register (MAR)"],
       ["Accumulator (ACC)", "Arithmetic logic unit (ALU)", "Control unit (CU)", "Random access memory (RAM)", "Cache", "Clock"],
-      "Any two from PC, MAR, MDR and CIR. 0478/11, November 2024, Question 5(a), Question 6 of your exam.", EX_FDE2, W_FDE3),
-    t3("fde-3c", "fde", "Two of these statements are not correct.\nA: PC stores the address of the next instruction to be fetched\nB: MAR sends the address it holds to RAM using the data bus\nC: MDR stores the data or instruction that has been fetched from RAM\nD: CIR stores the instruction while it is being decoded\nE: ACC stores the instruction set that is used to decode the instruction\nIdentify the letter of each incorrect statement and suggest a corrected statement for each. [4]",
-      ["Statement B", "The MAR sends the address using the address bus", "Statement E", "The ACC stores the result of a calculation"],
-      ["Statement A", "Statement C", "Statement D", "The MAR sends the address using the control bus", "The ACC stores the address of the next instruction", "The CIR stores the instruction set"],
-      "Question 8 of your exam: a letter and its correction for each.", EX_FDE2, W_FDE3)
+      "Any two from PC, MAR, MDR and CIR. 0478/11, November 2024, Question 5(a), Question 5(a) of your exam.", EX_FDE2, W_FDE3),
+    t3("fde-3c", "fde", "A computer with a Von Neumann architecture has a central processing unit (CPU).\nComplete the statements about the operation of the CPU. [6]",
+      ["The program counter stores the address of the next instruction to be fetched", "This address is sent to the memory address register", "The instruction is stored in the memory data register",
+        "The instruction is sent to the current instruction register", "It is decoded by the control unit", "It is decoded using an instruction set"],
+      ["The memory data register stores the address of the next instruction", "The address is sent to the accumulator", "The instruction is stored in the program register",
+        "It is decoded by the arithmetic logic unit", "It is decoded using a character set", "It is decoded using a cipher"],
+      "The six answers of 0478/11, November 2025, Question 6(a), Question 6 of your exam.", EX_FDE2, W_FDE3)
   );
 
   // =====================================================================
@@ -320,7 +325,7 @@
     t1("perf-1c", "perf", "What is the name of a processing unit within the CPU that can fetch, decode and execute instructions?", "A core",
       /\bcores?\b/i,
       ["A register", "A cache", "A clock", "A bus", "An accumulator"],
-      "Mark scheme: core. 0478/13, June 2025, Question 3(a), Question 4(v) of your exam.", EX_PERF1, W_PERF1),
+      "Mark scheme: core. 0478/13, June 2025, Question 3(a), Question 4(a)(iv) of your exam.", EX_PERF1, W_PERF1),
     t1("perf-1d", "perf", "A CPU has more cores. What can it process simultaneously?", "More instructions",
       /more\s*(instructions|FDE|fetch|cycles)/i,
       ["Fewer instructions", "Bigger files", "More addresses", "More buses", "More cache"],
@@ -334,7 +339,7 @@
   var Q_CLK = "The CPU has a clock speed of 2.4 GHz.\nDescribe what is meant by a 2.4 GHz clock speed. [2]";
   var Q_CACHE = "The amount of cache is increased to 64 kB.\nExplain how the amount of cache affects the performance of a computer. [2]";
   var Q_CORES = "The CPU is changed to a dual-core processor.\nExplain how the number of cores affects the performance of a CPU. [2]";
-  var Q_BC = "Computer B has a 2.2 GHz dual-core processor.\nComputer C has a 4.6 GHz single-core processor.\nExplain why Computer C can execute more instructions per second than Computer B. [2]";
+  var Q_BC = "Computer B has a 2.5 GHz dual-core processor.\nComputer C has a 5.2 GHz single-core processor.\nExplain why Computer C can execute more instructions per second than Computer B. [2]";
   var EX_PERF2 = "Explain how the number of checkouts in a shop affects how fast customers are served. [2]\nStep 1: say what changes: more checkouts serve more customers at the same time.\nStep 2: say the effect: more customers are served each minute.\nStep 3: \"it is better\" with no reason earns nothing.";
   var W_PERF2 = "A mark needs the reason: more of what, each second or at the same time?";
   add(
@@ -347,9 +352,9 @@
     t2("perf-2c", "perf", Q_CORES + WHICH, "More cores means more instructions can be executed simultaneously",
       ["More cores makes the clock faster", "More cores means more storage", "More cores means fewer instructions per second", "More cores means bigger files", "More cores means more cache"],
       "Mark scheme point: each core runs an FDE cycle simultaneously. 0478/12, March 2024, Question 2(b)(ii).", EX_PERF2, W_PERF2),
-    t2("perf-2d", "perf", Q_BC + WHICH, "C can run 4.6 billion instructions per second, but B can only run 4.4 billion",
-      ["C has more cores", "B has more cores so it is faster", "C has more cache", "C is newer", "B can run 2.2 billion instructions per second in total"],
-      "B has two cores at 2.2 GHz, so at most 4.4 billion a second; C runs 4.6 billion. Question 11(ii) of your exam.", EX_PERF2, W_PERF2)
+    t2("perf-2d", "perf", Q_BC + WHICH, "C can run 5.2 billion instructions per second, but B can only run 5 billion",
+      ["C has more cores", "B has more cores so it is faster", "C has more cache", "C is newer", "B can run 2.5 billion instructions per second in total"],
+      "B has two cores at 2.5 GHz, so at most 5 billion a second; C runs 5.2 billion. 0478/12, March 2025, Question 3(c)(ii).", EX_PERF2, W_PERF2)
   );
 
   var W_PERF3 = "Each change needs its reason. Pick the change and the line that explains it.";
@@ -362,10 +367,10 @@
       ["Increase the number of cores", "... so more instructions are processed simultaneously", "Increase the clock speed", "... so more instructions are processed per second"],
       ["Increase the size of the hard disk", "... so more files can be stored", "Use a bigger monitor", "Decrease the clock speed", "... so the CPU stays cool", "Add a printer"],
       "Four mark scheme points of 0478/12, November 2025, Question 4(c).", EX_PERF2, W_PERF3),
-    t3("perf-3c", "perf", "Computer A has a 2.0 GHz quad-core processor.\nComputer B has a 2.2 GHz dual-core processor.\nComputer C has a 4.6 GHz single-core processor.\nIdentify which computer is most likely to execute more instructions simultaneously. Justify your answer. [3]",
-      ["Computer A", "It has 4 cores", "4 instructions can be executed simultaneously"],
-      ["Computer B", "Computer C", "It has the highest clock speed", "It has the most cache", "It can run 4.6 billion instructions per second", "It has 2 cores"],
-      "Question 11(i) of your exam: the computer, then two points of justification.", EX_PERF2, W_PERF3)
+    t3("perf-3c", "perf", "The tablet computer has a 1.8 GHz quad-core processor.\nThe student wants a new tablet computer that has a 2.4 GHz dual-core processor.\nExplain whether the processor of the new tablet computer would have a better performance than the processor of her current tablet computer. [4]",
+      ["It has a faster clock speed", "... so it may process more instructions per second", "It has fewer cores", "... so it cannot process as many instructions simultaneously"],
+      ["It has more cores", "... so it can store more files", "It has more cache", "It has a slower clock speed", "... so it uses less storage", "It is newer"],
+      "Four mark scheme points of 0478/13, June 2026, Question 3(c)(ii), Question 8 of your exam.", EX_PERF2, W_PERF3)
   );
 
   // =====================================================================
@@ -396,13 +401,13 @@
       "Domestic appliances such as a washing machine, freezer or microwave oven contain embedded systems. 0478/12, November 2023, Question 4(b).", EX_EMB1, W_EMB1)
   );
 
-  var Q_WHY = "A vending machine is an example of an embedded system.\nExplain why the vending machine is an embedded system. [2]";
-  var Q_NOT = "A laptop is an example of a general purpose computer and not an embedded system.\nExplain why the laptop is not an embedded system. [2]";
+  var Q_WHY = "A flower shop has a room that has an air-conditioning system.\nThe air-conditioning system is an example of an embedded system.\nExplain why the air-conditioning system is an embedded system. [2]";
+  var Q_NOT = "An employee uses a computer that has a Von Neumann architecture to complete many different tasks in their working day.\nThe computer is an example of a general purpose computer and not an embedded system.\nExplain why the computer is not an embedded system. [2]";
   var EX_EMB2 = "Explain why a traffic light system is an embedded system. [2]\nStep 1: say how many jobs it does: just one, controlling the lights.\nStep 2: say whether its program can be changed by the user: no.\nStep 3: \"it is small\" or \"it is electronic\" is true of many devices and earns nothing.";
   var W_EMB2 = "Would this line also be true of a laptop? Then it does not show it is embedded.";
   add(
     t2("emb-2a", "emb", Q_WHY + WHICH, "It has a single function",
-      ["It is a computer", "It is small", "It is cheap", "It sells drinks", "It has a screen"],
+      ["It is a computer", "It is small", "It is cheap", "It keeps flowers cold", "It has a screen"],
       "Mark scheme point: it has a single or limited function. 0478/13, November 2025, Question 1(f).", EX_EMB2, W_EMB2),
     t2("emb-2b", "emb", Q_WHY + WHICH, "It has a microprocessor",
       ["It has a CPU and a hard disk", "It is electronic", "It uses electricity", "It has buttons", "It has a keypad"],
@@ -410,11 +415,11 @@
     t2("emb-2c", "emb", Q_WHY + WHICH, "It cannot be reprogrammed",
       ["It can be reprogrammed by the user", "It can run any software", "It is easy to use", "It is a computer", "It has a keyboard"],
       "Mark scheme point: it is difficult to change its function, or it cannot be reprogrammed. 0478/13, November 2025, Question 1(f).", EX_EMB2, W_EMB2),
-    t2("emb-2d", "emb", Q_NOT + WHICH, "A laptop can perform many different functions",
-      ["A laptop is big", "A laptop is expensive", "A laptop has a screen", "A laptop is a computer", "A laptop uses electricity"],
+    t2("emb-2d", "emb", Q_NOT + WHICH, "The computer can perform many different functions",
+      ["The computer is big", "The computer is expensive", "The computer has a screen", "The computer is a computer", "The computer uses electricity"],
       "Mark scheme point: a computer can be used to perform many different functions. 0478/12, June 2025, Question 4(b).", EX_EMB2, W_EMB2),
-    t2("emb-2e", "emb", Q_NOT + WHICH, "Software can easily be updated on a laptop",
-      ["A laptop is heavy", "A laptop has a battery", "A laptop has a keyboard", "A laptop is portable", "A laptop has a fan"],
+    t2("emb-2e", "emb", Q_NOT + WHICH, "Software can easily be updated on the computer",
+      ["The computer is heavy", "The computer has a battery", "The computer has a keyboard", "The computer is portable", "The computer has a fan"],
       "Mark scheme point: software can easily be updated or reprogrammed on the computer. 0478/12, June 2025, Question 4(b).", EX_EMB2, W_EMB2)
   );
 
@@ -422,16 +427,16 @@
   add(
     t3("emb-3a", "emb", Q_WHY,
       ["It has a single function", "It has a microprocessor"],
-      ["It is a computer", "It is small", "It sells drinks", "It has a screen", "It can run any software", "It has a hard disk"],
-      "Two mark scheme points of 0478/13, November 2025, Question 1(f), as in Question 12(a) of your exam.", EX_EMB2, W_EMB3),
-    t3("emb-3b", "emb", "A vending machine is an example of an embedded system.\nSelect three other examples of an embedded system. [3]",
-      ["Microwave oven", "Burglar alarm", "Washing machine"],
-      ["Personal computer (PC)", "Tablet computer", "Web server", "Smartphone", "Laptop", "Desktop computer"],
-      "Question 12(b) of your exam: each one does a single job chosen by its maker.", EX_EMB2, W_EMB3),
+      ["It is a computer", "It is small", "It keeps flowers cold", "It has a screen", "It can run any software", "It has a hard disk"],
+      "Two mark scheme points of 0478/13, November 2025, Question 1(f), Question 10(f) of your exam.", EX_EMB2, W_EMB3),
+    t3("emb-3b", "emb", "A washing machine is an example of an embedded system.\nCircle three other examples of an embedded system. [3]",
+      ["Freezer", "Security light system", "Vending machine"],
+      ["Laptop", "Personal computer (PC)", "Smartphone", "Web server", "Tablet computer", "Desktop computer"],
+      "The three answers of 0478/12, November 2023, Question 4(b), Question 11 of your exam.", EX_EMB2, W_EMB3),
     t3("emb-3c", "emb", Q_NOT,
-      ["A laptop can perform many different functions", "Software can easily be updated on a laptop"],
-      ["A laptop is big", "A laptop is expensive", "A laptop has a screen", "A laptop uses electricity", "A laptop has a microprocessor", "A laptop has one function"],
-      "Two mark scheme points of 0478/12, June 2025, Question 4(b), as in Question 12(c) of your exam.", EX_EMB2, W_EMB3)
+      ["The computer can perform many different functions", "Software can easily be updated on the computer"],
+      ["The computer is big", "The computer is expensive", "The computer has a screen", "The computer uses electricity", "The computer has a microprocessor", "The computer has one function"],
+      "Two mark scheme points of 0478/12, June 2025, Question 4(b), Question 12 of your exam.", EX_EMB2, W_EMB3)
   );
 
   DrillData.register("y10-3-1-exam-fix", {
