@@ -54,7 +54,7 @@ function results(q, n, caption, opts = {}) {
   const list = s.results.slice(0, n);
   return `<figure style="margin:0"><div style="display:flex;gap:8px;align-items:center;background:var(--surface-3);border-radius:10px;padding:5px 10px"><b style="color:var(--brand)">Seekit</b><span style="flex:1;background:var(--surface);border-radius:8px;padding:2px 8px;font-weight:600">${esc(q)}</span></div>` +
     (list.length ? list.map((r, i) => resultCard(r.page, opts.unranked ? '?' : i + 1, s.read.keys, opts.small)).join('') : `<p style="margin:8px 0;font-weight:700;color:var(--bad)">No results</p>`) +
-    `<figcaption style="font-size:15px;color:var(--muted);text-align:center">${caption}</figcaption></figure>`;
+    (caption ? `<figcaption style="font-size:15px;color:var(--muted);text-align:center">${caption}</figcaption>` : '') + '</figure>';
 }
 function pages(ids, keys, caption) {
   return `<figure style="margin:0">${ids.map((id) => resultCard(E.page(id), '?', keys, true)).join('')}<figcaption style="font-size:15px;color:var(--muted);text-align:center">${caption}</figcaption></figure>`;
@@ -172,12 +172,12 @@ steps.push(concept('concept-rank', 'Best Match First',
 }
 
 const PR_Q = 'football saturday', PR_IDS = ['training', 'swimlessons', 'football'];
-steps.push(mcStep('predict-rank', 'Predict: Which Is Ranked 1st?', 'Someone searches for <strong>' + PR_Q + '</strong>. Read the three pages.', [
+steps.push(mcStep('predict-rank', 'Predict: Which Is Ranked 1st?', '', [
   { prompt: 'Which page will be ranked 1st?', options: ['Football Training for Children', 'Swimming Lessons for Children', 'Greenhill Football Club: Results'], correct: 2,
     explain: 'Greenhill Football Club: Results has both search terms: football and Saturday.' },
   { prompt: 'Why is Football Training for Children ranked above Swimming Lessons for Children?', options: ['It has more search terms', 'Its search term is in the title', 'It is a newer page'], correct: 1,
     explain: 'Each has one search term. Football is in the training page\'s title, and Saturday is only in the swimming page\'s text.' },
-], ['Why does a search engine put the best match at the top, and not at the bottom?', 'Most people only read the first few results. The page they want should be where they look first.'], pages(PR_IDS, E.read(PR_Q).keys, 'Not in rank order')));
+], ['Why does a search engine put the best match at the top, and not at the bottom?', 'Most people only read the first few results. The page they want should be where they look first.'], pages(PR_IDS, E.read(PR_Q).keys, 'Search: <b>' + PR_Q + '</b>. Not in rank order.')));
 {
   const r = E.search(PR_Q).results.filter((x) => PR_IDS.includes(x.page.id)).map((x) => x.page.id);
   assert(r.join() === 'football,training,swimlessons', 'predict-rank order ' + r);
@@ -193,7 +193,7 @@ steps.push(concept('concept-terms', 'Clear Search Terms',
   '<p>fix mouse. The word mouse alone has two meanings, an animal and a computer mouse, so the animal page comes first.</p>',
   columns(facts(['<strong>Clear search terms</strong> are a few key words that the page you want has.', 'Leave out small words like how, the, is and I. Almost every page has them, so they do not help.',
     'Spell them right. No page has the word libary.', 'A word with two meanings needs one more word: mouse, or fix mouse?']),
-  results('mouse', 2, 'mouse', { small: true }) + results('fix mouse', 1, 'fix mouse', { small: true }))));
+  results('mouse', 2, '', { small: true }) + results('fix mouse', 1, '', { small: true }))));
 assert(E.rankOf('mouse', 'housemouse') === 1 && E.rankOf('fix mouse', 'fixmouse') === 1 && E.read('libary').unknown.length === 1, 'terms picture');
 
 steps.push(mcStep('predict-terms', 'Predict: Which Search?', '', [
@@ -218,11 +218,11 @@ const CQ = 'greenhill zoo ticket';
   assert(r[0].matched > r[1].matched && r[1].matched === r[2].matched && r[1].score > r[2].score, 'check ranks decided by the rules');
 }
 const CHK_TERMS = '^(?!.*\\b(a|an|the|how|do|does|when|what|is|are|i|it|please|to|at|for|of|in|on|time\\s+does)\\b)(?=.*\\bzoo\\b)(?=.*\\b(open|opens|opening|times?|hours?|closes?|closing)\\b)\\s*[a-z]+(\\s+[a-z]+){0,3}\\s*$';
-steps.push(checkStep('check-search', 'Check: Read and Search', 'Look at the results, then type your answers.', [
+steps.push(checkStep('check-search', 'Check: Read and Search', '', [
   { label: 'What rank is the page Greenhill Bus Times? Type a number.', answer: num(3), feedback: 'Count from the top: the page at the top is ranked 1st.' },
   { label: 'Type clear search terms to find when Greenhill Zoo opens. Use at most 4 words.', text: true, answer: CHK_TERMS,
     feedback: 'Use key words the zoo page has, like the name of the place and a word about opening. Leave out small words like when, does and the.' },
-], ['Why might a page be ranked lower even when it has a word you typed?', 'Other pages may have more of your search terms, or have them in the title.'], results(CQ, 3, 'Results for ' + CQ, { small: true })));
+], ['Why might a page be ranked lower even when it has a word you typed?', 'Other pages may have more of your search terms, or have them in the title.'], results(CQ, 3, '', { small: true })));
 
 // ---------------------------------------------------------------- Network Help Desk (party server on the class network)
 steps.push({ id: 'help-desk', label: 'Network Help Desk: Search Calls',
