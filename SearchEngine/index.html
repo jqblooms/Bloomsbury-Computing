@@ -339,7 +339,7 @@
     $('box').value = r.bad; $('box').disabled = true; $('go').disabled = true;
     var s = E.search(r.bad), rd = s.read;
     $('view').innerHTML = '<div class="meta">' + esc(r.who) + '\'s search: <b>' + esc(r.bad) + '</b>. ' + s.results.length + ' result' + (s.results.length === 1 ? '' : 's') + (s.results.length ? '. The top 3:' : '.') + '</div>' +
-      (searchNote(rd) ? '<div class="say warn">' + searchNote(rd) + '</div>' : '') +
+      // no spelling note here: it would answer the question below
       s.results.slice(0, 3).map(function (x, i) { return resultHtml(x, i, rd.keys); }).join('');
     var opts = shuffle(Object.keys(FAULTS));
     $('panel').innerHTML = '<h2>Fix the Search</h2>' + dots() +
@@ -357,7 +357,7 @@
     });
   }
   function faultWhy(r) {
-    if (r.fault === 'spelling') return 'Look at the yellow note: no page has one of the words, because it is spelt wrong.';
+    if (r.fault === 'spelling') return searchNote(E.read(r.bad));
     if (r.fault === 'meaning') return '<b>' + esc(r.bad) + '</b> can mean two different things, and the results show both.';
     return 'Many pages have <b>' + esc(r.bad) + '</b>, so the page ' + esc(r.who) + ' wants is not ranked 1st.';
   }
