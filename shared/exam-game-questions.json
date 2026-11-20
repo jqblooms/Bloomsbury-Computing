@@ -8855,6 +8855,569 @@
    ]
   },
   {
+   "setId": "y6-search",
+   "title": "Searching the Web",
+   "year": "Year 6",
+   "unit": "Unit 3 Computer Networks",
+   "questions": [
+    {
+     "qid": "y6s-what",
+     "text": "What is a search engine?\nTick one box.\nA A device that sends data from one network to another\nB A website that finds web pages for you\nC The computer that keeps a website\nD The words you type to find a page\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "What is a search engine?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "A device that sends data from one network to another",
+        "A website that finds web pages for you",
+        "The computer that keeps a website",
+        "The words you type to find a page"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-look",
+     "text": "You search for pizza. Where does the search engine look?\nTick one box.\nA At every web page, one by one, right then\nB Only on websites of pizza shops\nC In its list of web pages and their words\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "You search for pizza. Where does the search engine look?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "At every web page, one by one, right then",
+        "Only on websites of pizza shops",
+        "In its list of web pages and their words"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-new",
+     "text": "A new web page about pandas went online one minute ago. Why might a search not find it yet?\nTick one box.\nA The search engine has not visited it, so it is not in the list\nB Web pages about pandas are not allowed\nC The internet is too full today\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A new web page about pandas went online one minute ago. Why might a search not find it yet?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "The search engine has not visited it, so it is not in the list",
+        "Web pages about pandas are not allowed",
+        "The internet is too full today"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-terms",
+     "text": "Ana types dog walk into a search engine. What are the words dog and walk called?\nTick one box.\nA Results\nB Web pages\nC Titles\nD Search terms\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Ana types dog walk into a search engine. What are the words dog and walk called?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "Results",
+        "Web pages",
+        "Titles",
+        "Search terms"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-read-rank",
+     "text": "Ben searches for: moon facts\nThese are the results, best match first.\nResults\nThe Moon: Facts for Kids\nTigers: Facts for Kids\nHouse Mouse: Animal Facts\nVolcanoes: Facts for Kids\nMars: The Red Planet\nWhat rank is the page Volcanoes: Facts for Kids?\nRank ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Ben searches for: moon facts\nThese are the results, best match first."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Results"
+       ],
+       "rows": [
+        [
+         "The Moon: Facts for Kids"
+        ],
+        [
+         "Tigers: Facts for Kids"
+        ],
+        [
+         "House Mouse: Animal Facts"
+        ],
+        [
+         "Volcanoes: Facts for Kids"
+        ],
+        [
+         "Mars: The Red Planet"
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What rank is the page Volcanoes: Facts for Kids?"
+      },
+      {
+       "type": "line",
+       "label": "Rank"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-top-more",
+     "text": "Kim searches for: library open sunday\nPage title | Words on the page\nGreenhill Library: Borrow Books | With a library card you can borrow 6 books for 3 weeks.\nGreenhill Library: Opening Times | Greenhill Library is open from 9 am to 5 pm, Monday to Saturday. It is closed on Sunday.\nGreenhill News: A New Library Next Year | A second library will open in Greenhill next year, near the park.\nWhich page is ranked 1st?\nTick one box.\nA Greenhill Library: Borrow Books\nB Greenhill Library: Opening Times\nC Greenhill News: A New Library Next Year\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Kim searches for: library open sunday"
+      },
+      {
+       "type": "table",
+       "head": [
+        "Page title",
+        "Words on the page"
+       ],
+       "rows": [
+        [
+         "Greenhill Library: Borrow Books",
+         "With a library card you can borrow 6 books for 3 weeks."
+        ],
+        [
+         "Greenhill Library: Opening Times",
+         "Greenhill Library is open from 9 am to 5 pm, Monday to Saturday. It is closed on Sunday."
+        ],
+        [
+         "Greenhill News: A New Library Next Year",
+         "A second library will open in Greenhill next year, near the park."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Which page is ranked 1st?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "Greenhill Library: Borrow Books",
+        "Greenhill Library: Opening Times",
+        "Greenhill News: A New Library Next Year"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-second",
+     "text": "Leo searches for: football saturday\nThese four pages have his search terms.\nPage title | Words on the page\nGreenhill Library: Opening Times | Greenhill Library is open from 9 am to 5 pm, Monday to Saturday. It is closed on Sunday.\nGreenhill Football Club: Results | Greenhill won 3 to 1 on Saturday. The next match is at home.\nSwimming Lessons for Children | Swimming lessons for children are on Saturday at 10 am at the Greenhill pool.\nFootball Training for Children | Football training for children is on Wednesday at 4 pm. Bring a water bottle.\nGreenhill Football Club: Results is ranked 1st. It has both search terms. Which page is ranked 2nd?\nTick one box.\nA Greenhill Library: Opening Times\nB Swimming Lessons for Children\nC Football Training for Children\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Leo searches for: football saturday\nThese four pages have his search terms."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Page title",
+        "Words on the page"
+       ],
+       "rows": [
+        [
+         "Greenhill Library: Opening Times",
+         "Greenhill Library is open from 9 am to 5 pm, Monday to Saturday. It is closed on Sunday."
+        ],
+        [
+         "Greenhill Football Club: Results",
+         "Greenhill won 3 to 1 on Saturday. The next match is at home."
+        ],
+        [
+         "Swimming Lessons for Children",
+         "Swimming lessons for children are on Saturday at 10 am at the Greenhill pool."
+        ],
+        [
+         "Football Training for Children",
+         "Football training for children is on Wednesday at 4 pm. Bring a water bottle."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Greenhill Football Club: Results is ranked 1st. It has both search terms. Which page is ranked 2nd?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "Greenhill Library: Opening Times",
+        "Swimming Lessons for Children",
+        "Football Training for Children"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-why-above",
+     "text": "Mia searches for: children saturday\nPage title | Words on the page\nFootball Training for Children | Football training for children is on Wednesday at 4 pm. Bring a water bottle.\nGreenhill Library: Opening Times | Greenhill Library is open from 9 am to 5 pm, Monday to Saturday. It is closed on Sunday.\nWhy is Football Training for Children ranked above Greenhill Library: Opening Times?\nTick one box.\nA Its search term is in the title\nB It has more of the search terms\nC It has more words on the page\nD It is a newer page\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Mia searches for: children saturday"
+      },
+      {
+       "type": "table",
+       "head": [
+        "Page title",
+        "Words on the page"
+       ],
+       "rows": [
+        [
+         "Football Training for Children",
+         "Football training for children is on Wednesday at 4 pm. Bring a water bottle."
+        ],
+        [
+         "Greenhill Library: Opening Times",
+         "Greenhill Library is open from 9 am to 5 pm, Monday to Saturday. It is closed on Sunday."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Why is Football Training for Children ranked above Greenhill Library: Opening Times?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "Its search term is in the title",
+        "It has more of the search terms",
+        "It has more words on the page",
+        "It is a newer page"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-rank-typed",
+     "text": "Sam searches for: zoo ticket\nOnly these three pages have his search terms.\nPage title | Words on the page\nGreenhill Bus Times | The number 5 bus goes to the zoo every 20 minutes. The number 8 bus goes to the pool every 30 minutes.\nGreenhill Swimming Pool: Ticket Prices | A child ticket costs 40 baht. An adult ticket costs 80 baht. The pool is open from 7 am to 7 pm.\nGreenhill Zoo: Tickets and Opening Times | The zoo is open from 8 am to 6 pm every day. A child ticket costs 100 baht.\nWhat rank is the page Greenhill Swimming Pool: Ticket Prices?\nRank ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Sam searches for: zoo ticket\nOnly these three pages have his search terms."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Page title",
+        "Words on the page"
+       ],
+       "rows": [
+        [
+         "Greenhill Bus Times",
+         "The number 5 bus goes to the zoo every 20 minutes. The number 8 bus goes to the pool every 30 minutes."
+        ],
+        [
+         "Greenhill Swimming Pool: Ticket Prices",
+         "A child ticket costs 40 baht. An adult ticket costs 80 baht. The pool is open from 7 am to 7 pm."
+        ],
+        [
+         "Greenhill Zoo: Tickets and Opening Times",
+         "The zoo is open from 8 am to 6 pm every day. A child ticket costs 100 baht."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "What rank is the page Greenhill Swimming Pool: Ticket Prices?"
+      },
+      {
+       "type": "line",
+       "label": "Rank"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-why-top",
+     "text": "Why does a search engine put the best match at the top of the results?\nTick one box.\nA The page at the top is always the newest page\nB Most people only read the first few results\nC The search engine can only show one page\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Why does a search engine put the best match at the top of the results?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "The page at the top is always the newest page",
+        "Most people only read the first few results",
+        "The search engine can only show one page"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-clear",
+     "text": "Tom's computer mouse stops working. Which search terms are best?\nTick one box.\nA how do I fix my mouse please\nB mouse\nC fix computer mouse\nD fix compter mouse\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tom's computer mouse stops working. Which search terms are best?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "how do I fix my mouse please",
+        "mouse",
+        "fix computer mouse",
+        "fix compter mouse"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-small",
+     "text": "Lin searches for: how big is a tiger\nWhich words does the search engine leave out?\nTick one box.\nA how, is, a\nB big, tiger\nC tiger\nD how, big\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Lin searches for: how big is a tiger"
+      },
+      {
+       "type": "para",
+       "text": "Which words does the search engine leave out?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "how, is, a",
+        "big, tiger",
+        "tiger",
+        "how, big"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-spell",
+     "text": "Jay searches for: tigr facts\nOne word is spelt wrong, so the search engine cannot find it in its list.\nWrite the word, spelt right.\nWord ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Jay searches for: tigr facts\nOne word is spelt wrong, so the search engine cannot find it in its list."
+      },
+      {
+       "type": "para",
+       "text": "Write the word, spelt right."
+      },
+      {
+       "type": "line",
+       "label": "Word"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-meanings",
+     "text": "Sam wants facts about the small animal called a mouse. He searches for: mouse\nWhy is mouse not a clear search?\nTick one box.\nA mouse is spelt wrong\nB mouse is a small word\nC One search term is not allowed\nD mouse has two meanings: an animal and a part of a computer\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Sam wants facts about the small animal called a mouse. He searches for: mouse"
+      },
+      {
+       "type": "para",
+       "text": "Why is mouse not a clear search?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "mouse is spelt wrong",
+        "mouse is a small word",
+        "One search term is not allowed",
+        "mouse has two meanings: an animal and a part of a computer"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-add-word",
+     "text": "Sam wants facts about the small animal called a mouse.\nWhich search terms are best?\nTick one box.\nA computer mouse\nB house mouse facts\nC the mouse\nD mouse please\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Sam wants facts about the small animal called a mouse."
+      },
+      {
+       "type": "para",
+       "text": "Which search terms are best?\nTick one box."
+      },
+      {
+       "type": "options",
+       "items": [
+        "computer mouse",
+        "house mouse facts",
+        "the mouse",
+        "mouse please"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-write-mango",
+     "text": "Pim wants this page.\nPage title | Words on the page\nMango Sticky Rice Recipe | Soak the rice for 4 hours, then steam it for 25 minutes. Serve with mango.\nWrite 2 to 4 search terms that make this page ranked 1st. Leave out small words.\nSearch ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Pim wants this page."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Page title",
+        "Words on the page"
+       ],
+       "rows": [
+        [
+         "Mango Sticky Rice Recipe",
+         "Soak the rice for 4 hours, then steam it for 25 minutes. Serve with mango."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Write 2 to 4 search terms that make this page ranked 1st. Leave out small words."
+      },
+      {
+       "type": "line",
+       "label": "Search"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y6s-write-dentist",
+     "text": "Ploy wants to know when the dentist in Greenhill is open. She wants this page.\nPage title | Words on the page\nGreenhill Dentist: Opening Times | The dentist is open from 10 am to 4 pm, Monday to Friday.\nWrite 2 to 4 search terms that make this page ranked 1st. Leave out small words.\nSearch ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Ploy wants to know when the dentist in Greenhill is open. She wants this page."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Page title",
+        "Words on the page"
+       ],
+       "rows": [
+        [
+         "Greenhill Dentist: Opening Times",
+         "The dentist is open from 10 am to 4 pm, Monday to Friday."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Write 2 to 4 search terms that make this page ranked 1st. Leave out small words."
+      },
+      {
+       "type": "line",
+       "label": "Search"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "setId": "y10-unit3-1-practice",
    "title": "Unit 3.1 Revision: All Topics",
    "year": "Year 10",

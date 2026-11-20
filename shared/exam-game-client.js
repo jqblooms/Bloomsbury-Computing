@@ -130,7 +130,7 @@
   // sets and texts at once, so a round needs no server call. The student's history comes ONCE per set from the server
   // ('history'), with a copy kept in localStorage per set as the fallback; each submit result updates it. The pick
   // follows the server's rules (examGameNext_ in ExamGame.gs): no repeats until the pool is used up, then weakest first.
-  var QFILE_G = '9abd3451';
+  var QFILE_G = '41d5627b';
   var base = (function () {
     var s = document.currentScript && document.currentScript.src;
     return s ? s.replace(/[^\/]*$/, '') : '../shared/';
@@ -234,7 +234,7 @@
   if (useFile) loadFile();   // starts at once, so the set list and the first round need no wait
 
   // ---------------------------------------------------------------- topic picker (shared by every game)
-  // Sets grouped by year (Year 7 to Year 11, then any set without a year) and, inside a year, by unit.
+  // Sets grouped by year (Year 6 to Year 11, then any set without a year) and, inside a year, by unit.
   function groupSets(list) {
     var years = {}, order = [];
     (list || []).forEach(function (s) {

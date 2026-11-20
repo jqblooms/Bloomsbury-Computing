@@ -122,14 +122,14 @@ const qids = new Set();
 const realSets = sets.filter((s) => !s.qids);
 for (const s of sets.filter((x) => x.qids)) {
   if (Object.keys(s).join() !== 'setId,title,year,unit,questions,qids' || s.questions.length) fail(s.setId + ' combined set fields');
-  if (!/^Year (7|8|9|10|11)$/.test(s.year) || !s.unit) fail(s.setId + ' needs year and unit');
+  if (!/^Year (6|7|8|9|10|11)$/.test(s.year) || !s.unit) fail(s.setId + ' needs year and unit');
   if (!s.qids.length) fail(s.setId + ' has no questions');
   for (const qid of s.qids) if (!realSets.some((r) => r.questions.some((q) => q.qid === qid))) fail(s.setId + ' lists ' + qid + ', which no set has');
 }
 for (const s of realSets) {
   if (Object.keys(s).join() !== 'setId,title,year,unit,questions') fail(s.setId + ' set fields');
   // Every set is grouped by year and unit in the games' topic pickers.
-  if (!/^Year (7|8|9|10|11)$/.test(s.year)) fail(s.setId + ' needs year: \'Year 7\' to \'Year 11\' (got "' + s.year + '")');
+  if (!/^Year (6|7|8|9|10|11)$/.test(s.year)) fail(s.setId + ' needs year: \'Year 7\' to \'Year 11\' (got "' + s.year + '")');
   if (!s.unit) fail(s.setId + ' needs unit');
   if (!s.questions.length) fail(s.setId + ' has no questions');
   for (const q of s.questions) {
