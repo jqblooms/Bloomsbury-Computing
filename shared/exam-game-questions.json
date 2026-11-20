@@ -6746,6 +6746,585 @@
      ]
     }
    ]
+  },
+  {
+   "setId": "y10-cpu-performance",
+   "title": "Cores, Cache and Clock Speed",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [
+    {
+     "qid": "y10p-23j13-2a",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(a)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU has two cores.\nState the purpose of a core in the CPU.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(a)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU has two cores.\nState the purpose of a core in the CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-23j13-2b",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(b)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU has two cores.\nThe CPU is replaced with one that has four cores.\nExplain the effect this has on the performance of the self-checkout system.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2023, Question 2(b)\nA library has a self-checkout system that allows customers to register books that they want to borrow.\nThe self-checkout system has a central processing unit (CPU).\nThe CPU has two cores.\nThe CPU is replaced with one that has four cores.\nExplain the effect this has on the performance of the self-checkout system."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-23n11-1d",
+     "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(d)\nA student uses a computer and several hardware devices to complete his schoolwork.\nThe computer has a central processing unit (CPU).\nThe CPU has a clock speed of 2.4 Ghz.\nDescribe what is meant by a 2.4 Ghz clock speed.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(d)\nA student uses a computer and several hardware devices to complete his schoolwork.\nThe computer has a central processing unit (CPU).\nThe CPU has a clock speed of 2.4 Ghz.\nDescribe what is meant by a 2.4 Ghz clock speed."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-23n12-3ai",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 3(a)(i)\nA user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz.\nShe wants to change it to a CPU that has a clock speed of 3 GHz.\nState what is meant by clock speed.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 3(a)(i)\nA user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz.\nShe wants to change it to a CPU that has a clock speed of 3 GHz.\nState what is meant by clock speed."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-23n12-3aii",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 3(a)(ii)\nA user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz.\nShe wants to change it to a CPU that has a clock speed of 3 GHz.\nExplain the effect this change will have on the performance of the CPU.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2023, Question 3(a)(ii)\nA user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz.\nShe wants to change it to a CPU that has a clock speed of 3 GHz.\nExplain the effect this change will have on the performance of the CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-23n13-3b",
+     "text": "Cambridge IGCSE 0478/13, November 2023, Question 3(b)\nA computer has a central processing unit (CPU).\nThe CPU has cache.\nExplain the purpose of the cache.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2023, Question 3(b)\nA computer has a central processing unit (CPU).\nThe CPU has cache.\nExplain the purpose of the cache."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-23n13-3c",
+     "text": "Cambridge IGCSE 0478/13, November 2023, Question 3(c)\nA computer has a central processing unit (CPU).\nThe CPU has a component that regulates the number of fetch-decode-execute cycles the CPU can perform in a second.\nState the name of this component.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2023, Question 3(c)\nA computer has a central processing unit (CPU).\nThe CPU has a component that regulates the number of fetch-decode-execute cycles the CPU can perform in a second.\nState the name of this component."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-24m12-2bi",
+     "text": "Cambridge IGCSE 0478/12, March 2024, Question 2(b)(i)\nA computer has a central processing unit (CPU).\nThe computer has a single core 3.5 GHz processor and an 8 kB cache.\nState what is meant by a 3.5 GHz processor.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2024, Question 2(b)(i)\nA computer has a central processing unit (CPU).\nThe computer has a single core 3.5 GHz processor and an 8 kB cache.\nState what is meant by a 3.5 GHz processor."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-24m12-2bii",
+     "text": "Cambridge IGCSE 0478/12, March 2024, Question 2(b)(ii)\nA computer has a central processing unit (CPU).\nThe computer has a single core 3.5 GHz processor and an 8 kB cache.\nThe CPU is changed to a dual-core 3.5 GHz processor.\nExplain how the number of cores affects the performance of a CPU.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2024, Question 2(b)(ii)\nA computer has a central processing unit (CPU).\nThe computer has a single core 3.5 GHz processor and an 8 kB cache.\nThe CPU is changed to a dual-core 3.5 GHz processor.\nExplain how the number of cores affects the performance of a CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-24m12-2biii",
+     "text": "Cambridge IGCSE 0478/12, March 2024, Question 2(b)(iii)\nA computer has a central processing unit (CPU).\nThe computer has a single core 3.5 GHz processor and an 8 kB cache.\nThe amount of cache is increased to 64 kB.\nExplain how the amount of cache affects the performance of a computer.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2024, Question 2(b)(iii)\nA computer has a central processing unit (CPU).\nThe computer has a single core 3.5 GHz processor and an 8 kB cache.\nThe amount of cache is increased to 64 kB.\nExplain how the amount of cache affects the performance of a computer."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-24j13-8d",
+     "text": "Cambridge IGCSE 0478/13, June 2024, Question 8(d)\nA student has a computer that has a central processing unit (CPU).\nThe student wants to replace the CPU to increase the performance of the computer.\nExplain why a different CPU can increase the performance.\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2024, Question 8(d)\nA student has a computer that has a central processing unit (CPU).\nThe student wants to replace the CPU to increase the performance of the computer.\nExplain why a different CPU can increase the performance."
+      },
+      {
+       "type": "lines",
+       "rows": 6
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-25j11-5c",
+     "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(c)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nExplain how the clock speed can affect the performance of a CPU.\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(c)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nExplain how the clock speed can affect the performance of a CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 5
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-25n12-4b",
+     "text": "Cambridge IGCSE 0478/12, November 2025, Question 4(b)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that performs the fetch-decode-execute (FDE) cycle.\nThe CPU is dual core and has a processor speed of 2.4 GHz.\nDescribe what is meant by a core.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2025, Question 4(b)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that performs the fetch-decode-execute (FDE) cycle.\nThe CPU is dual core and has a processor speed of 2.4 GHz.\nDescribe what is meant by a core."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-25n12-4c",
+     "text": "Cambridge IGCSE 0478/12, November 2025, Question 4(c)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that performs the fetch-decode-execute (FDE) cycle.\nThe CPU is dual core and has a processor speed of 2.4 GHz.\nExplain two ways that the performance of the CPU could be increased.\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, November 2025, Question 4(c)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that performs the fetch-decode-execute (FDE) cycle.\nThe CPU is dual core and has a processor speed of 2.4 GHz.\nExplain two ways that the performance of the CPU could be increased."
+      },
+      {
+       "type": "lines",
+       "rows": 6
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-25n13-2ci",
+     "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(c)(i)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nThe computer has primary storage. One example of primary storage is cache.\nTick (✓) one box to show the correct statement that describes the purpose of cache.\nA It stores important instructions.\nB It stores the next instruction to be processed.\nC It stores frequently used instructions.\nD It stores instructions so they are not lost when the power is turned off.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(c)(i)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nThe computer has primary storage. One example of primary storage is cache.\nTick (✓) one box to show the correct statement that describes the purpose of cache."
+      },
+      {
+       "type": "options",
+       "items": [
+        "It stores important instructions.",
+        "It stores the next instruction to be processed.",
+        "It stores frequently used instructions.",
+        "It stores instructions so they are not lost when the power is turned off."
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-26j11-2b",
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 2(b)\nA smartphone has a quad-core 2.4 GHz processor.\nExplain the advantages of the smartphone having a quad-core processor instead of a dual-core processor.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2026, Question 2(b)\nA smartphone has a quad-core 2.4 GHz processor.\nExplain the advantages of the smartphone having a quad-core processor instead of a dual-core processor."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-26j12-2d",
+     "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(d)\nA computer has a central processing unit (CPU).\nThe CPU has a clock speed of 3 GHz.\nDescribe what is meant by a 3 GHz clock speed.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(d)\nA computer has a central processing unit (CPU).\nThe CPU has a clock speed of 3 GHz.\nDescribe what is meant by a 3 GHz clock speed."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-own-pick-clock",
+     "text": "Tick (✓) one box to show which statement describes the clock speed of a CPU.\nA The number of cores in the CPU.\nB The number of FDE cycles the CPU can perform in a second.\nC The amount of frequently used data the CPU can store.\nD The list of all the commands the CPU can process.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show which statement describes the clock speed of a CPU."
+      },
+      {
+       "type": "options",
+       "items": [
+        "The number of cores in the CPU.",
+        "The number of FDE cycles the CPU can perform in a second.",
+        "The amount of frequently used data the CPU can store.",
+        "The list of all the commands the CPU can process."
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-own-grid",
+     "text": "Tick (✓) one box in each row to show which part of the CPU each statement describes.\nStatement | Core | Cache | Clock\nIt stores frequently used data and instructions. | [ ] | [ ] | [ ]\nIt can fetch, decode and execute instructions on its own. | [ ] | [ ] | [ ]\nIt sets the number of FDE cycles the CPU performs in a second. | [ ] | [ ] | [ ]\nHaving more of these lets more instructions be processed at the same time. | [ ] | [ ] | [ ]\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Tick (✓) one box in each row to show which part of the CPU each statement describes."
+      },
+      {
+       "type": "tickGrid",
+       "head": [
+        "Statement",
+        "Core",
+        "Cache",
+        "Clock"
+       ],
+       "rows": [
+        [
+         "It stores frequently used data and instructions."
+        ],
+        [
+         "It can fetch, decode and execute instructions on its own."
+        ],
+        [
+         "It sets the number of FDE cycles the CPU performs in a second."
+        ],
+        [
+         "Having more of these lets more instructions be processed at the same time."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-own-ghz",
+     "text": "A games console has a CPU with a clock speed of 1.6 GHz.\nDescribe what is meant by a 1.6 GHz clock speed.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A games console has a CPU with a clock speed of 1.6 GHz.\nDescribe what is meant by a 1.6 GHz clock speed."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-own-cache-compare",
+     "text": "Computer A and computer B have the same number of cores and the same clock speed.\nComputer A has 2 MB of cache. Computer B has 8 MB of cache.\nExplain why computer B may have a better performance.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Computer A and computer B have the same number of cores and the same clock speed.\nComputer A has 2 MB of cache. Computer B has 8 MB of cache.\nExplain why computer B may have a better performance."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-own-terms",
+     "text": "Complete the table with the missing terms.\nTerm | Description\n........ | A processing unit in the CPU. A CPU may have two, four or more of these.\n........ | Storage in the CPU for frequently used data and instructions.\n........ | It sends out regular pulses. Its speed is measured in GHz.\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Complete the table with the missing terms."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Term",
+        "Description"
+       ],
+       "rows": [
+        [
+         "",
+         "A processing unit in the CPU. A CPU may have two, four or more of these."
+        ],
+        [
+         "",
+         "Storage in the CPU for frequently used data and instructions."
+        ],
+        [
+         "",
+         "It sends out regular pulses. Its speed is measured in GHz."
+        ]
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y10p-own-billion",
+     "text": "A CPU has one core and a clock speed of 4 GHz.\nState how many FDE cycles it can perform in one second.\nFDE cycles ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A CPU has one core and a clock speed of 4 GHz.\nState how many FDE cycles it can perform in one second."
+      },
+      {
+       "type": "line",
+       "label": "FDE cycles"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "setId": "y10-unit3-1-practice",
+   "title": "Unit 3.1 Revision: All Topics",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10c-22n11-2a",
+    "y10c-22n11-2c",
+    "y10c-21m12-8a",
+    "y10c-21m12-8bi",
+    "y10c-21m12-8bii",
+    "y10c-23n11-1c",
+    "y10c-23n11-1ei",
+    "y10c-23n12-3b",
+    "y10c-23j13-2ci",
+    "y10c-23j13-2cii",
+    "y10c-22j11-2a",
+    "y10c-25n13-2a",
+    "y10c-25n13-2bii",
+    "y10c-26j11-2aiii",
+    "y10c-own-pick-reg",
+    "y10c-own-order",
+    "y10c-own-alu-cu",
+    "y10c-own-pc-inc",
+    "y10c-own-von",
+    "y10p-23j13-2a",
+    "y10p-23j13-2b",
+    "y10p-23n11-1d",
+    "y10p-23n12-3ai",
+    "y10p-23n12-3aii",
+    "y10p-23n13-3b",
+    "y10p-23n13-3c",
+    "y10p-24m12-2bi",
+    "y10p-24m12-2bii",
+    "y10p-24m12-2biii",
+    "y10p-24j13-8d",
+    "y10p-25j11-5c",
+    "y10p-25n12-4b",
+    "y10p-25n12-4c",
+    "y10p-25n13-2ci",
+    "y10p-26j11-2b",
+    "y10p-26j12-2d",
+    "y10p-own-pick-clock",
+    "y10p-own-grid",
+    "y10p-own-ghz",
+    "y10p-own-cache-compare",
+    "y10p-own-terms",
+    "y10p-own-billion",
+    "y10i-23n12-3c",
+    "y10i-24j12-5b",
+    "y10i-26j13-3c",
+    "y10i-25j11-5a",
+    "y10i-25j11-5b",
+    "y10i-24n11-5b",
+    "y10i-26j11-2a",
+    "y10i-24n13-3b",
+    "y10i-25n12-4a",
+    "y10i-25n13-2b",
+    "y10i-own-decode1",
+    "y10i-own-decode2",
+    "y10i-own-opcode",
+    "y10i-own-operand",
+    "y10i-own-encode",
+    "y10i-own-trace1",
+    "y10i-own-trace2",
+    "y10i-own-cpub",
+    "y10i-own-binary",
+    "y10i-own-differ",
+    "y10e-23n12-4a",
+    "y10e-24n11-6a",
+    "y10e-24n12-4e",
+    "y10e-25m12-4b",
+    "y10e-25n11-1g",
+    "y10e-25n12-7d",
+    "y10e-own-pick-device",
+    "y10e-own-pick-part",
+    "y10e-own-pick-feature",
+    "y10e-own-grid-device",
+    "y10e-own-grid-statement",
+    "y10e-own-terms",
+    "y10e-own-define-gp",
+    "y10e-own-gp-chars",
+    "y10e-own-smartphone",
+    "y10e-own-benefits",
+    "y10e-own-traffic"
+   ]
   }
  ]
 }

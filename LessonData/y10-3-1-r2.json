@@ -295,7 +295,7 @@
   {
    "id": "how-to-play",
    "label": "Data Bridge: Use Your Notes",
-   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before it costs you marks in the exam.</p></div></details><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the exam questions</strong> on instruction sets and the FDE cycle to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before it costs you marks in the exam.</p></div></details><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the exam questions</strong> on every topic in the Unit 3.1 exam to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
   },
   {
    "id": "game",
@@ -304,7 +304,7 @@
    "appId": "bridge-builder",
    "embedContainerId": "y10-31r2-game",
    "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Earn coins with real exam questions, then build.</p><div id=\"y10-31r2-game\"></div>",
-   "embedQuery": "set=y10-instruction-sets&goal=3"
+   "embedQuery": "set=y10-unit3-1-practice&goal=3"
   }
  ],
  "validators": {

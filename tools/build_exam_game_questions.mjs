@@ -28,7 +28,16 @@ for (const f of files) vm.runInContext(fs.readFileSync(path.join(SHELL, f), 'utf
 const all = vm.runInContext('examGameAllSets_()', ctx);
 const listed = vm.runInContext('examGameSets_()', ctx);
 
-const sets = listed.map(({ setId }) => ({
+// A combined set (combine in the shell, e.g. y10-unit3-1-practice) has questions: [] and qids: the questions it draws from
+// the other sets, which shared/exam-game-client.js fills in (an older client sees an empty topic, never a broken file).
+const sets = listed.map(({ setId }) => all[setId].combine ? {
+  setId,
+  title: String(all[setId].title),
+  year: String(all[setId].year || ''),
+  unit: String(all[setId].unit || ''),
+  questions: [],
+  qids: all[setId].questions.map((q) => String(q.qid))
+} : {
   setId,
   title: String(all[setId].title),
   year: String(all[setId].year || ''),
@@ -38,7 +47,7 @@ const sets = listed.map(({ setId }) => ({
     if (q.blocks) o.blocks = JSON.parse(JSON.stringify(q.blocks));
     return o;
   })
-}));
+});
 const data = { v: 1, sets };
 
 // Only these fields, ever.
@@ -110,7 +119,14 @@ function checkBlocks(q, srcQ) {
 }
 if (Object.keys(data).join() !== 'v,sets') fail('top-level fields');
 const qids = new Set();
-for (const s of sets) {
+const realSets = sets.filter((s) => !s.qids);
+for (const s of sets.filter((x) => x.qids)) {
+  if (Object.keys(s).join() !== 'setId,title,year,unit,questions,qids' || s.questions.length) fail(s.setId + ' combined set fields');
+  if (!/^Year (7|8|9|10|11)$/.test(s.year) || !s.unit) fail(s.setId + ' needs year and unit');
+  if (!s.qids.length) fail(s.setId + ' has no questions');
+  for (const qid of s.qids) if (!realSets.some((r) => r.questions.some((q) => q.qid === qid))) fail(s.setId + ' lists ' + qid + ', which no set has');
+}
+for (const s of realSets) {
   if (Object.keys(s).join() !== 'setId,title,year,unit,questions') fail(s.setId + ' set fields');
   // Every set is grouped by year and unit in the games' topic pickers.
   if (!/^Year (7|8|9|10|11)$/.test(s.year)) fail(s.setId + ' needs year: \'Year 7\' to \'Year 11\' (got "' + s.year + '")');

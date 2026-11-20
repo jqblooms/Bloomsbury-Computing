@@ -17,6 +17,8 @@ Folder: `BridgeBuilder/` (entry `BridgeBuilder/index.html`). Shell registry id `
 - Each round: ONE exam question (any number of marks, James 2026-11-19), answered in its exam-style answer spaces (shared/exam-question.js answerUI). The round pool (`LEVELS[n].pool` in `js/physics.js`) is split per mark; a second try pays half.
 - Build, then Send the truck. A crossing keeps the leftover coins. Any snapped beam, a fall or a stuck truck keeps the same round: the failed bridge's coins are spent, the leftover is kept (capped at that round's pool), then a fresh exam round for that round (normal pool) and a rebuild.
 - A reload during the drive finishes that test at once (the physics is deterministic), so it cannot dodge a failed round.
+- After a question that did not get full marks: "I need help" under its feedback (shared/exam-help.js, Exam Game ops helpGet and help: the shell slide help, Haiku, 3 questions per question, never the answer). Not in teacher mode. The answer it sends is the last marked one (item.marked).
+- A combined topic (e.g. y10-unit3-1-practice, every Unit 3.1 exam topic) arrives from the questions file as qids; shared/exam-game-client.js fills in the questions, so the game treats it like any topic.
 - Timers only, never `requestAnimationFrame`; nothing runs while the page is hidden. Saves per topic under `bc-databridge-v1:`.
 
 ## Physics and tests

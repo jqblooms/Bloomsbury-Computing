@@ -55,7 +55,7 @@
       pending[reqId] = { resolve: resolve, reject: reject, timer: setTimeout(function () {
         delete pending[reqId];
         reject(new Error('No answer from the site. Check you are signed in, then try again.'));
-      }, op === 'submitMany' ? 60000 : op === 'submit' ? 45000 : 20000) };
+      }, op === 'submitMany' || op === 'help' ? 60000 : op === 'submit' ? 45000 : 20000) };
       try { window.parent.postMessage({ type: 'BC_EXAM_GAME_REQUEST', reqId: reqId, op: op, payload: payload || {} }, '*'); }
       catch (err) { delete pending[reqId]; reject(err); }
     });
@@ -72,6 +72,7 @@
   function lastInt(t) { var m = String(t).replace(/−/g, '-').match(/-?\d+/g); return m ? Number(m[m.length - 1]) : NaN; }
   // Stub resends: the same rid gets the stored result. ?examStubFail=N (or ExamGame.stubFail(N)) makes the next
   // N submit requests fail as a network error would.
+  var stubHelp = {};
   var stubSent = {}, stubFails = Math.max(0, Number(params.get('examStubFail')) || 0), stubFailed = 0;
   var STUB = {
     submitMany: function (p) {
@@ -84,6 +85,15 @@
     },
     sets: function () { return [{ setId: 'twos-complement', title: 'Two\'s Complement (practice)', year: 'Year 11', unit: '1 Data Representation', count: STUB_QS.length }]; },
     history: function () { return { seen: {}, score: {}, tries: {} }; },
+    // "I need help" (shared/exam-help.js): a practice conversation, three questions per question.
+    helpGet: function (p) { var t = stubHelp[p.qid] || []; return { ok: true, available: true, perSlide: 3, left: 3 - t.length, turns: t }; },
+    help: function (p) {
+      var t = stubHelp[p.qid] || (stubHelp[p.qid] = []);
+      if (t.length >= 3) return { ok: false, reason: 'slide', message: 'You have used your 3 questions on this question. Ask your teacher.', left: 0 };
+      if (!String(p.question || '').trim()) return { ok: false, reason: 'empty', message: 'Type your question first.', left: 3 - t.length };
+      t.push({ q: String(p.question), a: 'Practice help: read the question again and find its command word. Then look at your notes for this topic.' });
+      return { ok: true, reply: t[t.length - 1].a, left: 3 - t.length, turns: t.slice() };
+    },
     next: function (p) {
       var n = Math.max(1, Math.min(10, Number(p.count) || 1)), out = [];
       var pool = STUB_QS.filter(function (q) { return q.marks <= (Number(p.maxMarks) || 99); });
@@ -120,7 +130,7 @@
   // sets and texts at once, so a round needs no server call. The student's history comes ONCE per set from the server
   // ('history'), with a copy kept in localStorage per set as the fallback; each submit result updates it. The pick
   // follows the server's rules (examGameNext_ in ExamGame.gs): no repeats until the pool is used up, then weakest first.
-  var QFILE_G = 'dbeb4f26';
+  var QFILE_G = '7d97fd83';
   var base = (function () {
     var s = document.currentScript && document.currentScript.src;
     return s ? s.replace(/[^\/]*$/, '') : '../shared/';
@@ -136,6 +146,10 @@
         return r.json();
       }).then(function (d) {
         if (!d || !Array.isArray(d.sets) || !d.sets.length) throw new Error('questions file empty');
+        // A combined set (e.g. y10-unit3-1-practice) lists only qids: its questions are the other sets' own.
+        var byQid = {};
+        d.sets.forEach(function (s) { if (!s.qids) s.questions.forEach(function (q) { byQid[q.qid] = q; }); });
+        d.sets.forEach(function (s) { if (Array.isArray(s.qids)) s.questions = s.qids.map(function (id) { return byQid[id]; }).filter(Boolean); });
         return noteBlocks(d);
       });
       filePromise.catch(function () { filePromise = null; });
@@ -293,7 +307,7 @@
     sets: function () {
       if (!useFile) return request('sets');
       return loadFile().then(function (d) {
-        return d.sets.map(function (s) { s.questions.forEach(function (q) { qidSet[q.qid] = s.setId; }); return { setId: s.setId, title: s.title, year: s.year || '', unit: s.unit || '', count: s.questions.length }; });
+        return d.sets.map(function (s) { if (!s.qids) s.questions.forEach(function (q) { if (!qidSet[q.qid]) qidSet[q.qid] = s.setId; }); return { setId: s.setId, title: s.title, year: s.year || '', unit: s.unit || '', count: s.questions.length }; });
       }, function () { return request('sets'); });
     },
     // Fetches the student's history for the set and warms the relay; call it at game start and while a wave runs.
@@ -358,6 +372,12 @@
         if (e && e.message === 'Unknown request.') return Promise.all(ps.map(one));
         throw e;
       });
+    },
+    // "I need help" on one question (the shell's slide help: Haiku, three questions per question, never the answer).
+    // helpGet -> { ok, available, perSlide, left, turns: [{ q, a }] }; help -> { ok, reply, left, turns } | { ok: false, message, left? }
+    helpGet: function (qid) { return request('helpGet', { qid: String(qid || '') }); },
+    help: function (qid, question, answer) {
+      return request('help', { qid: String(qid || ''), question: String(question || '').slice(0, 300), answer: String(answer == null ? '' : answer).slice(0, 300) });
     },
     // Stub only: what the last submit sent ({ qid, answerChars, imageChars }).
     lastStubSubmit: function () { return stubLast; },

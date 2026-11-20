@@ -357,7 +357,7 @@ steps.push(fixStep('fix-watch', 'Embedded Systems: Fix the Answer', '0478/12, No
 steps.push(embed('plenary', 'Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill', 'drill-y10-3-1-r2', 'Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill',
   mins(5) + 'Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.',
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
-bridgeSteps('y10-instruction-sets', 'instruction sets and the FDE cycle');
+bridgeSteps('y10-unit3-1-practice', 'every topic in the Unit 3.1 exam');
 
 // ---------------------------------------------------------------- self-checks
 const VL = (L, k) => L.validators[`${L.P}_${k}`.replace(/-/g, '_')];

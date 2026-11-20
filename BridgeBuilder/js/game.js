@@ -578,7 +578,7 @@
         (it.attempt === 2 && it.open ? '<span class="bb-pill is-warn">Second try: half coins</span>' : '') + '</div>' +
         '<div class="bb-q-text" id="qText' + i + '"></div>' +
         '<p class="bb-label" id="ansLabel' + i + '">Your answer' + (edit ? ' (you must type it)' : '') + ':</p><div id="ans' + i + '" class="bb-ans"></div>' +
-        '<div class="bb-fb" id="fb' + i + '" hidden></div><p class="bb-q-err" id="err' + i + '" hidden></p></section>';
+        '<div class="bb-fb" id="fb' + i + '" hidden></div><div id="help' + i + '"></div><p class="bb-q-err" id="err' + i + '" hidden></p></section>';
     });
     h += '<div class="bb-round-foot"><p class="bb-round-total" id="roundTotal" hidden></p><p class="bb-q-err" id="sendErr" hidden></p>' +
       '<div class="bb-q-actions" id="roundActs"></div></div></div>';
@@ -608,6 +608,10 @@
       (fb.canRetry && !it.open ? '<div class="bb-q-actions"><button class="bc-btn is-outline" type="button" id="again' + i + '">Try again</button></div>' : '');
     if (fb.feedback) box.querySelector('.bb-fb-text').textContent = fb.feedback;
     if ($('again' + i)) $('again' + i).onclick = function () { openRetry([i]); };
+    // After a mistake: I need help (shared/exam-help.js, the slides' Haiku help for this question, never the answer).
+    if (fb.marks < fb.max && !TM && window.BCExamHelp && $('help' + i)) {
+      window.BCExamHelp.mount($('help' + i), { qid: S.exam.qs[i].qid, answer: function () { return it.marked || it.answer || ''; } });
+    }
   }
 
   function openRetry(list) {
@@ -690,7 +694,7 @@
         else pay = Math.round(Math.max(0, marks - (it.first || 0)) * r.rate * 0.5);
         var before = it.attempt === 2 && it.fb ? it.fb.pay || 0 : 0;
         it.fb = { marks: marks, max: max, feedback: res.feedback || '', canRetry: !!res.canRetry && it.attempt === 1 && marks < max, pay: before + pay };
-        it.open = false; it.rid = '';
+        it.open = false; it.rid = ''; it.marked = it.answer;
         if (pay) { S.coins += pay; r.paid += pay; paidNow += pay; }
       });
       save();
