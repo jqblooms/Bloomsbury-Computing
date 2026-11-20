@@ -250,7 +250,7 @@
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^(?=.*\\b(stor\\w*|hold\\w*|keep\\w*)\\b)(?=.*\\b(data|instructions?|address\\w*|values?)\\b)(?=.*\\b(temporar\\w*|short|brief\\w*|while|during)\\b).*$|\\bimmediate(ly)?\\s+access\\w*\\b",
+     "source": "^(?=.*\\b(stor\\w*|hold\\w*|keep\\w*)\\b)(?=.*\\b(data|instructions?|address\\w*|values?)\\b)(?=.*\\b(temporar\\w*|short|brief\\w*|while|during|current\\w*|now|working|being|processing)\\b).*$|\\bimmediate(ly)?\\s+access\\w*\\b",
      "flags": "i"
     },
     "feedback": "Say what a register holds, and for how long."

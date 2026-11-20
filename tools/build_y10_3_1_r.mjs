@@ -179,7 +179,7 @@ steps[steps.length - 1].walkthrough = WT_PARTS;
 // 0478/13 June 2024 Q8(b)(i), any one: to temporarily store data/instruction/address; to allow immediate access to data
 // during the FDE cycle.
 const RE_FIRST = '^\\s*(the\\s+)?(pc|program\\s+counter|mar|memory\\s+address\\s+register)(\\s*\\(\\s*(pc|mar)\\s*\\))?\\s*\\.?\\s*$';
-const RE_REG = '^(?=.*\\b(stor\\w*|hold\\w*|keep\\w*)\\b)(?=.*\\b(data|instructions?|address\\w*|values?)\\b)(?=.*\\b(temporar\\w*|short|brief\\w*|while|during)\\b).*$|\\bimmediate(ly)?\\s+access\\w*\\b';
+const RE_REG = '^(?=.*\\b(stor\\w*|hold\\w*|keep\\w*)\\b)(?=.*\\b(data|instructions?|address\\w*|values?)\\b)(?=.*\\b(temporar\\w*|short|brief\\w*|while|during|current\\w*|now|working|being|processing)\\b).*$|\\bimmediate(ly)?\\s+access\\w*\\b';
 steps.push(checkStep('do-now-2', 'Do Now: Registers (2 of 2)', 'Do Now: Registers (2 of 2)',
   'Part (a): ' + cite('0478/11, June 2026, Question 2(a)(i)') + ' A smartphone has a quad-core 2.4 GHz processor. The processor performs the fetch-decode-execute (FDE) cycle. Part (b): ' + cite('0478/13, June 2024, Question 8(b)(i)') + ' The CPU contains registers.', [
     { line: true, label: 'The first register used in the FDE cycle stores the location in random access memory (RAM) of the next instruction. Identify the name of this register.', answer: RE_FIRST, feedback: 'Which register keeps the address of the next instruction?' },
