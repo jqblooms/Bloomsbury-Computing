@@ -91,7 +91,7 @@ function bridgeSteps(set, topic) {
       '<li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>' });
   steps.push({ id: 'game', label: 'Play: Data Bridge', type: 'embedded-app', appId: 'bridge-builder', embedContainerId: `${P}-game`,
     content: '<h2 class="lesson-h2">Play: Data Bridge</h2>' + why('Why keep your notes open while you play?', 'The questions use the same ideas. Your notes help you answer them right the first time.') +
-      `<p class="lesson-lead">${mins(19)}Earn coins with real exam questions, then build. Play until the end of the lesson.</p><div id="${P}-game"></div>`,
+      `<p class="lesson-lead">${mins(3)}Earn coins with real exam questions, then build. Play until the end of the lesson.</p><div id="${P}-game"></div>`,
     embedQuery: `set=${set}&goal=3` });
 }
 
@@ -178,8 +178,11 @@ steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y10-3-1-l3'
 steps.push({ id: 'title', label: 'The CPU and the FDE Cycle Exam Practice',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">3.1 Review: Exam Practice 1</p><h2 class="lesson-h2">The CPU and the FDE Cycle</h2><p>Year 10</p></div>' +
     facts(['<strong>Today:</strong> real exam questions on the parts of the CPU, the registers, the buses and the FDE cycle.',
-      '<strong>Also:</strong> run the CPU yourself, and fix answers that lose marks.']) +
+      '<strong>Also:</strong> a practice paper, and fix answers that lose marks.']) +
     why('An exam question has 3 marks. Why is one long sentence about one idea not enough?', 'Each mark is for a different point. One idea, said in many ways, still gets one mark.') });
+steps.push({ id: 'recap', label: 'Key Facts: The CPU',
+  content: '<h2 class="lesson-h2">Key Facts: The CPU</h2>' + facts(["<strong>CPU:</strong> processes instructions and data.","<strong>ALU:</strong> does calculations and logic. <strong>CU:</strong> decodes instructions and sends signals.","<strong>PC:</strong> holds the address of the next instruction.","<strong>MAR:</strong> holds the address to read or write. <strong>MDR:</strong> holds the data or instruction read or to write.","<strong>CIR:</strong> holds the instruction being decoded and executed. <strong>ACC:</strong> holds the result of a calculation.","<strong>Address bus:</strong> carries addresses, one way. <strong>Data bus:</strong> carries data, both ways. <strong>Control bus:</strong> carries signals, both ways.","<strong>Fetch:</strong> PC to MAR, PC goes up by 1, the instruction goes to the MDR, then to the CIR. <strong>Decode:</strong> the CU decodes it. <strong>Execute:</strong> it is carried out."]) +
+    why('Which of these facts do you find hardest to remember?', 'Everyone has a different answer. Copy that fact into your notes now.') });
 
 // ---------------------------------------------------------------- The CPU and its parts
 // 0478/11 November 2022 Q2(c): one from ALU; any two from: to temporarily store data; it stores the result of interim
@@ -252,6 +255,10 @@ steps.push(checkStep('practice', 'Practice: Quick Exam Questions', 'Practice: Qu
 steps.push(embed('plenary', 'Plenary: The CPU and FDE Cycle Exam Drill', 'drill-y10-3-1-r', 'Plenary: The CPU and FDE Cycle Exam Drill',
   mins(5) + 'Real exam questions on the CPU, the registers, the buses and the FDE cycle. Get each one right three times in a row. Your progress is saved.',
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
+steps.push({ id: 'paper', label: 'Practice Paper: The Fetch-Decode-Execute Cycle', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l4-paper', buttonId: `${P}-open-paper`,
+  content: '<h2 class="lesson-h2">Practice Paper: The Fetch-Decode-Execute Cycle</h2>' + why('Why do a whole paper, and not only single questions?', 'In the exam you must choose what to write with no help. A paper shows which marks you still lose.') +
+    `<p class="lesson-lead">${mins(12)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
+    `<p><button type="button" class="donow-btn" id="${P}-open-paper">Open the practice paper</button></p>` });
 bridgeSteps('y10-cpu', 'the CPU and the FDE cycle');
 
 // ================================================================ Lesson 2
@@ -292,8 +299,11 @@ steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y10-3-1-l4'
 steps.push({ id: 'title', label: 'Performance, Instruction Sets and Embedded Systems Exam Practice',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">3.1 Review: Exam Practice 2</p><h2 class="lesson-h2">Performance, Instruction Sets and Embedded Systems</h2><p>Year 10</p></div>' +
     facts(['<strong>Today:</strong> real exam questions on CPU performance, instruction sets and embedded systems.',
-      '<strong>Also:</strong> race two CPUs, run a machine code program, and fix answers that lose marks.']) +
+      '<strong>Also:</strong> a practice paper, and fix answers that lose marks.']) +
     why('An "Explain" question has 2 marks. Why should your answer use "so" or "because"?', 'Explain wants a point and its result. "So" or "because" joins the two marks together.') });
+steps.push({ id: 'recap', label: 'Key Facts: Performance, Instruction Sets, Embedded Systems',
+  content: '<h2 class="lesson-h2">Key Facts: Performance, Instruction Sets, Embedded Systems</h2>' + facts(["<strong>Clock speed:</strong> the number of FDE cycles per second. Higher means more instructions each second.","<strong>Cores:</strong> each core can process instructions at the same time as the others.","<strong>Cache:</strong> small, fast memory in the CPU for data and instructions used often.","<strong>Instruction set:</strong> the list of all the commands a CPU can process.","<strong>Embedded system:</strong> a computer system built into a larger device to do a dedicated function.","<strong>Embedded features:</strong> dedicated hardware, a microprocessor, firmware, cannot easily be reprogrammed.","<strong>General purpose computer:</strong> can do many different tasks, such as a laptop."]) +
+    why('Which of these facts do you find hardest to remember?', 'Everyone has a different answer. Copy that fact into your notes now.') });
 
 // ---------------------------------------------------------------- Performance
 // 0478/11 June 2025 Q5(c). Three from.
@@ -357,6 +367,10 @@ steps.push(fixStep('fix-watch', 'Embedded Systems: Fix the Answer', '0478/12, No
 steps.push(embed('plenary', 'Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill', 'drill-y10-3-1-r2', 'Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill',
   mins(5) + 'Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.',
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
+steps.push({ id: 'paper', label: 'Practice Paper: CPU Performance', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l5-paper', buttonId: `${P}-open-paper`,
+  content: '<h2 class="lesson-h2">Practice Paper: CPU Performance</h2>' + why('Why do a whole paper, and not only single questions?', 'In the exam you must choose what to write with no help. A paper shows which marks you still lose.') +
+    `<p class="lesson-lead">${mins(12)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
+    `<p><button type="button" class="donow-btn" id="${P}-open-paper">Open the practice paper</button></p>` });
 bridgeSteps('y10-unit3-1-practice', 'every topic in the Unit 3.1 exam');
 
 // ---------------------------------------------------------------- self-checks
@@ -630,8 +644,8 @@ for (const L of [L1, L2]) {
 }
 // Minutes: Do Now 7, title 1, the slides below, Data Bridge 1 + 6. Each lesson fits 55.
 const MINUTES = {
-  'y10-3-1-r': { 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'exam-acc': 4, 'fix-stored': 4, 'exam-bus': 4, 'fix-mar-mdr': 4, 'exam-pc': 3, practice: 3, plenary: 5, 'how-to-play': 1, game: 19 },
-  'y10-3-1-r2': { 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'exam-clock': 4, 'exam-cores': 3, 'exam-cache': 3, 'fix-quad': 4, 'exam-atm': 4, 'fix-watch': 4, plenary: 5, 'how-to-play': 1, game: 19 },
+  'y10-3-1-r': { recap: 4, paper: 12, 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'exam-acc': 4, 'fix-stored': 4, 'exam-bus': 4, 'fix-mar-mdr': 4, 'exam-pc': 3, practice: 3, plenary: 5, 'how-to-play': 1, game: 3 },
+  'y10-3-1-r2': { recap: 4, paper: 12, 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'exam-clock': 4, 'exam-cores': 3, 'exam-cache': 3, 'fix-quad': 4, 'exam-atm': 4, 'fix-watch': 4, plenary: 5, 'how-to-play': 1, game: 3 },
 };
 for (const L of [L1, L2]) {
   const m = MINUTES[L.id];

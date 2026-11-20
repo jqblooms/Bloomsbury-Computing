@@ -124,7 +124,12 @@
   {
    "id": "title",
    "label": "Performance, Instruction Sets and Embedded Systems Exam Practice",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 2</p><h2 class=\"lesson-h2\">Performance, Instruction Sets and Embedded Systems</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions on CPU performance, instruction sets and embedded systems.</li><li><strong>Also:</strong> race two CPUs, run a machine code program, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An \"Explain\" question has 2 marks. Why should your answer use \"so\" or \"because\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Explain wants a point and its result. \"So\" or \"because\" joins the two marks together.</p></div></details>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 2</p><h2 class=\"lesson-h2\">Performance, Instruction Sets and Embedded Systems</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions on CPU performance, instruction sets and embedded systems.</li><li><strong>Also:</strong> a practice paper, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An \"Explain\" question has 2 marks. Why should your answer use \"so\" or \"because\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Explain wants a point and its result. \"So\" or \"because\" joins the two marks together.</p></div></details>"
+  },
+  {
+   "id": "recap",
+   "label": "Key Facts: Performance, Instruction Sets, Embedded Systems",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Performance, Instruction Sets, Embedded Systems</h2><ul class=\"lesson-facts\"><li><strong>Clock speed:</strong> the number of FDE cycles per second. Higher means more instructions each second.</li><li><strong>Cores:</strong> each core can process instructions at the same time as the others.</li><li><strong>Cache:</strong> small, fast memory in the CPU for data and instructions used often.</li><li><strong>Instruction set:</strong> the list of all the commands a CPU can process.</li><li><strong>Embedded system:</strong> a computer system built into a larger device to do a dedicated function.</li><li><strong>Embedded features:</strong> dedicated hardware, a microprocessor, firmware, cannot easily be reprogrammed.</li><li><strong>General purpose computer:</strong> can do many different tasks, such as a laptop.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which of these facts do you find hardest to remember?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Everyone has a different answer. Copy that fact into your notes now.</p></div></details>"
   },
   {
    "id": "exam-clock",
@@ -275,6 +280,15 @@
    "content": "<h2 class=\"lesson-h2\">Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do questions keep coming back until you get them right three times in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right once can be luck. Three times in a row shows that you really know it.</p></div></details><p class=\"lesson-lead\"><strong>5 minutes.</strong> Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.</p><div id=\"y10-31r2-plenary\"></div>"
   },
   {
+   "id": "paper",
+   "label": "Practice Paper: CPU Performance",
+   "type": "app-link",
+   "appId": "exampaper",
+   "appQuery": "paper=y10-3-1-l5-paper",
+   "buttonId": "y10-31r2-open-paper",
+   "content": "<h2 class=\"lesson-h2\">Practice Paper: CPU Performance</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do a whole paper, and not only single questions?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>In the exam you must choose what to write with no help. A paper shows which marks you still lose.</p></div></details><p class=\"lesson-lead\"><strong>12 minutes.</strong> Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y10-31r2-open-paper\">Open the practice paper</button></p>"
+  },
+  {
    "id": "how-to-play",
    "label": "Data Bridge: Use Your Notes",
    "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before it costs you marks in the exam.</p></div></details><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the exam questions</strong> on every topic in the Unit 3.1 exam to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
@@ -285,7 +299,7 @@
    "type": "embedded-app",
    "appId": "bridge-builder",
    "embedContainerId": "y10-31r2-game",
-   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>19 minutes.</strong> Earn coins with real exam questions, then build. Play until the end of the lesson.</p><div id=\"y10-31r2-game\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Earn coins with real exam questions, then build. Play until the end of the lesson.</p><div id=\"y10-31r2-game\"></div>",
    "embedQuery": "set=y10-unit3-1-practice&goal=3"
   }
  ],
