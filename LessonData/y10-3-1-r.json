@@ -134,15 +134,6 @@
    ]
   },
   {
-   "id": "activity-1",
-   "label": "Activity 1: Watch the Registers",
-   "type": "embedded-app",
-   "appId": "cpu-lab",
-   "embedContainerId": "y10-31r-activity-1",
-   "content": "<h2 class=\"lesson-h2\">Activity 1: Watch the Registers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict before you run the CPU?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A prediction shows what you really think. When the run is different, you find the exact step you had wrong.</p></div></details><p class=\"lesson-lead\"><strong>7 minutes.</strong> Predict what each register will hold, then check, then run the CPU one step at a time to see why. Clear the levels to finish.</p><div id=\"y10-31r-activity-1\"></div>",
-   "embedQuery": "activity=regs&level=2&upto=3"
-  },
-  {
    "id": "exam-bus",
    "label": "Buses: One Bus and Its Purpose",
    "type": "self-marked-response",
@@ -187,15 +178,6 @@
      "context": "4 minutes. Cambridge IGCSE 0478/12, June 2026, Question 2(c). A computer has a central processing unit (CPU). A value is fetched from random access memory (RAM) to the CPU. Explain how the MAR and MDR are used in this process. A student wrote: \"The MDR holds the address of the value, and the MAR holds the value when it arrives from RAM.\" This got 0 of 3 marks: the two registers are swapped: the MAR holds the address and the MDR holds the value. The student now writes a better answer. Marking rule: Three from, one mark for each point met, up to 3."
     }
    ]
-  },
-  {
-   "id": "activity-2",
-   "label": "Activity 2: Trace the Buses",
-   "type": "embedded-app",
-   "appId": "cpu-lab",
-   "embedContainerId": "y10-31r-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: Trace the Buses</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why trace a write as well as a read?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The data goes the other way in a write. Tracing both shows you know what each bus does, not just one pattern.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Trace a read and a write: for each bus, pick what it carries and which way it goes. Then do it with no help.</p><div id=\"y10-31r-activity-2\"></div>",
-   "embedQuery": "activity=buses&level=3&upto=4"
   },
   {
    "id": "exam-pc",
@@ -245,7 +227,7 @@
    "type": "embedded-app",
    "appId": "bridge-builder",
    "embedContainerId": "y10-31r-game",
-   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Earn coins with real exam questions, then build.</p><div id=\"y10-31r-game\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>19 minutes.</strong> Earn coins with real exam questions, then build. Play until the end of the lesson.</p><div id=\"y10-31r-game\"></div>",
    "embedQuery": "set=y10-cpu&goal=3"
   }
  ],

@@ -91,7 +91,7 @@ function bridgeSteps(set, topic) {
       '<li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>' });
   steps.push({ id: 'game', label: 'Play: Data Bridge', type: 'embedded-app', appId: 'bridge-builder', embedContainerId: `${P}-game`,
     content: '<h2 class="lesson-h2">Play: Data Bridge</h2>' + why('Why keep your notes open while you play?', 'The questions use the same ideas. Your notes help you answer them right the first time.') +
-      `<p class="lesson-lead">${mins(6)}Earn coins with real exam questions, then build.</p><div id="${P}-game"></div>`,
+      `<p class="lesson-lead">${mins(19)}Earn coins with real exam questions, then build. Play until the end of the lesson.</p><div id="${P}-game"></div>`,
     embedQuery: `set=${set}&goal=3` });
 }
 
@@ -201,7 +201,7 @@ steps.push(fixStep('fix-stored', 'Von Neumann: Fix the Answer', '0478/12, March 
     source: '0478/12 March 2021 Q8(a)', why: 'it does not say where the instructions and data are kept, or how the instructions are run.' },
   ['Why can an answer that sounds right still get 0 marks?', 'It may only say the question again in other words. A mark needs a fact the question did not already give.']));
 
-steps.push(embed('activity-1', 'Activity 1: Watch the Registers', 'cpu-lab', 'Activity 1: Watch the Registers',
+if (false) steps.push(embed('activity-1', 'Activity 1: Watch the Registers', 'cpu-lab', 'Activity 1: Watch the Registers',
   mins(7) + 'Predict what each register will hold, then check, then run the CPU one step at a time to see why. Clear the levels to finish.',
   ['Why predict before you run the CPU?', 'A prediction shows what you really think. When the run is different, you find the exact step you had wrong.'], 'activity=regs&level=2&upto=3'));
 
@@ -225,7 +225,7 @@ steps.push(fixStep('fix-mar-mdr', 'Registers: Fix the Answer', '0478/12, June 20
     source: '0478/12 June 2026 Q2(c)', why: 'the two registers are swapped: the MAR holds the address and the MDR holds the value.' },
   ['Two registers have names that look alike. How can you remember which holds what?', 'Read the middle word of each name. It says what kind of value that register holds.']));
 
-steps.push(embed('activity-2', 'Activity 2: Trace the Buses', 'cpu-lab', 'Activity 2: Trace the Buses',
+if (false) steps.push(embed('activity-2', 'Activity 2: Trace the Buses', 'cpu-lab', 'Activity 2: Trace the Buses',
   mins(6) + 'Trace a read and a write: for each bus, pick what it carries and which way it goes. Then do it with no help.',
   ['Why trace a write as well as a read?', 'The data goes the other way in a write. Tracing both shows you know what each bus does, not just one pattern.'], 'activity=buses&level=3&upto=4'));
 
@@ -305,7 +305,7 @@ steps.push(selfMarked('exam-clock', 'Performance: Clock Speed', 'Performance: Cl
       '0478/11 June 2025 Q5(c)'),
   ], ['Why is "it makes the computer faster" not enough for 3 marks?', 'It is one general idea. The marks need the steps: what the clock speed is, what changes, and the effect.']));
 
-steps.push(embed('activity-1', 'Activity 1: CPU Race', 'cpu-lab', 'Activity 1: CPU Race',
+if (false) steps.push(embed('activity-1', 'Activity 1: CPU Race', 'cpu-lab', 'Activity 1: CPU Race',
   mins(7) + 'Two CPUs run the same task. Predict which finishes first, or work out each time, then check. Some tasks cannot be split, and some data does not fit the cache.',
   ['Why can the CPU with more cores still lose a race?', 'Extra cores only help when the task can be split between them. The task decides which upgrade matters.'], 'activity=perf&level=3&upto=4'));
 
@@ -333,7 +333,7 @@ steps.push(fixStep('fix-quad', 'Performance: Fix the Answer', '0478/11, June 202
   ['Why read the numbers in the question before you explain a difference?', 'Only what is different can explain the advantage. A value that stays the same cannot be the reason.']));
 
 // ---------------------------------------------------------------- Instruction sets
-steps.push(embed('activity-2', 'Activity 2: Run a Machine Code Program', 'cpu-lab', 'Activity 2: Run a Machine Code Program',
+if (false) steps.push(embed('activity-2', 'Activity 2: Run a Machine Code Program', 'cpu-lab', 'Activity 2: Run a Machine Code Program',
   mins(6) + 'Decode each machine code instruction with the instruction set, then run the program one line at a time. Then try a CPU with a different instruction set.',
   ['Why can a program made for one CPU fail on another CPU?', 'Each CPU decodes with its own instruction set. The same bits can mean a different command on another CPU.'], 'activity=isa&level=3&upto=4'));
 
@@ -630,8 +630,8 @@ for (const L of [L1, L2]) {
 }
 // Minutes: Do Now 7, title 1, the slides below, Data Bridge 1 + 6. Each lesson fits 55.
 const MINUTES = {
-  'y10-3-1-r': { 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'exam-acc': 4, 'fix-stored': 4, 'activity-1': 7, 'exam-bus': 4, 'fix-mar-mdr': 4, 'activity-2': 6, 'exam-pc': 3, practice: 3, plenary: 5, 'how-to-play': 1, game: 6 },
-  'y10-3-1-r2': { 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'exam-clock': 4, 'activity-1': 7, 'exam-cores': 3, 'exam-cache': 3, 'fix-quad': 4, 'activity-2': 6, 'exam-atm': 4, 'fix-watch': 4, plenary: 5, 'how-to-play': 1, game: 6 },
+  'y10-3-1-r': { 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'exam-acc': 4, 'fix-stored': 4, 'exam-bus': 4, 'fix-mar-mdr': 4, 'exam-pc': 3, practice: 3, plenary: 5, 'how-to-play': 1, game: 19 },
+  'y10-3-1-r2': { 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'exam-clock': 4, 'exam-cores': 3, 'exam-cache': 3, 'fix-quad': 4, 'exam-atm': 4, 'fix-watch': 4, plenary: 5, 'how-to-play': 1, game: 19 },
 };
 for (const L of [L1, L2]) {
   const m = MINUTES[L.id];

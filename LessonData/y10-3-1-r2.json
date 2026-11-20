@@ -150,15 +150,6 @@
    ]
   },
   {
-   "id": "activity-1",
-   "label": "Activity 1: CPU Race",
-   "type": "embedded-app",
-   "appId": "cpu-lab",
-   "embedContainerId": "y10-31r2-activity-1",
-   "content": "<h2 class=\"lesson-h2\">Activity 1: CPU Race</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can the CPU with more cores still lose a race?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Extra cores only help when the task can be split between them. The task decides which upgrade matters.</p></div></details><p class=\"lesson-lead\"><strong>7 minutes.</strong> Two CPUs run the same task. Predict which finishes first, or work out each time, then check. Some tasks cannot be split, and some data does not fit the cache.</p><div id=\"y10-31r2-activity-1\"></div>",
-   "embedQuery": "activity=perf&level=3&upto=4"
-  },
-  {
    "id": "exam-cores",
    "label": "Performance: Cores",
    "type": "self-marked-response",
@@ -224,15 +215,6 @@
      "context": "4 minutes. Cambridge IGCSE 0478/11, June 2026, Question 2(b). A smartphone has a quad-core 2.4 GHz processor. Explain the advantages of the smartphone having a quad-core processor instead of a dual-core processor. A student wrote: \"It is faster because it has a higher clock speed.\" This got 0 of 2 marks: the clock speed is not different here; the advantage comes from the number of cores. The student now writes a better answer. Marking rule: Two from, one mark for each point met, up to 2."
     }
    ]
-  },
-  {
-   "id": "activity-2",
-   "label": "Activity 2: Run a Machine Code Program",
-   "type": "embedded-app",
-   "appId": "cpu-lab",
-   "embedContainerId": "y10-31r2-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: Run a Machine Code Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a program made for one CPU fail on another CPU?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each CPU decodes with its own instruction set. The same bits can mean a different command on another CPU.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Decode each machine code instruction with the instruction set, then run the program one line at a time. Then try a CPU with a different instruction set.</p><div id=\"y10-31r2-activity-2\"></div>",
-   "embedQuery": "activity=isa&level=3&upto=4"
   },
   {
    "id": "exam-atm",
@@ -303,7 +285,7 @@
    "type": "embedded-app",
    "appId": "bridge-builder",
    "embedContainerId": "y10-31r2-game",
-   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Earn coins with real exam questions, then build.</p><div id=\"y10-31r2-game\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep your notes open while you play?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The questions use the same ideas. Your notes help you answer them right the first time.</p></div></details><p class=\"lesson-lead\"><strong>19 minutes.</strong> Earn coins with real exam questions, then build. Play until the end of the lesson.</p><div id=\"y10-31r2-game\"></div>",
    "embedQuery": "set=y10-unit3-1-practice&goal=3"
   }
  ],
