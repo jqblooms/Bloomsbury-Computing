@@ -643,7 +643,7 @@ let body = '// Year 9, 3.1 Pseudocode: Data Bridge Questions (Drills library onl
   '  title: "3.1 Pseudocode: Data Bridge Questions",\n' +
   '  subtitle: "Learn every Data Bridge question on following and correcting pseudocode, one step at a time",\n' +
   '  // Haiku second check on typed answers the keyword check rejects; each card waits for Next question.\n' +
-  '  aiFallback: true,\n  waitForNext: true,\n' +
+  '  aiFallback: true,\n  waitForNext: true,\n  keepOrder: true,\n' +
   '  // The slides\' "I need help" chat on every card (Haiku, three questions per card, never the answer).\n' +
   '  aiHelp: true,\n' +
   '  categories: [\n' + CATS.map((c) => '    ' + JSON.stringify(c)).join(',\n') + '\n  ],\n' +

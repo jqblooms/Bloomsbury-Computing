@@ -9,6 +9,7 @@ DrillData.register("y9-3-1-db-drill", {
   // Haiku second check on typed answers the keyword check rejects; each card waits for Next question.
   aiFallback: true,
   waitForNext: true,
+  keepOrder: true,
   // The slides' "I need help" chat on every card (Haiku, three questions per card, never the answer).
   aiHelp: true,
   categories: [

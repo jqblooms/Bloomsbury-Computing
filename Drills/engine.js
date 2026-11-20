@@ -65,6 +65,10 @@
   // waitForNext: true (James, 2026-11-20): a marked card shows the model answer and its note and stays until the
   // student presses Next question (or Enter), never moving on by itself.
   var waitForNext = !!drill.waitForNext;
+  // keepOrder: true (2026-11-20): cards come in the drill's own order (key idea, similar question, the question)
+  // instead of shuffled, for drills that build up to each question.
+  var keepOrder = !!drill.keepOrder;
+  function orderIds(ids) { return keepOrder ? ids.slice() : shuffle(ids); }
   // aiHelp: true (James, 2026-11-20, first used by the Y9 Data Bridge drills): every question card gets the slides'
   // "I need help" chat (shared/exam-help.js): up to three questions to Haiku about this card, never the answer. The shell
   // (SlideHelp.gs, ops drillHelpGet / drillHelp) keeps the limits, checks each reply against the card's answers and note,
@@ -196,7 +200,7 @@
     if (buttonsOnly) answerMode = "mc";
     var pool = poolCardIds(category, poolChoice);
     var size = (count && count < pool.length) ? count : pool.length;
-    var queue = (count && count < pool.length) ? sample(pool, size) : shuffle(pool);
+    var queue = (count && count < pool.length) ? (keepOrder ? pool.slice(0, size) : sample(pool, size)) : orderIds(pool);
     return {
       mode: mode,
       category: category || "all",
@@ -764,7 +768,7 @@
     updateProgress();
     if (run.mode === "quiz" && !run.queue.length) return renderDone();
     if (!run.queue.length) { // learn mode ran dry - reshuffle everything
-      run.queue = shuffle(drill.cards.map(function (c) { return c.id; }));
+      run.queue = orderIds(drill.cards.map(function (c) { return c.id; }));
     }
     var cardId = run.queue.shift();
     // A card with a `randomize` function gets a fresh instance (new numbers,
