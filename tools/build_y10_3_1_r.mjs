@@ -41,9 +41,15 @@ const why = (q, a) => tps(q, `<p>${a}</p>`);
 // Revision notes (James 2026-11-20: revision sessions are mostly students making notes). Each slide gives a heading and
 // the questions the notes must answer. Students write from memory first, then use earlier notes; the Check Your Notes
 // slide after them shows the facts to tick or add in a different colour.
-function makeNotes(id, label, head, qs, whyQ, m = 4) {
+// An information slide before each Make Your Notes slide: the facts to learn, short and in plain words.
+function info(id, label, rows, whyQ) {
   return { id, label, content: '<h2 class="lesson-h2">' + label + '</h2>' + tps(whyQ[0], '<p>' + whyQ[1] + '</p>') +
-    '<p class="lesson-lead"><strong>' + m + ' minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p>' +
+    '<table style="border-collapse:collapse;width:100%;font-size:19px;line-height:1.45">' + rows.map((r) =>
+      '<tr><td style="padding:5px 10px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap"><b>' + r[0] + '</b></td><td style="padding:5px 10px;border-bottom:1px solid var(--line)">' + r[1] + '</td></tr>').join('') + '</table>' };
+}
+function makeNotes(id, label, head, qs, whyQ, m = 3) {
+  return { id, label, content: '<h2 class="lesson-h2">' + label + '</h2>' + tps(whyQ[0], '<p>' + whyQ[1] + '</p>') +
+    '<p class="lesson-lead"><strong>' + m + ' minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Use the slide before. Keep it short.</p>' +
     '<div style="border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px"><b>Heading: ' + head + '</b>' +
     '<ol style="margin:6px 0 0;line-height:1.55">' + qs.map((q) => '<li>' + q + '</li>').join('') + '</ol></div>' };
 }
@@ -187,15 +193,46 @@ steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y10-3-1-l3'
 
 steps.push({ id: 'title', label: 'The CPU and the FDE Cycle Exam Practice',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">3.1 Review: Exam Practice 1</p><h2 class="lesson-h2">The CPU and the FDE Cycle</h2><p>Year 10</p></div>' +
-    facts(['<strong>Today:</strong> make your revision notes, check them, then use them on real exam questions.',
+    facts(['<strong>Today:</strong> learn the key facts and make your revision notes, then use them on real exam questions.',
       '<strong>Also:</strong> a practice paper. Keep your notes open for it.']) +
     why('An exam question has 3 marks. Why is one long sentence about one idea not enough?', 'Each mark is for a different point. One idea, said in many ways, still gets one mark.') });
+steps.push(info('info-cpu', 'The CPU', [
+  ['CPU', 'The central processing unit. It processes the instructions and data of a program.'],
+  ['How', 'It runs the fetch-decode-execute (FDE) cycle again and again, one instruction each cycle.'],
+  ['Microprocessor', 'A CPU on a single chip. It is the type of processor in an embedded system.'],
+  ['Von Neumann', 'An architecture where the CPU, memory (RAM) and buses work together. Instructions and data are stored together in the same memory.'],
+  ['Stored program', 'The program is stored in memory, then fetched by the CPU one instruction at a time.']],
+  ['Why store instructions and data in the same memory?', 'One memory and one set of buses can be used for both, so the design is simpler.']));
 steps.push(makeNotes('notes-cpu', 'Make Your Notes: The CPU', 'The CPU', ['What does the CPU do?', 'What is a microprocessor?', 'What is the Von Neumann architecture? What is stored in memory?'],
   ['Why write it in your own words, and not copy it?', 'Putting it in your own words makes you think about what it means. That is what the exam tests.']));
+steps.push(info('info-parts', 'ALU, CU and Registers', [
+  ['ALU', 'Arithmetic logic unit. Does the calculations (such as add) and the logic (such as compare).'],
+  ['CU', 'Control unit. Decodes each instruction and sends signals to control the other parts.'],
+  ['PC', 'Program counter. Holds the address of the next instruction to fetch.'],
+  ['MAR', 'Memory address register. Holds the address of the location to read from or write to.'],
+  ['MDR', 'Memory data register. Holds the data or instruction read from memory, or the data to write.'],
+  ['CIR', 'Current instruction register. Holds the instruction being decoded and executed.'],
+  ['ACC', 'Accumulator. Holds the result of a calculation done by the ALU.']],
+  ['Why is a register faster to use than RAM?', 'A register is inside the CPU, so the data does not have to travel along a bus.']));
 steps.push(makeNotes('notes-parts', 'Make Your Notes: ALU, CU and Registers', 'Inside the CPU', ['What does the ALU do?', 'What does the CU do?', 'What does each register hold: PC, MAR, MDR, CIR, ACC?'],
   ['Why try from memory before you look?', 'Trying first shows you what you have forgotten. Those are the parts to learn again.']));
+steps.push(info('info-buses', 'Buses', [
+  ['Bus', 'A set of wires that carries signals between the CPU and memory.'],
+  ['Address bus', 'Carries an address from the MAR to memory. One way only: CPU to memory.'],
+  ['Data bus', 'Carries data and instructions between the CPU (MDR) and memory. Both ways.'],
+  ['Control bus', 'Carries control signals, such as read, write and the clock. Both ways.'],
+  ['Read', 'The address goes on the address bus, a read signal on the control bus, then the data comes back on the data bus.']],
+  ['Why does the address bus only go one way?', 'Only the CPU decides which address to use. Memory never sends an address back.']));
 steps.push(makeNotes('notes-buses', 'Make Your Notes: Buses', 'The buses', ['What does the address bus carry? Which way?', 'What does the data bus carry? Which way?', 'What does the control bus carry? Which way?'],
-  ['Why put the three buses side by side in your notes?', 'Side by side, the differences are easy to see and easy to learn.'], 3));
+  ['Why put the three buses side by side in your notes?', 'Side by side, the differences are easy to see and easy to learn.']));
+steps.push(info('info-fde', 'The FDE Cycle', [
+  ['Fetch 1', 'The address in the PC is copied to the MAR.'],
+  ['Fetch 2', 'The PC goes up by 1, so it points to the next instruction.'],
+  ['Fetch 3', 'The address is sent on the address bus. The instruction comes back on the data bus into the MDR.'],
+  ['Fetch 4', 'The instruction is copied from the MDR to the CIR.'],
+  ['Decode', 'The CU decodes the instruction in the CIR, using the instruction set.'],
+  ['Execute', 'The instruction is carried out, for example the ALU adds and the result goes in the ACC.']],
+  ['Why does the PC go up by 1 during fetch?', 'So that the next cycle fetches the next instruction in the program.']));
 steps.push(makeNotes('notes-fde', 'Make Your Notes: The FDE Cycle', 'The FDE cycle', ['Fetch: write each step in order, with the register used.', 'Decode: what happens, and which part does it?', 'Execute: what happens?'],
   ['Why number the steps of the cycle?', 'Exam questions often ask for the steps in order. Numbered notes are easy to learn in order.']));
 steps.push({ id: 'recap', label: 'Check Your Notes: The CPU',
@@ -275,7 +312,7 @@ steps.push(embed('plenary', 'Plenary: The CPU and FDE Cycle Exam Drill', 'drill-
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
 steps.push({ id: 'paper', label: 'Practice Paper: The Fetch-Decode-Execute Cycle', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l4-paper', buttonId: `${P}-open-paper`,
   content: '<h2 class="lesson-h2">Practice Paper: The Fetch-Decode-Execute Cycle</h2>' + why('Why do a whole paper, and not only single questions?', 'In the exam you must choose what to write with no help. A paper shows which marks you still lose.') +
-    `<p class="lesson-lead">${mins(12)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
+    `<p class="lesson-lead">${mins(10)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
     `<p><button type="button" class="donow-btn" id="${P}-open-paper">Open the practice paper</button></p>` });
 bridgeSteps('y10-cpu', 'the CPU and the FDE cycle');
 
@@ -316,15 +353,43 @@ steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y10-3-1-l4'
 
 steps.push({ id: 'title', label: 'Performance, Instruction Sets and Embedded Systems Exam Practice',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">3.1 Review: Exam Practice 2</p><h2 class="lesson-h2">Performance, Instruction Sets and Embedded Systems</h2><p>Year 10</p></div>' +
-    facts(['<strong>Today:</strong> make your revision notes, check them, then use them on real exam questions.',
+    facts(['<strong>Today:</strong> learn the key facts and make your revision notes, then use them on real exam questions.',
       '<strong>Also:</strong> a practice paper. Keep your notes open for it.']) +
     why('An "Explain" question has 2 marks. Why should your answer use "so" or "because"?', 'Explain wants a point and its result. "So" or "because" joins the two marks together.') });
+steps.push(info('info-perf', 'CPU Performance', [
+  ['Clock speed', 'The number of FDE cycles the CPU can do each second, in GHz. 3 GHz is 3 billion cycles a second.'],
+  ['Higher clock speed', 'More instructions are processed each second, so the CPU is faster.'],
+  ['Core', 'A unit that processes instructions. Each core can process an instruction at the same time as the others.'],
+  ['More cores', 'More instructions at the same time, but only if the task can be split between the cores.'],
+  ['Cache', 'Small, fast memory in the CPU. It holds data and instructions that are used often.'],
+  ['More cache', 'More can be fetched from the fast cache instead of the slower RAM.']],
+  ['Why does a second core not always make a program twice as fast?', 'Some tasks cannot be split. One core must wait for the result of another.']));
 steps.push(makeNotes('notes-perf', 'Make Your Notes: CPU Performance', 'CPU performance', ['What is clock speed? How does a higher clock speed help?', 'What is a core? How do more cores help?', 'What is cache? How does more cache help?'],
   ['Why write how each one helps, and not only what it is?', 'Many exam questions ask you to explain the effect on performance. A name alone gets few marks.']));
+steps.push(info('info-isa', 'Instruction Sets', [
+  ['Instruction set', 'The list of all the commands (instructions) a CPU can process.'],
+  ['Opcode', 'The part of an instruction that says what to do, such as LOAD or ADD.'],
+  ['Operand', 'The part of an instruction that says what to use, such as an address or a value.'],
+  ['Machine code', 'Instructions in binary, made from the instruction set.'],
+  ['Different CPUs', 'Each type of CPU has its own instruction set, so machine code for one CPU may not run on another.']],
+  ['Why does the CU need the instruction set?', 'It uses it to decode each instruction: to know what each opcode means.']));
 steps.push(makeNotes('notes-isa', 'Make Your Notes: Instruction Sets', 'Instruction sets', ['What is an instruction set?', 'What is an opcode? What is an operand?', 'Why can a program for one CPU not run on another CPU?'],
-  ['Why add an example to your notes?', 'An example shows you understand the idea, and it is easy to remember.'], 3));
+  ['Why add an example to your notes?', 'An example shows you understand the idea, and it is easy to remember.']));
+steps.push(info('info-embedded', 'Embedded Systems', [
+  ['Embedded system', 'A computer system built into a larger device to perform a dedicated function.'],
+  ['Features', 'Dedicated hardware. A microprocessor. Firmware. Cannot easily be reprogrammed. Often small, cheap and low power.'],
+  ['Examples', 'Washing machine, freezer, microwave, vending machine, security light system, traffic lights, air bags in a car, ATM, calculator.'],
+  ['Benefits', 'Small, so it fits in the device. Cheap to make. Uses little power. Works automatically.']],
+  ['Why is an embedded system cheap to make?', 'It only has the hardware its one job needs, so it has fewer parts.']));
 steps.push(makeNotes('notes-embedded', 'Make Your Notes: Embedded Systems', 'Embedded systems', ['What is an embedded system?', 'Give four features of an embedded system.', 'Give five examples of devices with an embedded system.'],
   ['Why learn several features, not only one?', 'Questions often ask for two or three features. Each different feature gets a mark.']));
+steps.push(info('info-gp', 'General Purpose Computers', [
+  ['General purpose', 'A computer that can perform many different tasks, such as a laptop, a PC or a smartphone.'],
+  ['Jobs', 'General purpose: many tasks, chosen by the user. Embedded: one dedicated function, chosen by the maker.'],
+  ['Software', 'General purpose: new software can easily be installed. Embedded: cannot easily be reprogrammed.'],
+  ['Hardware', 'General purpose: a CPU, and peripherals can be plugged in. Embedded: dedicated hardware and a microprocessor.'],
+  ['Smartphone', 'General purpose: new apps can be installed and it does many tasks. Being small does not make it embedded.']],
+  ['Why does the size of a device not decide if it is embedded?', 'It is the number of jobs that decides, not the size.']));
 steps.push(makeNotes('notes-gp', 'Make Your Notes: General Purpose Computers', 'General purpose or embedded?', ['What is a general purpose computer? Give two examples.', 'Make a table: general purpose computer compared with embedded system.', 'Is a smartphone embedded? Why?'],
   ['Why compare in a table?', 'A table puts each difference on one row, so you can see it and learn it fast.']));
 steps.push({ id: 'recap', label: 'Check Your Notes: Performance, Instruction Sets, Embedded Systems',
@@ -395,7 +460,7 @@ steps.push(embed('plenary', 'Plenary: Performance, Instruction Sets and Embedded
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
 steps.push({ id: 'paper', label: 'Practice Paper: CPU Performance', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l5-paper', buttonId: `${P}-open-paper`,
   content: '<h2 class="lesson-h2">Practice Paper: CPU Performance</h2>' + why('Why do a whole paper, and not only single questions?', 'In the exam you must choose what to write with no help. A paper shows which marks you still lose.') +
-    `<p class="lesson-lead">${mins(12)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
+    `<p class="lesson-lead">${mins(10)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
     `<p><button type="button" class="donow-btn" id="${P}-open-paper">Open the practice paper</button></p>` });
 bridgeSteps('y10-unit3-1-practice', 'every topic in the Unit 3.1 exam');
 
@@ -657,7 +722,7 @@ for (const [id, about, title, subtitle, cats, fn] of DRILLS) {
   }
 }
 
-const DROP = { 'y10-3-1-r': ['fix-stored', 'fix-mar-mdr', 'exam-pc', 'practice'], 'y10-3-1-r2': ['exam-cores', 'exam-cache', 'fix-quad', 'fix-watch'] };
+const DROP = { 'y10-3-1-r': ['recap', 'fix-stored', 'fix-mar-mdr', 'exam-pc', 'practice'], 'y10-3-1-r2': ['recap', 'exam-cores', 'exam-cache', 'fix-quad', 'fix-watch'] };
 for (const L of [L1, L2]) L.steps = L.steps.filter((x) => !DROP[L.id].includes(x.id));
 for (const L of [L1, L2]) {
   const text = JSON.stringify(L.steps);
@@ -672,8 +737,8 @@ for (const L of [L1, L2]) {
 }
 // Minutes: Do Now 7, title 1, the slides below, Data Bridge 1 + 6. Each lesson fits 55.
 const MINUTES = {
-  'y10-3-1-r': { 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'notes-cpu': 4, 'notes-parts': 4, 'notes-buses': 3, 'notes-fde': 4, recap: 3, 'exam-acc': 4, 'exam-bus': 4, paper: 12, plenary: 5, 'how-to-play': 1, game: 3 },
-  'y10-3-1-r2': { 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'notes-perf': 4, 'notes-isa': 3, 'notes-embedded': 4, 'notes-gp': 4, recap: 3, 'exam-clock': 4, 'exam-atm': 4, paper: 12, plenary: 5, 'how-to-play': 1, game: 3 },
+  'y10-3-1-r': { 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'info-cpu': 2, 'notes-cpu': 3, 'info-parts': 2, 'notes-parts': 3, 'info-buses': 2, 'notes-buses': 3, 'info-fde': 2, 'notes-fde': 3, 'exam-acc': 4, 'exam-bus': 4, plenary: 5, paper: 10, 'how-to-play': 1, game: 3 },
+  'y10-3-1-r2': { 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'info-perf': 2, 'notes-perf': 3, 'info-isa': 2, 'notes-isa': 3, 'info-embedded': 2, 'notes-embedded': 3, 'info-gp': 2, 'notes-gp': 3, 'exam-clock': 4, 'exam-atm': 4, plenary: 5, paper: 10, 'how-to-play': 1, game: 3 },
 };
 for (const L of [L1, L2]) {
   const m = MINUTES[L.id];
