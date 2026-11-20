@@ -124,12 +124,32 @@
   {
    "id": "title",
    "label": "Performance, Instruction Sets and Embedded Systems Exam Practice",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 2</p><h2 class=\"lesson-h2\">Performance, Instruction Sets and Embedded Systems</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions on CPU performance, instruction sets and embedded systems.</li><li><strong>Also:</strong> a practice paper, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An \"Explain\" question has 2 marks. Why should your answer use \"so\" or \"because\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Explain wants a point and its result. \"So\" or \"because\" joins the two marks together.</p></div></details>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 2</p><h2 class=\"lesson-h2\">Performance, Instruction Sets and Embedded Systems</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> make your revision notes, check them, then use them on real exam questions.</li><li><strong>Also:</strong> a practice paper. Keep your notes open for it.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An \"Explain\" question has 2 marks. Why should your answer use \"so\" or \"because\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Explain wants a point and its result. \"So\" or \"because\" joins the two marks together.</p></div></details>"
+  },
+  {
+   "id": "notes-perf",
+   "label": "Make Your Notes: CPU Performance",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: CPU Performance</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write how each one helps, and not only what it is?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Many exam questions ask you to explain the effect on performance. A name alone gets few marks.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: CPU performance</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What is clock speed? How does a higher clock speed help?</li><li>What is a core? How do more cores help?</li><li>What is cache? How does more cache help?</li></ol></div>"
+  },
+  {
+   "id": "notes-isa",
+   "label": "Make Your Notes: Instruction Sets",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: Instruction Sets</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why add an example to your notes?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>An example shows you understand the idea, and it is easy to remember.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: Instruction sets</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What is an instruction set?</li><li>What is an opcode? What is an operand?</li><li>Why can a program for one CPU not run on another CPU?</li></ol></div>"
+  },
+  {
+   "id": "notes-embedded",
+   "label": "Make Your Notes: Embedded Systems",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: Embedded Systems</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why learn several features, not only one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Questions often ask for two or three features. Each different feature gets a mark.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: Embedded systems</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What is an embedded system?</li><li>Give four features of an embedded system.</li><li>Give five examples of devices with an embedded system.</li></ol></div>"
+  },
+  {
+   "id": "notes-gp",
+   "label": "Make Your Notes: General Purpose Computers",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: General Purpose Computers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why compare in a table?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A table puts each difference on one row, so you can see it and learn it fast.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: General purpose or embedded?</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What is a general purpose computer? Give two examples.</li><li>Make a table: general purpose computer compared with embedded system.</li><li>Is a smartphone embedded? Why?</li></ol></div>"
   },
   {
    "id": "recap",
-   "label": "Key Facts: Performance, Instruction Sets, Embedded Systems",
-   "content": "<h2 class=\"lesson-h2\">Key Facts: Performance, Instruction Sets, Embedded Systems</h2><ul class=\"lesson-facts\"><li><strong>Clock speed:</strong> the number of FDE cycles per second. Higher means more instructions each second.</li><li><strong>Cores:</strong> each core can process instructions at the same time as the others.</li><li><strong>Cache:</strong> small, fast memory in the CPU for data and instructions used often.</li><li><strong>Instruction set:</strong> the list of all the commands a CPU can process.</li><li><strong>Embedded system:</strong> a computer system built into a larger device to do a dedicated function.</li><li><strong>Embedded features:</strong> dedicated hardware, a microprocessor, firmware, cannot easily be reprogrammed.</li><li><strong>General purpose computer:</strong> can do many different tasks, such as a laptop.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which of these facts do you find hardest to remember?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Everyone has a different answer. Copy that fact into your notes now.</p></div></details>"
+   "label": "Check Your Notes: Performance, Instruction Sets, Embedded Systems",
+   "content": "<h2 class=\"lesson-h2\">Check Your Notes</h2><p class=\"lesson-lead\"><strong>3 minutes.</strong> Tick each fact you have. Add anything missing in a different colour.</p><ul class=\"lesson-facts\"><li><strong>Clock speed:</strong> the number of FDE cycles per second. Higher means more instructions each second.</li><li><strong>Cores:</strong> each core can process instructions at the same time as the others.</li><li><strong>Cache:</strong> small, fast memory in the CPU for data and instructions used often.</li><li><strong>Instruction set:</strong> the list of all the commands a CPU can process.</li><li><strong>Embedded system:</strong> a computer system built into a larger device to do a dedicated function.</li><li><strong>Embedded features:</strong> dedicated hardware, a microprocessor, firmware, cannot easily be reprogrammed.</li><li><strong>General purpose computer:</strong> can do many different tasks, such as a laptop.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why add missing facts in a different colour?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The new colour shows what you did not know. Learn those parts first.</p></div></details>"
   },
   {
    "id": "exam-clock",
@@ -155,73 +175,6 @@
    ]
   },
   {
-   "id": "exam-cores",
-   "label": "Performance: Cores",
-   "type": "self-marked-response",
-   "containerId": "y10-31r2-exam-cores",
-   "content": "<h2 class=\"lesson-h2\">Performance: Cores</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read what changed in the question before you answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The answer must be about the part that changed. A reason about a different part earns nothing.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Cambridge IGCSE 0478/12, March 2024, Question 2(b)(ii). The computer has a single core 3.5 GHz processor and an 8 kB cache.</p><div id=\"y10-31r2-exam-cores\"></div>",
-   "items": [
-    {
-     "id": "cores",
-     "prompt": "The CPU is changed to a dual-core 3.5 GHz processor. Explain how the number of cores affects the performance of a CPU.",
-     "marks": 2,
-     "modelAnswer": "More cores mean more instructions are executed each second, because each core runs an FDE cycle at the same time.",
-     "scheme": [
-      "more cores increases / improves the performance",
-      "more cores mean more FDE cycles / instructions are executed each second",
-      "... because each core runs an FE cycle / instruction simultaneously"
-     ],
-     "source": "0478/12 March 2024 Q2(b)(ii)",
-     "context": "3 minutes. Cambridge IGCSE 0478/12, March 2024, Question 2(b)(ii). The computer has a single core 3.5 GHz processor and an 8 kB cache. Question: The CPU is changed to a dual-core 3.5 GHz processor. Explain how the number of cores affects the performance of a CPU. Marking rule: Any two from, one mark for each point met, up to 2."
-    }
-   ]
-  },
-  {
-   "id": "exam-cache",
-   "label": "Performance: Cache",
-   "type": "self-marked-response",
-   "containerId": "y10-31r2-exam-cache",
-   "content": "<h2 class=\"lesson-h2\">Performance: Cache</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the question give the old size and the new size?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They show what changed. Your answer must say what that change does, and why.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Cambridge IGCSE 0478/12, March 2024, Question 2(b)(iii). The computer has a single core 3.5 GHz processor and an 8 kB cache.</p><div id=\"y10-31r2-exam-cache\"></div>",
-   "items": [
-    {
-     "id": "cache",
-     "prompt": "The amount of cache is increased to 64 kB. Explain how the amount of cache affects the performance of a computer.",
-     "marks": 2,
-     "modelAnswer": "More cache means more frequently used data can be accessed faster, instead of from the slower RAM.",
-     "scheme": [
-      "more cache improves performance",
-      "... because more cache means the processor can access more frequently used data / instructions faster",
-      "... instead of having to access the data from the slower-access RAM"
-     ],
-     "source": "0478/12 March 2024 Q2(b)(iii)",
-     "context": "3 minutes. Cambridge IGCSE 0478/12, March 2024, Question 2(b)(iii). The computer has a single core 3.5 GHz processor and an 8 kB cache. Question: The amount of cache is increased to 64 kB. Explain how the amount of cache affects the performance of a computer. Marking rule: Any two from, one mark for each point met, up to 2."
-    }
-   ]
-  },
-  {
-   "id": "fix-quad",
-   "label": "Performance: Fix the Answer",
-   "type": "self-marked-response",
-   "containerId": "y10-31r2-fix-quad",
-   "content": "<h2 class=\"lesson-h2\">Performance: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read the numbers in the question before you explain a difference?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Only what is different can explain the advantage. A value that stays the same cannot be the reason.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/11, June 2026, Question 2(b). A smartphone has a quad-core 2.4 GHz processor. Explain the advantages of the smartphone having a quad-core processor instead of a dual-core processor.</p><div id=\"y10-31r2-fix-quad\"></div>",
-   "items": [
-    {
-     "id": "fix-quad-core",
-     "prompt": "A student wrote: <em>&ldquo;It is faster because it has a higher clock speed.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 2 marks.",
-     "marks": 2,
-     "modelAnswer": "It has twice as many cores, so four instructions can be executed simultaneously rather than two.",
-     "scheme": [
-      "it can execute more instructions / FDE cycles simultaneously // four instructions can be executed simultaneously rather than two",
-      "it can execute more instructions / FDE cycles per second",
-      "... as it has double the number of cores // it has more cores // it has 4 cores instead of 2"
-     ],
-     "source": "0478/11 June 2026 Q2(b)",
-     "ariaLabel": "Explain the advantages of the smartphone having a quad-core processor instead of a dual-core processor. (better answer)",
-     "context": "4 minutes. Cambridge IGCSE 0478/11, June 2026, Question 2(b). A smartphone has a quad-core 2.4 GHz processor. Explain the advantages of the smartphone having a quad-core processor instead of a dual-core processor. A student wrote: \"It is faster because it has a higher clock speed.\" This got 0 of 2 marks: the clock speed is not different here; the advantage comes from the number of cores. The student now writes a better answer. Marking rule: Two from, one mark for each point met, up to 2."
-    }
-   ]
-  },
-  {
    "id": "exam-atm",
    "label": "Embedded Systems: The ATM",
    "type": "self-marked-response",
@@ -242,32 +195,6 @@
      ],
      "source": "0478/12 March 2025 Q4(b)",
      "context": "4 minutes. Cambridge IGCSE 0478/12, March 2025, Question 4(b). An automated teller machine (ATM) is a device where a person inserts their bank card and can request to withdraw money. The ATM also allows the person to check how much money they have in their bank account. Question: Describe the features of the ATM that identify it as an embedded system. Marking rule: Any two from, one mark for each point met, up to 2."
-    }
-   ]
-  },
-  {
-   "id": "fix-watch",
-   "label": "Embedded Systems: Fix the Answer",
-   "type": "self-marked-response",
-   "containerId": "y10-31r2-fix-watch",
-   "content": "<h2 class=\"lesson-h2\">Embedded Systems: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the size of a device not a good reason in this kind of question?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Small devices can be general purpose, such as a smartphone. So size alone cannot decide it.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/12, November 2024, Question 4(e). A student has a smartwatch. The smartwatch only displays the time and text messages. A student incorrectly describes this smartwatch as a general-purpose computer. Explain why the student's description is incorrect.</p><div id=\"y10-31r2-fix-watch\"></div>",
-   "items": [
-    {
-     "id": "fix-watch-gp",
-     "prompt": "A student wrote: <em>&ldquo;The smartwatch is too small to be a general-purpose computer.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 2 marks.",
-     "marks": 2,
-     "modelAnswer": "The watch can only perform a dedicated function, whereas a general purpose computer performs many functions.",
-     "scheme": [
-      "the watch can only perform a dedicated / limited function",
-      "... and a general purpose computer performs many / multiple functions",
-      "... (this means that) it is an embedded system",
-      "you cannot plug in peripherals",
-      "you cannot reprogram the smartwatch // cannot install other software / apps",
-      "it would only have a microprocessor // it would not have a CPU"
-     ],
-     "source": "0478/12 November 2024 Q4(e)",
-     "ariaLabel": "Explain why the student's description is incorrect. (better answer)",
-     "context": "4 minutes. Cambridge IGCSE 0478/12, November 2024, Question 4(e). A student has a smartwatch. The smartwatch only displays the time and text messages. A student incorrectly describes this smartwatch as a general-purpose computer. Explain why the student's description is incorrect. A student wrote: \"The smartwatch is too small to be a general-purpose computer.\" This got 0 of 2 marks: size does not decide it; the answer must say how many functions each one can perform. The student now writes a better answer. Marking rule: Any two from, one mark for each point met, up to 2."
     }
    ]
   },

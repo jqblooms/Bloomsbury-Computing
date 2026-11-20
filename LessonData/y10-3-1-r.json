@@ -87,12 +87,32 @@
   {
    "id": "title",
    "label": "The CPU and the FDE Cycle Exam Practice",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 1</p><h2 class=\"lesson-h2\">The CPU and the FDE Cycle</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions on the parts of the CPU, the registers, the buses and the FDE cycle.</li><li><strong>Also:</strong> a practice paper, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An exam question has 3 marks. Why is one long sentence about one idea not enough?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is for a different point. One idea, said in many ways, still gets one mark.</p></div></details>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Review: Exam Practice 1</p><h2 class=\"lesson-h2\">The CPU and the FDE Cycle</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> make your revision notes, check them, then use them on real exam questions.</li><li><strong>Also:</strong> a practice paper. Keep your notes open for it.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An exam question has 3 marks. Why is one long sentence about one idea not enough?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is for a different point. One idea, said in many ways, still gets one mark.</p></div></details>"
+  },
+  {
+   "id": "notes-cpu",
+   "label": "Make Your Notes: The CPU",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: The CPU</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write it in your own words, and not copy it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Putting it in your own words makes you think about what it means. That is what the exam tests.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: The CPU</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What does the CPU do?</li><li>What is a microprocessor?</li><li>What is the Von Neumann architecture? What is stored in memory?</li></ol></div>"
+  },
+  {
+   "id": "notes-parts",
+   "label": "Make Your Notes: ALU, CU and Registers",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: ALU, CU and Registers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why try from memory before you look?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Trying first shows you what you have forgotten. Those are the parts to learn again.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: Inside the CPU</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What does the ALU do?</li><li>What does the CU do?</li><li>What does each register hold: PC, MAR, MDR, CIR, ACC?</li></ol></div>"
+  },
+  {
+   "id": "notes-buses",
+   "label": "Make Your Notes: Buses",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: Buses</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why put the three buses side by side in your notes?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Side by side, the differences are easy to see and easy to learn.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: The buses</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What does the address bus carry? Which way?</li><li>What does the data bus carry? Which way?</li><li>What does the control bus carry? Which way?</li></ol></div>"
+  },
+  {
+   "id": "notes-fde",
+   "label": "Make Your Notes: The FDE Cycle",
+   "content": "<h2 class=\"lesson-h2\">Make Your Notes: The FDE Cycle</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why number the steps of the cycle?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Exam questions often ask for the steps in order. Numbered notes are easy to learn in order.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Try from memory first, then look back at your old notes.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: The FDE cycle</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>Fetch: write each step in order, with the register used.</li><li>Decode: what happens, and which part does it?</li><li>Execute: what happens?</li></ol></div>"
   },
   {
    "id": "recap",
-   "label": "Key Facts: The CPU",
-   "content": "<h2 class=\"lesson-h2\">Key Facts: The CPU</h2><ul class=\"lesson-facts\"><li><strong>CPU:</strong> processes instructions and data.</li><li><strong>ALU:</strong> does calculations and logic. <strong>CU:</strong> decodes instructions and sends signals.</li><li><strong>PC:</strong> holds the address of the next instruction.</li><li><strong>MAR:</strong> holds the address to read or write. <strong>MDR:</strong> holds the data or instruction read or to write.</li><li><strong>CIR:</strong> holds the instruction being decoded and executed. <strong>ACC:</strong> holds the result of a calculation.</li><li><strong>Address bus:</strong> carries addresses, one way. <strong>Data bus:</strong> carries data, both ways. <strong>Control bus:</strong> carries signals, both ways.</li><li><strong>Fetch:</strong> PC to MAR, PC goes up by 1, the instruction goes to the MDR, then to the CIR. <strong>Decode:</strong> the CU decodes it. <strong>Execute:</strong> it is carried out.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which of these facts do you find hardest to remember?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Everyone has a different answer. Copy that fact into your notes now.</p></div></details>"
+   "label": "Check Your Notes: The CPU",
+   "content": "<h2 class=\"lesson-h2\">Check Your Notes: The CPU</h2><p class=\"lesson-lead\"><strong>3 minutes.</strong> Tick each fact you have. Add anything missing in a different colour.</p><ul class=\"lesson-facts\"><li><strong>CPU:</strong> processes instructions and data.</li><li><strong>ALU:</strong> does calculations and logic. <strong>CU:</strong> decodes instructions and sends signals.</li><li><strong>PC:</strong> holds the address of the next instruction.</li><li><strong>MAR:</strong> holds the address to read or write. <strong>MDR:</strong> holds the data or instruction read or to write.</li><li><strong>CIR:</strong> holds the instruction being decoded and executed. <strong>ACC:</strong> holds the result of a calculation.</li><li><strong>Address bus:</strong> carries addresses, one way. <strong>Data bus:</strong> carries data, both ways. <strong>Control bus:</strong> carries signals, both ways.</li><li><strong>Fetch:</strong> PC to MAR, PC goes up by 1, the instruction goes to the MDR, then to the CIR. <strong>Decode:</strong> the CU decodes it. <strong>Execute:</strong> it is carried out.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why add missing facts in a different colour?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The new colour shows what you did not know. Learn those parts first.</p></div></details>"
   },
   {
    "id": "exam-acc",
@@ -113,28 +133,6 @@
      ],
      "source": "0478/11 November 2022 Q2(c)",
      "context": "4 minutes. Cambridge IGCSE 0478/11, November 2022, Question 2(c). Phil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU). Question: Identify the component within the CPU that the accumulator is built into and describe the purpose of the accumulator. Marking rule: One mark for the component (ALU), then any two from, one mark for each point met, up to 3."
-    }
-   ]
-  },
-  {
-   "id": "fix-stored",
-   "label": "Von Neumann: Fix the Answer",
-   "type": "self-marked-response",
-   "containerId": "y10-31r-fix-stored",
-   "content": "<h2 class=\"lesson-h2\">Von Neumann: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can an answer that sounds right still get 0 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It may only say the question again in other words. A mark needs a fact the question did not already give.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/12, March 2021, Question 8(a). The Von Neumann model, for a computer system, uses the stored program concept. Describe what is meant by the stored program concept.</p><div id=\"y10-31r-fix-stored\"></div>",
-   "items": [
-    {
-     "id": "fix-stored-program",
-     "prompt": "A student wrote: <em>&ldquo;The program is stored on the computer so it can be used again later.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 2 marks.",
-     "marks": 2,
-     "modelAnswer": "Instructions and data are stored in the same memory. Instructions are fetched and executed in order.",
-     "scheme": [
-      "instructions and data stored in the same / main memory",
-      "instructions fetched and executed in order / one after another / in sequence"
-     ],
-     "source": "0478/12 March 2021 Q8(a)",
-     "ariaLabel": "Describe what is meant by the stored program concept. (better answer)",
-     "context": "4 minutes. Cambridge IGCSE 0478/12, March 2021, Question 8(a). The Von Neumann model, for a computer system, uses the stored program concept. Describe what is meant by the stored program concept. A student wrote: \"The program is stored on the computer so it can be used again later.\" This got 0 of 2 marks: it does not say where the instructions and data are kept, or how the instructions are run. The student now writes a better answer. Marking rule: One mark each, one mark for each point met, up to 2."
     }
    ]
   },
@@ -160,58 +158,6 @@
      "context": "4 minutes. Cambridge IGCSE 0478/13, June 2023, Question 2(c)(ii). A library has a self-checkout system that allows customers to register books that they want to borrow. The self-checkout system has a central processing unit (CPU). The CPU contains registers and buses. Question: Identify one bus that can be found in the CPU and explain its purpose in the fetch-decode-execute cycle. Marking rule: One mark for the bus, two marks for the matching description, one mark for each point met, up to 3."
     }
    ]
-  },
-  {
-   "id": "fix-mar-mdr",
-   "label": "Registers: Fix the Answer",
-   "type": "self-marked-response",
-   "containerId": "y10-31r-fix-mar-mdr",
-   "content": "<h2 class=\"lesson-h2\">Registers: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Two registers have names that look alike. How can you remember which holds what?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Read the middle word of each name. It says what kind of value that register holds.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Cambridge IGCSE 0478/12, June 2026, Question 2(c). A computer has a central processing unit (CPU). A value is fetched from random access memory (RAM) to the CPU. Explain how the MAR and MDR are used in this process.</p><div id=\"y10-31r-fix-mar-mdr\"></div>",
-   "items": [
-    {
-     "id": "fix-mar-mdr-use",
-     "prompt": "A student wrote: <em>&ldquo;The MDR holds the address of the value, and the MAR holds the value when it arrives from RAM.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 3 marks.",
-     "marks": 3,
-     "modelAnswer": "The MAR holds the address of the value to be fetched. The value is copied into the MDR.",
-     "scheme": [
-      "the MAR stores / holds the address / location // the address is sent / copied to the MAR ...",
-      "... for the value / data that is to be fetched / in RAM",
-      "the MDR stores / holds the value / data // the data is sent / copied to the MDR"
-     ],
-     "source": "0478/12 June 2026 Q2(c)",
-     "ariaLabel": "Explain how the MAR and MDR are used in this process. (better answer)",
-     "context": "4 minutes. Cambridge IGCSE 0478/12, June 2026, Question 2(c). A computer has a central processing unit (CPU). A value is fetched from random access memory (RAM) to the CPU. Explain how the MAR and MDR are used in this process. A student wrote: \"The MDR holds the address of the value, and the MAR holds the value when it arrives from RAM.\" This got 0 of 3 marks: the two registers are swapped: the MAR holds the address and the MDR holds the value. The student now writes a better answer. Marking rule: Three from, one mark for each point met, up to 3."
-    }
-   ]
-  },
-  {
-   "id": "exam-pc",
-   "label": "The FDE Cycle: The Program Counter",
-   "type": "self-marked-response",
-   "containerId": "y10-31r-exam-pc",
-   "content": "<h2 class=\"lesson-h2\">The FDE Cycle: The Program Counter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A register holds one value. Why does the exam want you to say which value?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every register holds a value. Saying which one shows what makes this register different.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Cambridge IGCSE 0478/12, March 2021, Question 8(b)(i). The fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses.</p><div id=\"y10-31r-exam-pc\"></div>",
-   "items": [
-    {
-     "id": "pc",
-     "prompt": "Describe the role of the Program Counter.",
-     "marks": 2,
-     "modelAnswer": "It holds the address of the next instruction.",
-     "scheme": [
-      "holds the address ...",
-      "... of next / current instruction"
-     ],
-     "source": "0478/12 March 2021 Q8(b)(i)",
-     "context": "3 minutes. Cambridge IGCSE 0478/12, March 2021, Question 8(b)(i). The fetch-execute cycle of a Von Neumann model, for a computer system, uses registers and buses. Question: Describe the role of the Program Counter. Marking rule: One mark each, one mark for each point met, up to 2."
-    }
-   ]
-  },
-  {
-   "id": "practice",
-   "label": "Practice: Quick Exam Questions",
-   "type": "short-answer-validation",
-   "validatorId": "y10-31r-practice",
-   "validatorKey": "y10_31r_practice",
-   "content": "<h2 class=\"lesson-h2\">Practice: Quick Exam Questions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why give the full name of a component, not a word such as \"register\" or \"unit\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Many parts share those words. Only the full name, or its letters, tells the examiner which part you mean.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Part (a): Cambridge IGCSE 0478/11, November 2023, Question 1(c). Part (b): Cambridge IGCSE 0478/11, June 2026, Question 2(a)(iii). Part (c): Cambridge IGCSE 0478/13, November 2025, Question 2(b)(ii). The CPU has a control unit (CU).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-31r-practice-a\">(a) A component in the CPU sends signals to manage the fetch-decode-execute cycle. State the name of this component. [1]</label><input id=\"y10-31r-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Quick Exam Questions part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-31r-practice-b\">(b) Give the name of one component that is used in the execute stage of the FDE cycle. [1]</label><input id=\"y10-31r-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Quick Exam Questions part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-31r-practice-c\">(c) Give the name of the register that is part of the CU. [1]</label><input id=\"y10-31r-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Quick Exam Questions part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-31r-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-31r-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
   },
   {
    "id": "plenary",
