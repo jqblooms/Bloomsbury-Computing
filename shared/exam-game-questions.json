@@ -7925,6 +7925,936 @@
    ]
   },
   {
+   "setId": "y9-pseudocode",
+   "title": "Following and Correcting Pseudocode",
+   "year": "Year 9",
+   "unit": "Unit 3 Pseudocode and Software Development",
+   "questions": [
+    {
+     "qid": "y9p-24j22-7a",
+     "text": "Cambridge IGCSE 0478/22, May/June 2024, Question 7\nAn algorithm has been written in pseudocode to find and display the maximum and minimum values in an array of 1000 positive numbers. The array List[] starts at index 1\n1  DECLARE List : ARRAY[1:1000] OF INTEGER\n2  DECLARE Max : INTEGER\n3  DECLARE Min : INTEGER\n4  DECLARE Counter : INTEGER\n5  Max ← List[1]\n6  Min ← List[1]\n7  FOR Counter ← 2 TO 1000\n8      IF List[Counter] > Max THEN\n9          Max ← List[Counter]\n10      ENDIF\n11      IF List[Counter] < Min THEN\n12          Min ← List[Counter]\n13      ENDIF\n14  NEXT Counter\n15  OUTPUT \"Maximum value is \", Max\n16  OUTPUT \"Minimum value is \", Min\n(a) Give a line number for each of these types of statement:\nAssignment statement ........\nSelection statement ........\nIteration statement ........\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/22, May/June 2024, Question 7\nAn algorithm has been written in pseudocode to find and display the maximum and minimum values in an array of 1000 positive numbers. The array List[] starts at index 1"
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE List : ARRAY[1:1000] OF INTEGER",
+        "DECLARE Max : INTEGER",
+        "DECLARE Min : INTEGER",
+        "DECLARE Counter : INTEGER",
+        "Max ← List[1]",
+        "Min ← List[1]",
+        "FOR Counter ← 2 TO 1000",
+        "    IF List[Counter] > Max THEN",
+        "        Max ← List[Counter]",
+        "    ENDIF",
+        "    IF List[Counter] < Min THEN",
+        "        Min ← List[Counter]",
+        "    ENDIF",
+        "NEXT Counter",
+        "OUTPUT \"Maximum value is \", Max",
+        "OUTPUT \"Minimum value is \", Min"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Give a line number for each of these types of statement:"
+      },
+      {
+       "type": "line",
+       "label": "Assignment statement"
+      },
+      {
+       "type": "line",
+       "label": "Selection statement"
+      },
+      {
+       "type": "line",
+       "label": "Iteration statement"
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-24j21-4a",
+     "text": "Cambridge IGCSE 0478/21, May/June 2024, Question 4\nThis pseudocode algorithm is intended to allow 10 values to be entered and totalled. The total of the entered values is output at the end of the algorithm.\n1  DECLARE Loop : STRING\n2  DECLARE Value : REAL\n3  DECLARE Total : REAL\n4  Total ← 0\n5  IF Loop ← 1 TO 10\n6      OUTPUT \"Enter a number\"\n7      INPUT Loop\n8      Total ← Total * Value\n9  NEXT Loop\n10  OUTPUT \"The total of the numbers entered is \", Total\n(a) Identify the line numbers of four errors in the pseudocode and suggest corrections.\nError 1 line number ........\nCorrection 1 ........\nError 2 line number ........\nCorrection 2 ........\nError 3 line number ........\nCorrection 3 ........\nError 4 line number ........\nCorrection 4 ........\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/21, May/June 2024, Question 4\nThis pseudocode algorithm is intended to allow 10 values to be entered and totalled. The total of the entered values is output at the end of the algorithm."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Loop : STRING",
+        "DECLARE Value : REAL",
+        "DECLARE Total : REAL",
+        "Total ← 0",
+        "IF Loop ← 1 TO 10",
+        "    OUTPUT \"Enter a number\"",
+        "    INPUT Loop",
+        "    Total ← Total * Value",
+        "NEXT Loop",
+        "OUTPUT \"The total of the numbers entered is \", Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line numbers of four errors in the pseudocode and suggest corrections."
+      },
+      {
+       "type": "line",
+       "label": "Error 1 line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction 1"
+      },
+      {
+       "type": "line",
+       "label": "Error 2 line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction 2"
+      },
+      {
+       "type": "line",
+       "label": "Error 3 line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction 3"
+      },
+      {
+       "type": "line",
+       "label": "Error 4 line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction 4"
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-lines",
+     "text": "1  DECLARE A : INTEGER\n2  DECLARE B : INTEGER\n3  A ← 6\n4  B ← A - 2\n5  A ← B * 3\n6  OUTPUT A\nState the output.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE A : INTEGER",
+        "DECLARE B : INTEGER",
+        "A ← 6",
+        "B ← A - 2",
+        "A ← B * 3",
+        "OUTPUT A"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-copy",
+     "text": "1  DECLARE P : INTEGER\n2  DECLARE Q : INTEGER\n3  P ← 7\n4  Q ← P\n5  P ← P + 5\n6  OUTPUT Q\nState the output.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE P : INTEGER",
+        "DECLARE Q : INTEGER",
+        "P ← 7",
+        "Q ← P",
+        "P ← P + 5",
+        "OUTPUT Q"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-out-inside",
+     "text": "1  DECLARE Number : INTEGER\n2  DECLARE Count : INTEGER\n3  Number ← 2\n4  FOR Count ← 1 TO 3\n5      Number ← Number * 3\n6      OUTPUT Number\n7  NEXT Count\nState how many values are output.\nNumber of values ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Number : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Number ← 2",
+        "FOR Count ← 1 TO 3",
+        "    Number ← Number * 3",
+        "    OUTPUT Number",
+        "NEXT Count"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State how many values are output."
+      },
+      {
+       "type": "line",
+       "label": "Number of values"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-out-after",
+     "text": "1  DECLARE Number : INTEGER\n2  DECLARE Count : INTEGER\n3  Number ← 2\n4  FOR Count ← 1 TO 3\n5      Number ← Number * 3\n6  NEXT Count\n7  OUTPUT Number\nState the output.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Number : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Number ← 2",
+        "FOR Count ← 1 TO 3",
+        "    Number ← Number * 3",
+        "NEXT Count",
+        "OUTPUT Number"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-reset",
+     "text": "This program should output 5 + 5 + 5 + 5.\n1  DECLARE Total : INTEGER\n2  DECLARE Count : INTEGER\n3  FOR Count ← 1 TO 4\n4      Total ← 0\n5      Total ← Total + 5\n6  NEXT Count\n7  OUTPUT Total\nState the output of the program exactly as it is written.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should output 5 + 5 + 5 + 5."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 1 TO 4",
+        "    Total ← 0",
+        "    Total ← Total + 5",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output of the program exactly as it is written."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-reset-line",
+     "text": "This program should output the total of 3, 4, 5 and 6. One line is in the wrong place.\n1  DECLARE Total : INTEGER\n2  DECLARE Count : INTEGER\n3  FOR Count ← 3 TO 6\n4      Total ← 0\n5      Total ← Total + Count\n6  NEXT Count\n7  OUTPUT Total\nIdentify the line number of the line that must be moved to before the loop.\nLine number ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should output the total of 3, 4, 5 and 6. One line is in the wrong place."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 3 TO 6",
+        "    Total ← 0",
+        "    Total ← Total + Count",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Identify the line number of the line that must be moved to before the loop."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-reset-explain",
+     "text": "This program should output the total of 3, 4, 5 and 6, which is 18.\n1  DECLARE Total : INTEGER\n2  DECLARE Count : INTEGER\n3  FOR Count ← 3 TO 6\n4      Total ← 0\n5      Total ← Total + Count\n6  NEXT Count\n7  OUTPUT Total\nExplain why the program outputs 6 and not 18.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should output the total of 3, 4, 5 and 6, which is 18."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "FOR Count ← 3 TO 6",
+        "    Total ← 0",
+        "    Total ← Total + Count",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Explain why the program outputs 6 and not 18."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-if-after",
+     "text": "This program should count the numbers that are 50 or more. The user inputs 60, 20, 75, 40 and 55.\n1  DECLARE Number : INTEGER\n2  DECLARE Count : INTEGER\n3  DECLARE Big : INTEGER\n4  Big ← 0\n5  FOR Count ← 1 TO 5\n6      INPUT Number\n7  NEXT Count\n8  IF Number >= 50 THEN\n9      Big ← Big + 1\n10  ENDIF\n11  OUTPUT Big\nState the output of the program exactly as it is written.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should count the numbers that are 50 or more. The user inputs 60, 20, 75, 40 and 55."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Number : INTEGER",
+        "DECLARE Count : INTEGER",
+        "DECLARE Big : INTEGER",
+        "Big ← 0",
+        "FOR Count ← 1 TO 5",
+        "    INPUT Number",
+        "NEXT Count",
+        "IF Number >= 50 THEN",
+        "    Big ← Big + 1",
+        "ENDIF",
+        "OUTPUT Big"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output of the program exactly as it is written."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-if-where",
+     "text": "This program should count the numbers that are 50 or more. The IF (lines 8 to 10) is in the wrong place.\n1  DECLARE Number : INTEGER\n2  DECLARE Count : INTEGER\n3  DECLARE Big : INTEGER\n4  Big ← 0\n5  FOR Count ← 1 TO 5\n6      INPUT Number\n7  NEXT Count\n8  IF Number >= 50 THEN\n9      Big ← Big + 1\n10  ENDIF\n11  OUTPUT Big\nTick (✓) one box to show where lines 8 to 10 must go.\nA Before the FOR line\nB Inside the loop, after INPUT Number\nC After OUTPUT Big\nD Before Big ← 0\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should count the numbers that are 50 or more. The IF (lines 8 to 10) is in the wrong place."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Number : INTEGER",
+        "DECLARE Count : INTEGER",
+        "DECLARE Big : INTEGER",
+        "Big ← 0",
+        "FOR Count ← 1 TO 5",
+        "    INPUT Number",
+        "NEXT Count",
+        "IF Number >= 50 THEN",
+        "    Big ← Big + 1",
+        "ENDIF",
+        "OUTPUT Big"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show where lines 8 to 10 must go."
+      },
+      {
+       "type": "options",
+       "items": [
+        "Before the FOR line",
+        "Inside the loop, after INPUT Number",
+        "After OUTPUT Big",
+        "Before Big ← 0"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-boundary-out",
+     "text": "This program should count the marks that are 40 or more. The user inputs 40, 52, 39, 40 and 70.\n1  DECLARE Mark : INTEGER\n2  DECLARE Count : INTEGER\n3  DECLARE Pass : INTEGER\n4  Pass ← 0\n5  FOR Count ← 1 TO 5\n6      INPUT Mark\n7      IF Mark > 40 THEN\n8          Pass ← Pass + 1\n9      ENDIF\n10  NEXT Count\n11  OUTPUT Pass\nState the output of the program exactly as it is written.\nOutput ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should count the marks that are 40 or more. The user inputs 40, 52, 39, 40 and 70."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Mark : INTEGER",
+        "DECLARE Count : INTEGER",
+        "DECLARE Pass : INTEGER",
+        "Pass ← 0",
+        "FOR Count ← 1 TO 5",
+        "    INPUT Mark",
+        "    IF Mark > 40 THEN",
+        "        Pass ← Pass + 1",
+        "    ENDIF",
+        "NEXT Count",
+        "OUTPUT Pass"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "State the output of the program exactly as it is written."
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-boundary-fix",
+     "text": "This program should count the marks that are 40 or more. The user inputs 40, 52, 39, 40 and 70.\n1  DECLARE Mark : INTEGER\n2  DECLARE Count : INTEGER\n3  DECLARE Pass : INTEGER\n4  Pass ← 0\n5  FOR Count ← 1 TO 5\n6      INPUT Mark\n7      IF Mark > 40 THEN\n8          Pass ← Pass + 1\n9      ENDIF\n10  NEXT Count\n11  OUTPUT Pass\nWrite a correct line 7 so that the program counts the marks that are 40 or more.\nLine 7 ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should count the marks that are 40 or more. The user inputs 40, 52, 39, 40 and 70."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Mark : INTEGER",
+        "DECLARE Count : INTEGER",
+        "DECLARE Pass : INTEGER",
+        "Pass ← 0",
+        "FOR Count ← 1 TO 5",
+        "    INPUT Mark",
+        "    IF Mark > 40 THEN",
+        "        Pass ← Pass + 1",
+        "    ENDIF",
+        "NEXT Count",
+        "OUTPUT Pass"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Write a correct line 7 so that the program counts the marks that are 40 or more."
+      },
+      {
+       "type": "line",
+       "label": "Line 7"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-less-tick",
+     "text": "A program counts the cold days. A day is cold when Temp is 15 or less.\nTick (✓) one box to identify the correct IF line.\nA IF Temp < 15 THEN\nB IF Temp >= 15 THEN\nC IF Temp <= 15 THEN\nD IF Temp > 15 THEN\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A program counts the cold days. A day is cold when Temp is 15 or less."
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to identify the correct IF line."
+      },
+      {
+       "type": "options",
+       "items": [
+        "IF Temp < 15 THEN",
+        "IF Temp >= 15 THEN",
+        "IF Temp <= 15 THEN",
+        "IF Temp > 15 THEN"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-error-input",
+     "text": "This program should input five scores and output their total. It has one error.\n1  DECLARE Score : INTEGER\n2  DECLARE Total : INTEGER\n3  DECLARE Count : INTEGER\n4  Total ← 0\n5  FOR Count ← 1 TO 5\n6      OUTPUT Score\n7      Total ← Total + Score\n8  NEXT Count\n9  OUTPUT Total\n(a) Identify the line number that contains the error.\nLine number ........\n[1]\n(b) Write the correct line.\nCorrect line ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should input five scores and output their total. It has one error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Score : INTEGER",
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Total ← 0",
+        "FOR Count ← 1 TO 5",
+        "    OUTPUT Score",
+        "    Total ← Total + Score",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line number that contains the error."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) Write the correct line."
+      },
+      {
+       "type": "line",
+       "label": "Correct line"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-error-output",
+     "text": "This program should input six marks, count the marks that are 50 or more, then output the count. It has one error.\n1  DECLARE Mark : INTEGER\n2  DECLARE Count : INTEGER\n3  DECLARE Pass : INTEGER\n4  Pass ← 0\n5  FOR Count ← 1 TO 6\n6      INPUT Mark\n7      IF Mark >= 50 THEN\n8          Pass ← Pass + 1\n9      ENDIF\n10  NEXT Count\n11  OUTPUT Mark\n(a) Identify the line number that contains the error.\nLine number ........\n[1]\n(b) Write the correct line.\nCorrect line ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should input six marks, count the marks that are 50 or more, then output the count. It has one error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Mark : INTEGER",
+        "DECLARE Count : INTEGER",
+        "DECLARE Pass : INTEGER",
+        "Pass ← 0",
+        "FOR Count ← 1 TO 6",
+        "    INPUT Mark",
+        "    IF Mark >= 50 THEN",
+        "        Pass ← Pass + 1",
+        "    ENDIF",
+        "NEXT Count",
+        "OUTPUT Mark"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line number that contains the error."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) Write the correct line."
+      },
+      {
+       "type": "line",
+       "label": "Correct line"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-error-array",
+     "text": "The array Scores holds five scores, from index 1 to 5. This program should output the total of all five scores. It has one error.\n1  DECLARE Scores : ARRAY[1:5] OF INTEGER\n2  DECLARE Total : INTEGER\n3  DECLARE Index : INTEGER\n4  Total ← 0\n5  FOR Index ← 1 TO 4\n6      Total ← Total + Scores[Index]\n7  NEXT Index\n8  OUTPUT Total\n(a) Identify the line number that contains the error.\nLine number ........\n[1]\n(b) Write the correct line.\nCorrect line ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "The array Scores holds five scores, from index 1 to 5. This program should output the total of all five scores. It has one error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Scores : ARRAY[1:5] OF INTEGER",
+        "DECLARE Total : INTEGER",
+        "DECLARE Index : INTEGER",
+        "Total ← 0",
+        "FOR Index ← 1 TO 4",
+        "    Total ← Total + Scores[Index]",
+        "NEXT Index",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line number that contains the error."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) Write the correct line."
+      },
+      {
+       "type": "line",
+       "label": "Correct line"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-error-add",
+     "text": "This program should input four marks and output their total. It has one error.\n1  DECLARE Mark : INTEGER\n2  DECLARE Total : INTEGER\n3  DECLARE Count : INTEGER\n4  Total ← 0\n5  FOR Count ← 1 TO 4\n6      INPUT Mark\n7      Total ← Total + 1\n8  NEXT Count\n9  OUTPUT Total\n(a) Identify the line number that contains the error.\nLine number ........\n[1]\n(b) Write the correct line.\nCorrect line ........\n[1]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should input four marks and output their total. It has one error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Mark : INTEGER",
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Total ← 0",
+        "FOR Count ← 1 TO 4",
+        "    INPUT Mark",
+        "    Total ← Total + 1",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "(a) Identify the line number that contains the error."
+      },
+      {
+       "type": "line",
+       "label": "Line number"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      },
+      {
+       "type": "para",
+       "text": "(b) Write the correct line."
+      },
+      {
+       "type": "line",
+       "label": "Correct line"
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-three",
+     "text": "This algorithm should input the prices of 5 items, count how many cost 20 or more, then output the count. It has three errors.\n1  DECLARE Price : INTEGER\n2  DECLARE Count : INTEGER\n3  DECLARE Dear : INTEGER\n4  Dear ← 0\n5  FOR Count ← 1 TO 4\n6      INPUT Price\n7      IF Price > 20 THEN\n8          Dear ← Dear + 1\n9      ENDIF\n10  NEXT Count\n11  OUTPUT Price\nIdentify the line numbers of the three errors and suggest a correction for each error.\nError 1 line number ........\nCorrection 1 ........\nError 2 line number ........\nCorrection 2 ........\nError 3 line number ........\nCorrection 3 ........\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This algorithm should input the prices of 5 items, count how many cost 20 or more, then output the count. It has three errors."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Price : INTEGER",
+        "DECLARE Count : INTEGER",
+        "DECLARE Dear : INTEGER",
+        "Dear ← 0",
+        "FOR Count ← 1 TO 4",
+        "    INPUT Price",
+        "    IF Price > 20 THEN",
+        "        Dear ← Dear + 1",
+        "    ENDIF",
+        "NEXT Count",
+        "OUTPUT Price"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Identify the line numbers of the three errors and suggest a correction for each error."
+      },
+      {
+       "type": "line",
+       "label": "Error 1 line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction 1"
+      },
+      {
+       "type": "line",
+       "label": "Error 2 line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction 2"
+      },
+      {
+       "type": "line",
+       "label": "Error 3 line number"
+      },
+      {
+       "type": "line",
+       "label": "Correction 3"
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-trace",
+     "text": "This program should output the total of 2, 3 and 4. It has an error.\n1  DECLARE Total : INTEGER\n2  DECLARE Count : INTEGER\n3  Total ← 0\n4  FOR Count ← 2 TO 4\n5      Total ← Count + 1\n6  NEXT Count\n7  OUTPUT Total\nComplete the trace table with the value of Total after each pass, exactly as the program is written, and state the output.\nCount | Total\n2 | ........\n3 | ........\n4 | ........\nOutput ........\n[4]",
+     "marks": 4,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "This program should output the total of 2, 3 and 4. It has an error."
+      },
+      {
+       "type": "code",
+       "lang": "pseudocode",
+       "numbered": true,
+       "lines": [
+        "DECLARE Total : INTEGER",
+        "DECLARE Count : INTEGER",
+        "Total ← 0",
+        "FOR Count ← 2 TO 4",
+        "    Total ← Count + 1",
+        "NEXT Count",
+        "OUTPUT Total"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "Complete the trace table with the value of Total after each pass, exactly as the program is written, and state the output."
+      },
+      {
+       "type": "table",
+       "head": [
+        "Count",
+        "Total"
+       ],
+       "rows": [
+        [
+         "2",
+         ""
+        ],
+        [
+         "3",
+         ""
+        ],
+        [
+         "4",
+         ""
+        ]
+       ]
+      },
+      {
+       "type": "line",
+       "label": "Output"
+      },
+      {
+       "type": "para",
+       "text": "[4]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-purpose-why",
+     "text": "A student is given a program that has an error.\nExplain why the student should know the purpose of the program before looking for the error.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A student is given a program that has an error.\nExplain why the student should know the purpose of the program before looking for the error."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y9p-own-boundary-why",
+     "text": "A program should count the scores that are 40 or more.\nExplain why the program should be tested with a score of exactly 40.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "A program should count the scores that are 40 or more.\nExplain why the program should be tested with a score of exactly 40."
+      },
+      {
+       "type": "lines",
+       "rows": 3
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "setId": "y10-unit3-1-practice",
    "title": "Unit 3.1 Revision: All Topics",
    "year": "Year 10",
