@@ -205,7 +205,7 @@ const F1R = flowRun(F1);
 assert(F1R.outs.join() === '6' && F1R.yes === 3 && F1R.v.Count === 4, 'F1 runs');
 // node index: 0 Start, 1 Total<-0, 2 Count<-1, 3 decision, 4 Total<-Total+Count, 5 Count<-Count+1, 6 OUTPUT, 7 Stop
 const tr = (rows) => table(rows.map((r) => r.map((c) => c === '' ? '&nbsp;' : c)), ['Total', 'Count', 'Count &lt;= 3?', 'Output']);
-const SH = (hl, say, rows) => `<p style="margin:0 0 6px;font-size:17px">${say}</p>` + columns(flowSvg(F1, hl, 300), tr(rows));
+const SH = (hl, say, rows) => `<p style="margin:0 0 6px;font-size:17px">${say}</p>` + columns(flowSvg(F1, hl, 265), tr(rows));
 const r0 = [['0', '', '', '']], r1 = r0.concat([['', '1', '', '']]);
 const watchSteps = [
   { title: 'The shapes', html: SH(-1, 'Oval: Start or Stop. Box: do this. Slanted box: INPUT or OUTPUT. Diamond: a <strong>decision</strong>, a question with the answer Yes or No.', []) },
@@ -231,7 +231,7 @@ steps.push(selfMarked('explain-loop', 'Explain It: How a Flowchart Loops', 'Expl
     guidance: 'One mark for each point. Credit the ideas in the student\'s own words: an arrow or line going back (to the question / diamond / decision) for point 1; the question or decision answering No, or Count getting too big, for point 2. Do not accept "it loops" or "it repeats" alone for point 1.',
     context: 'The flowchart: Start, Total <- 0, Count <- 1, then a decision "Count <= 3?". Yes leads to Total <- Total + Count, then Count <- Count + 1, then an arrow back up to the decision. No leads to OUTPUT Total, then Stop. The class watched it run: Count was 1, 2 and 3 on the Yes passes, then 4 gave No and it output 6.',
     modelAnswer: 'After Count <- Count + 1 the arrow goes back up to the decision, so the boxes run again. When Count is 4, Count <= 3 is No, so it leaves the loop.' },
-], ['Why does Count have to change inside the loop?', 'If Count never changed, the decision would give the same answer every time.'], flowSvg(F1, -1, 300)));
+], ['Why explain it in your own words, not copy the boxes?', 'Your own words show you know how it works, not just what it says.'], flowSvg(F1, -1, 300)));
 
 // ---------------------------------------------------------------- check: follow a flowchart loop
 const F2 = { pre: [T('Start'), B('Total <- 0'), B('Count <- 1')], dec: 'Count <= 4?', body: [B('Total <- Total + 3'), B('Count <- Count + 1')], post: [IO('OUTPUT Total'), T('Stop')] };
@@ -344,16 +344,18 @@ steps.push({ id: 'activity-2', label: 'Activity 2: Trace the Hot Days', type: 'e
 // ---------------------------------------------------------------- exam-style question
 const F4 = { pre: [T('Start'), B('Total <- 0'), B('Count <- 1')], dec: 'Count <= 5?', body: [IO('INPUT Mark'), B('Total <- Total + Mark'), B('Count <- Count + 1')], post: [IO('OUTPUT Total'), T('Stop')] };
 assert(flowRun(F4, [3, 4, 5, 6, 7]).outs.join() === '25', 'F4 totals five marks');
-steps.push(selfMarked('exam-flow', 'Exam-Style Question: A Flowchart Loop', 'Exam-Style Question: A Flowchart Loop', mins(4, 'answer both parts in full sentences. Use Check my answer.'), [
+steps.push(selfMarked('exam-flow', 'Exam-Style Question: A Flowchart Loop (1 of 2)', 'Exam-Style Question: A Flowchart Loop (1 of 2)', mins(2, 'answer in a full sentence. Use Check my answer.'), [
   { id: 'flow-purpose', prompt: '(a) State the purpose of this flowchart. [2]', marks: 2,
     scheme: ['It inputs 5 marks / five numbers', 'It adds them up / finds the total and outputs the total'],
     guidance: 'One mark for each point. Point 1 needs the number of inputs (5) or "five marks". Do not accept "it loops" or "it adds" alone.',
     modelAnswer: 'It inputs 5 marks and outputs their total.' },
+], ['Why read every box from Start to Stop before you state the purpose?', 'The purpose is what the whole algorithm does, not what one box does.'], flowSvg(F4, -1, 300)));
+steps.push(selfMarked('exam-flow-2', 'Exam-Style Question: A Flowchart Loop (2 of 2)', 'Exam-Style Question: A Flowchart Loop (2 of 2)', mins(2, 'answer in full sentences. Use Check my answer.'), [
   { id: 'flow-count-why', prompt: '(b) Explain why the box Count ← Count + 1 is needed. [2]', marks: 2,
     scheme: ['Count goes up by 1 on each pass / it counts how many marks have been input', 'So Count reaches 6 and the decision gives No, so the loop stops after 5 marks / without it the loop never stops'],
     guidance: 'One mark for each point. Accept "so the loop ends" with a reason linked to Count for point 2. Do not accept "to add 1" alone.',
     modelAnswer: 'It adds 1 to Count on each pass. When Count reaches 6 the decision is No, so the loop stops.' },
-], ['Part (a) has 2 marks. How do you plan the answer?', 'Say what goes in and what comes out: one mark for each.'], flowSvg(F4, -1, 360)));
+], ['An Explain question has 2 marks. Why give two linked ideas, not one?', 'One idea says what happens. The second says why that matters. Each earns a mark.'], flowSvg(F4, -1, 300)));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Algorithms with Loops Drill', 'drill-y9-3-2-loops', 'Plenary: Algorithms with Loops Drill',
