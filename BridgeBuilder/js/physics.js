@@ -71,6 +71,13 @@
       anchors: [[8, 0], [8, -2], [16, -3], [18, -3], [22, 0], [22, -2]], start: [1.5, 0], goal: [28, 2] }
   ];
 
+  // Level packs (James 2026-11-20: 60 rounds). js/levels/pack-K.js sets BBLevelPacks[K] = { levels: fn(T), sound:
+  // fn(H), flimsy: fn(H) }; pack 2 is rounds 11 to 20, pack 3 is 21 to 30 and so on. Packs are added in order and
+  // stop at the first missing one, so round numbers never shift. See BridgeBuilder/LEVEL-PACKS.md.
+  var TERRAIN = { cliffL: cliffL, cliffR: cliffR, DEEP: DEEP, BACK: BACK, FAR: FAR, WORLD_W: WORLD_W, Y_MIN: Y_MIN, Y_MAX: Y_MAX, MAX_LEN: MAX_LEN };
+  var PACKS = root.BBLevelPacks || {};
+  for (var pk = 2; PACKS[pk]; pk++) LEVELS = LEVELS.concat(PACKS[pk].levels(TERRAIN));
+
   function bbox(poly) {
     var b = { x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9 };
     poly.forEach(function (p) { b.x0 = Math.min(b.x0, p[0]); b.x1 = Math.max(b.x1, p[0]); b.y0 = Math.min(b.y0, p[1]); b.y1 = Math.max(b.y1, p[1]); });
@@ -342,7 +349,7 @@
 
   root.BBPhys = {
     WORLD_W: WORLD_W, Y_MIN: Y_MIN, Y_MAX: Y_MAX, MAX_LEN: MAX_LEN, MATS: MATS, MAT_ORDER: MAT_ORDER, LEVELS: LEVELS,
-    WHEEL_R: WHEEL_R, AXLE: AXLE, FPS: FPS,
+    WHEEL_R: WHEEL_R, AXLE: AXLE, FPS: FPS, TERRAIN: TERRAIN,
     level: level, solidAt: solidAt, onGround: onGround, pointOk: pointOk, isAnchor: isAnchor, beamProblem: beamProblem, beamCost: beamCost, designCost: designCost,
     blen: blen, findNode: findNode, emptyDesign: emptyDesign, addBeam: addBeam, removeBeam: removeBeam,
     makeSim: makeSim, step: step, run: run, afterTest: afterTest

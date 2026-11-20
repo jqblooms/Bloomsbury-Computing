@@ -7,6 +7,10 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 const require = createRequire(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
+// Level packs load before physics.js, as in index.html.
+import fs from 'fs';
+const packDir = path.join(here, '..', 'BridgeBuilder', 'js', 'levels');
+if (fs.existsSync(packDir)) for (const f of fs.readdirSync(packDir).filter(f => /^pack-\d+\.js$/.test(f)).sort()) require(path.join(packDir, f));
 require(path.join(here, '..', 'BridgeBuilder', 'js', 'physics.js'));
 const B = globalThis.BBPhys;
 
@@ -33,7 +37,17 @@ const flimsy = {
   10: chain(line(8, 0, 22, 0, 2), R).concat([[8, -2, 10, 0, W], [16, -3, 16, 0, W], [18, -3, 18, 0, W], [16, -3, 14, 0, W], [18, -3, 20, 0, W], [22, -2, 20, 0, W]])
 };
 const designs = {};
-for (const n of Object.keys(SOL.sound)) designs[n] = { sound: SOL.sound[n], flimsy: flimsy[n] };
+for (const n of Object.keys(SOL.sound)) designs[n] = { sound: SOL.sound[n], flimsy: flimsy[n] || SOL.flimsy[n] };
+// BB_PACK=K: test only pack K's rounds, on their own, even when an earlier pack is not written yet.
+const ONLY = Number(process.env.BB_PACK || 0);
+let ROUNDS_TO_TEST = [];
+if (ONLY) {
+  const P = globalThis.BBLevelPacks[ONLY], H = { chain, warren, line, R: 'road', W: 'wood', S: 'steel' };
+  const lvs = P.levels(B.TERRAIN), so = P.sound(H), fl = P.flimsy(H), base = (ONLY - 1) * 10;
+  lvs.forEach((d, i) => { designs[base + 1 + i] = { sound: so[i], flimsy: fl[i] }; ROUNDS_TO_TEST.push([base + 1 + i, d]); });
+} else {
+  for (let n = 1; n <= B.LEVELS.length; n++) ROUNDS_TO_TEST.push([n, null]);
+}
 
 function build(lv, list) {
   const d = B.emptyDesign(lv), probs = [];
@@ -50,8 +64,8 @@ function warrenFlat(lv, h, chord, diag) { return build(lv, warren(line(lv.L, 0, 
 
 // 1. Every round: the layout is fair, a designed bridge crosses inside the full-marks pool, a flimsy one fails.
 ok(B.LEVELS.length >= 10, 'at least 10 rounds');
-for (let n = 1; n <= B.LEVELS.length; n++) {
-  const lv = B.level(n), tag = `round ${n} (${lv.name})`;
+for (const [n, custom] of ROUNDS_TO_TEST) {
+  const lv = custom ? Object.assign(B.level(n, custom), { n }) : B.level(n), tag = `round ${n} (${lv.name})`;
   ok(designs[n], `${tag}: has test designs`);
   ok(lv.intro && lv.intro.length < 120, `${tag}: has a short intro line`);
   // anchors on the terrain, on the grid, on the board

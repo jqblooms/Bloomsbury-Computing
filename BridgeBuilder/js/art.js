@@ -41,7 +41,7 @@
     { sky: ['#030d16', '#0a2638', '#175066'], glow: '#7fe3ff', far: '#08202e', mid: '#0b2838', haze: '#103d50', stream: '#a5f3ff',
       metal: ['#52677a', '#2a3a4a', '#17212c'], rock: ['#2e3e4a', '#1d2a33', '#121a21'], led: ['#7fe3ff', '#3ddc84', '#ffffff'] }
   ];
-  function palette(n) { n = n | 0; return PALS[((n % PALS.length) + PALS.length) % PALS.length]; }
+  function palette(n) { if (n && typeof n === 'object') return n; n = n | 0; return PALS[((n % PALS.length) + PALS.length) % PALS.length]; }
 
   // ---------------------------------------------------------------- shared sprites, patterns and gradients (made once)
   var K = null;
@@ -513,7 +513,7 @@
   function prepare(lv, opts) {
     opts = opts || {};
     kit();
-    var pal = palette(lv.theme), seed = 101 + (lv.n || 1) * 977 + (lv.theme || 0) * 31;
+    var pal = palette(lv.theme), seed = 101 + (lv.n || 1) * 977 + (typeof lv.theme === 'number' ? lv.theme : 7) * 31;
     STREAM_TOP = Math.round(sy(-0.6));
     var sc = { lv: lv, pal: pal, farLeds: [], midLeds: [], leds: [], cols: [] };
     sc.sky = paintSky(pal, rng(seed));

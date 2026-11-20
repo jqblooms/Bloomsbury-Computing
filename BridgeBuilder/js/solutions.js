@@ -38,5 +38,12 @@
       warren(line(16, 0, 22, 0, 2), -2, W, W).slice(1), [[16, 0, 18, 0, R], [17, -2, 16, -3, W], [17, -2, 18, -3, W], [21, -2, 22, -2, W]])
       .filter(function (b) { return !(b[0] === 16 && b[1] === 0 && b[2] === 17); })
   };
-  root.BBSolutions = { sound: sound, chain: chain, warren: warren, line: line };
+  // Rounds from the level packs (js/levels/pack-K.js): each pack's sound and flimsy lists follow its levels in order.
+  var flimsy = {}, PACKS = root.BBLevelPacks || {}, H = { chain: chain, warren: warren, line: line, R: R, W: W, S: S }, at = 11;
+  for (var pk = 2; PACKS[pk]; pk++) {
+    var so = PACKS[pk].sound(H), fl = PACKS[pk].flimsy(H);
+    for (var i = 0; i < so.length; i++) { sound[at + i] = so[i]; flimsy[at + i] = fl[i]; }
+    at += so.length;
+  }
+  root.BBSolutions = { sound: sound, flimsy: flimsy, chain: chain, warren: warren, line: line };
 })(typeof window !== 'undefined' ? window : globalThis);
