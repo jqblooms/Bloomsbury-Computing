@@ -37,7 +37,7 @@ your own with the same keys as `PALS` in `js/art.js` (sky, glow, far, mid, haze,
 `BB_PACK=3 node tools/test_bridge_builder.mjs` tests pack 3 on its own, even if pack 2 is not written yet.
 `node tools/test_bridge_builder.mjs` tests every round that is loaded. Every round must pass: anchors on the
 terrain and on the grid, the truck starts on the ground, the sound bridge follows the build rules, crosses, peaks
-under 0.7 of its limit and costs no more than the pool, the flimsy bridge breaks or falls, an empty board falls.
+under 0.85 of its limit (0.7 for rounds 1 to 10) and costs no more than the pool, the flimsy bridge breaks or falls, an empty board falls.
 
 ## Difficulty
 
