@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Engine Lab</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    /* Search Engine Lab (Year 6, 6.3.4 Searching the Web). A pretend search engine over 24 Greenhill web pages
+       (engine.js). Missions: Predict the Top Result, Find It, Fix the Search. 3 clean rounds in a row finish a mission;
+       any mistake resets the count and shows why. ?part=1 (predict) or ?part=2 (find, fix) on a lesson slide;
+       ?embed=1 reports its height and posts BC_APP_RESULT. No requestAnimationFrame (hidden iframe safe). */
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    .embed, .embed body { background: transparent; }
+    main { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 14px; padding: 14px 16px; box-sizing: border-box; max-width: 1200px; margin: 0 auto; }
+    .embed main { padding: 2px 4px 10px; }
+    header { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    header h1 { margin: 0 12px 0 0; font-size: 24px; font-weight: 800; }
+    .embed header h1 { display: none; }
+    .tab { font: 700 15px var(--font-body); padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+    .tab.on { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+    .tab .tick { color: var(--good); font-weight: 800; }
+    .tab.on .tick { color: var(--on-brand); }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; align-self: start; }
+    .panel h2 { margin: 0; font-size: 20px; color: var(--brand); }
+    .streak { display: flex; gap: 6px; align-items: center; font: 600 14px var(--font-body); color: var(--muted); }
+    .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line-strong); box-sizing: border-box; }
+    .dot.on { background: var(--good); border-color: var(--good); }
+    .ask { font-size: 17px; line-height: 1.4; }
+    .ask b.q { display: block; font-size: 18px; margin-top: 4px; }
+    .say { font-size: 15px; line-height: 1.4; border-radius: 10px; padding: 8px 10px; }
+    .say:empty { display: none; }
+    .say.good { background: var(--good-soft); border: 1px solid var(--good-line); }
+    .say.bad { background: var(--bad-soft); border: 1px solid var(--bad-line); }
+    .say.warn { background: var(--warn-soft); border: 1px solid var(--warn-line); }
+    .choices { display: flex; flex-direction: column; gap: 6px; }
+    .choices button, .btn { font: 700 15px var(--font-body); padding: 7px 12px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); cursor: pointer; text-align: left; }
+    .btn.primary { background: var(--brand); color: var(--on-brand); border-color: var(--brand); text-align: center; }
+    button:disabled { opacity: .55; cursor: default; }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .row input { flex: 1; min-width: 0; font: 600 17px var(--font-body); padding: 7px 10px; border-radius: 10px; border: 2px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+    .browser { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1); overflow: hidden; display: flex; flex-direction: column; min-height: 430px; }
+    .chrome { background: var(--surface-3); padding: 8px 12px; display: flex; gap: 10px; align-items: center; }
+    .chrome .logo { font: 800 20px var(--font-display, var(--font-body)); color: var(--brand); white-space: nowrap; }
+    .chrome .row { flex: 1; }
+    .view { padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+    .meta { font-size: 14px; color: var(--muted); }
+    .meta b { color: var(--ink); }
+    .res { border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; display: grid; grid-template-columns: 30px 1fr; gap: 0 8px; background: var(--surface); }
+    .res.pick { cursor: pointer; }
+    .res.pick:hover { border-color: var(--brand); }
+    .res .n { grid-row: 1 / span 3; font: 800 20px var(--font-mono); color: var(--brand); align-self: center; text-align: center; }
+    .res .t { font-weight: 700; font-size: 16px; color: var(--brand-dark, var(--brand)); }
+    .res .u { font: 12px var(--font-mono); color: var(--good); }
+    .res .x { font-size: 14px; color: var(--ink-soft); }
+    .res.win { border: 2px solid var(--good); }
+    .res.lose { border: 2px solid var(--bad); }
+    mark { background: var(--warn-soft); color: inherit; border-radius: 3px; padding: 0 2px; font-weight: 700; }
+    mark.ttl { background: color-mix(in srgb, var(--brand) 25%, transparent); }
+    .why { font-size: 13px; color: var(--muted); grid-column: 2; }
+    .page { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+    .page h3 { margin: 4px 0 8px; font-size: 22px; }
+    .page p { margin: 0; font-size: 18px; line-height: 1.5; }
+    .cards { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .done { font-size: 18px; font-weight: 700; color: var(--good); }
+    @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <header id="tabs"><h1>Search Engine Lab</h1></header>
+  <section class="panel" id="panel"></section>
+  <section class="browser">
+    <div class="chrome"><span class="logo">Seekit</span><div class="row"><input id="box" autocomplete="off" spellcheck="false" aria-label="Search terms" placeholder="Type search terms"><button type="button" class="btn primary" id="go">Search</button></div></div>
+    <div class="view" id="view"></div>
+  </section>
+</main>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+<script src="engine.js?v=1"></script>
+<script>
+(function () {
+  'use strict';
+  var E = window.SearchEngine;
+  var Q = new URLSearchParams(location.search);
+  var EMBED = Q.get('embed') === '1';
+  if (EMBED) document.documentElement.classList.add('embed');
+  var PART = Q.get('part');
+  var MISSIONS = [
+    { id: 'predict', label: 'Predict the Top Result' },
+    { id: 'find', label: 'Find It' },
+    { id: 'fix', label: 'Fix the Search' },
+  ];
+  var SHOWN = PART === '1' ? ['predict'] : PART === '2' ? ['find', 'fix'] : ['predict', 'find', 'fix'];
+  var NEED = 3;
+
+  // Predict the Top Result: search terms and three pages; which is ranked 1st? (tools/test_search_engine.mjs checks
+  // that each answer is decided by the rules, never by list order.)
+  var PREDICT = [
+    { q: 'tiger facts', ids: ['moon', 'tiger', 'housemouse'] },
+    { q: 'dentist opening times', ids: ['library', 'zoo', 'dentist'] },
+    { q: 'zoo bus ticket', ids: ['bus', 'zoo', 'pool'] },
+    { q: 'children swimming', ids: ['pool', 'training', 'swimlessons'] },
+    { q: 'mouse cable', ids: ['housemouse', 'fixmouse', 'buymouse'] },
+    { q: 'cat water', ids: ['training', 'cat', 'dog'] },
+    { q: 'library card', ids: ['library', 'newlib', 'books'] },
+    { q: 'moon mars', ids: ['moon', 'mars', 'volcano'] },
+    { q: 'football saturday', ids: ['training', 'swimlessons', 'football'] },
+    { q: 'greenhill weather rain', ids: ['library', 'weather', 'zoo'] },
+  ];
+  // Find It: a question; search, open the page that answers it, type the answer.
+  var FIND = [
+    { ask: 'When does Greenhill Library close?', id: 'library', ans: /^5\s*(pm|p\.?\s?m\.?|o'?clock)?$/, say: '5 pm' },
+    { ask: 'How many books can you borrow from Greenhill Library?', id: 'books', ans: /^(6|six)(\s*books?)?$/, say: '6' },
+    { ask: 'How much is a child ticket at the Greenhill swimming pool?', id: 'pool', ans: /^40\s*(baht)?$/, say: '40 baht' },
+    { ask: 'How heavy can a big tiger be?', id: 'tiger', ans: /^300\s*(kg|kilograms?|kilos?)?$/, say: '300 kg' },
+    { ask: 'How long is a house mouse?', id: 'housemouse', ans: /^(about\s*)?8\s*(cm|centimet(re|er)s?)?$/, say: '8 cm' },
+    { ask: 'For how long do you bake the easy pizza?', id: 'pizza', ans: /^15\s*(min|mins|minutes?)?$/, say: '15 minutes' },
+    { ask: 'Which day is football training for children?', id: 'training', ans: /^(on\s*)?wednesdays?$/, say: 'Wednesday' },
+    { ask: 'How far is the Moon from Earth?', id: 'moon', ans: /^(about\s*)?384[, ]?000\s*(km|kilomet(re|er)s?)?$/, say: '384000 km' },
+    { ask: 'When does the Greenhill school holiday start?', id: 'holiday', ans: /^(on\s*)?(20(th)?\s*(of\s*)?dec(ember)?|dec(ember)?\s*20(th)?)$/, say: '20 December' },
+    { ask: 'How often does the number 5 bus go to the zoo?', id: 'bus', ans: /^(every\s*)?20\s*(min|mins|minutes?)?$/, say: 'every 20 minutes' },
+    { ask: 'How long is a day on Mars?', id: 'mars', ans: /^24\s*(hours?|h|hrs?)\s*(and\s*)?37\s*(min|mins|minutes?)?$/, say: '24 hours and 37 minutes' },
+    { ask: 'When does the Greenhill dentist close?', id: 'dentist', ans: /^4\s*(pm|p\.?\s?m\.?|o'?clock)?$/, say: '4 pm' },
+  ];
+  // Fix the Search: a customer's search that does not work; say what is wrong, then type better search terms.
+  var FAULTS = { vague: 'Too few words: many pages have it', spelling: 'A word is spelt wrong', meaning: 'The word has two meanings' };
+  var FIX = [
+    { who: 'Mrs Lee', bad: 'times', want: 'She wants the dentist\'s opening times.', id: 'dentist', fault: 'vague' },
+    { who: 'Tom', bad: 'ticket', want: 'He wants the price of a zoo ticket.', id: 'zoo', fault: 'vague' },
+    { who: 'Mai', bad: 'football', want: 'She wants football training for children.', id: 'training', fault: 'vague' },
+    { who: 'Mr Khan', bad: 'library', want: 'He wants to know how many books he can borrow.', id: 'books', fault: 'vague' },
+    { who: 'Ana', bad: 'mouse', want: 'Her computer mouse stopped working. She wants to fix it.', id: 'fixmouse', fault: 'meaning' },
+    { who: 'Ben', bad: 'mouse', want: 'He wants to buy a computer mouse.', id: 'buymouse', fault: 'meaning' },
+    { who: 'Chi', bad: 'vulcano facts', want: 'She wants facts about volcanoes.', id: 'volcano', fault: 'spelling' },
+    { who: 'Mrs Park', bad: 'dentis opening times', want: 'She wants the dentist\'s opening times.', id: 'dentist', fault: 'spelling' },
+    { who: 'Sam', bad: 'tigre weight', want: 'He wants to know how heavy a tiger is.', id: 'tiger', fault: 'spelling' },
+  ];
+
+  // ---------------------------------------------------------------- saved progress and results for the teacher
+  function load(k, d) { try { var v = localStorage.getItem('bc-searchlab-v1:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem('bc-searchlab-v1:' + k, JSON.stringify(v)); } catch (e) {} }
+  var log = {};
+  function post(m, mistake, line) {
+    var r = log[m.id] || (log[m.id] = { lines: [], right: 0, tries: 0 });
+    r.tries++; if (!mistake) r.right++;
+    r.lines.push(line); if (r.lines.length > 12) r.lines.shift();
+    var done = !!load('done:' + m.id, false);
+    if (window.parent === window) return;
+    try {
+      window.parent.postMessage({ type: 'BC_APP_RESULT', questionId: 'search-engine-' + m.id, label: 'Search Engine Lab: ' + m.label,
+        summary: (done ? 'Finished (' + NEED + ' in a row). ' : 'Streak ' + state.streak + ' of ' + NEED + '. ') + r.right + ' of ' + r.tries + ' right. ' + r.lines.join(' | '),
+        complete: done, mistake: !!mistake }, '*');
+    } catch (e) {}
+  }
+  function reportHeight() {
+    if (window.parent === window) return;
+    var h = document.querySelector('main').getBoundingClientRect().height;
+    try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: Math.ceil(h) + 8 }, '*'); } catch (e) {}
+  }
+  if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(document.querySelector('main'));
+  window.addEventListener('load', reportHeight);
+
+  // ---------------------------------------------------------------- helpers
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  // highlight each search term (by its stem) in a piece of text
+  function hl(text, keys, cls) {
+    return String(text).split(/(\s+)/).map(function (w) {
+      var s = E.stem(w.toLowerCase().replace(/[^a-z0-9]/g, ''));
+      return s && keys.indexOf(s) >= 0 ? '<mark' + (cls ? ' class="' + cls + '"' : '') + '>' + esc(w) + '</mark>' : esc(w);
+    }).join('');
+  }
+  function resultHtml(r, i, keys, opts) {
+    opts = opts || {};
+    var why = opts.why ? '<div class="why">' + r.matched + ' search term' + (r.matched > 1 ? 's' : '') + (r.inTitle.length ? ', ' + r.inTitle.length + ' in the title' : '') + '</div>' : '';
+    return '<div class="res' + (opts.pick ? ' pick' : '') + (opts.cls ? ' ' + opts.cls : '') + '" data-id="' + r.page.id + '"' + (opts.pick ? ' role="button" tabindex="0"' : '') + '>' +
+      '<div class="n">' + (i + 1) + '</div><div class="t">' + hl(r.page.title, keys, 'ttl') + '</div><div class="u">' + esc(r.page.url) + '</div>' +
+      '<div class="x">' + hl(r.page.text, keys) + '</div>' + why + '</div>';
+  }
+  function searchNote(rd) {
+    var bits = [];
+    if (rd.small.length) bits.push('Left out the small words <b>' + rd.small.map(esc).join(', ') + '</b>: they are on almost every page, so they do not help.');
+    if (rd.unknown.length) bits.push('No page in the list has the word <b>' + rd.unknown.map(esc).join(', ') + '</b>. Check the spelling.');
+    return bits.join(' ');
+  }
+  // the rules for a clear search (Find It and Fix the Search)
+  function searchProblem(rd) {
+    if (!rd.keys.length) return 'Type some key words first.';
+    if (rd.small.length) return 'Leave out small words like <b>' + rd.small.map(esc).join(', ') + '</b>. They do not help.';
+    if (rd.unknown.length) return 'No page has the word <b>' + rd.unknown.map(esc).join(', ') + '</b>. Check the spelling.';
+    if (rd.typed.length > 4) return 'Use at most 4 key words. Pick the words that only the page you want has.';
+    return '';
+  }
+
+  // ---------------------------------------------------------------- state
+  var state = { m: null, streak: 0, round: null, phase: '' };
+  var last = {};
+  function nextFrom(list, key) {
+    var pool = list.filter(function (x, i) { return i !== last[key]; });
+    var x = pool[Math.floor(Math.random() * pool.length)];
+    last[key] = list.indexOf(x);
+    return x;
+  }
+  function dots() {
+    var s = '<div class="streak">'; for (var i = 0; i < NEED; i++) s += '<span class="dot' + (i < state.streak ? ' on' : '') + '"></span>';
+    return s + '<span>' + NEED + ' in a row to finish</span></div>';
+  }
+  function tabs() {
+    var h = '<h1>Search Engine Lab</h1>';
+    SHOWN.forEach(function (id) {
+      var m = MISSIONS.filter(function (x) { return x.id === id; })[0];
+      h += '<button type="button" class="tab' + (state.m === m ? ' on' : '') + '" data-m="' + id + '">' + (load('done:' + id, false) ? '<span class="tick">&#10003;</span> ' : '') + m.label + '</button>';
+    });
+    $('tabs').innerHTML = h;
+    Array.prototype.forEach.call($('tabs').querySelectorAll('.tab'), function (b) { b.onclick = function () { start(b.getAttribute('data-m')); }; });
+  }
+  function start(id) {
+    state.m = MISSIONS.filter(function (x) { return x.id === id; })[0];
+    state.streak = 0; tabs(); newRound();
+  }
+  function newRound() {
+    var id = state.m.id;
+    $('box').value = ''; $('view').innerHTML = '';
+    if (id === 'predict') roundPredict(); else if (id === 'find') roundFind(); else roundFix();
+  }
+  function finishRound(mistake, line, sayHtml) {
+    if (mistake) state.streak = 0; else state.streak++;
+    var finished = !mistake && state.streak >= NEED;
+    if (finished) save('done:' + state.m.id, true);
+    post(state.m, mistake, line);
+    tabs();
+    var p = $('panel');
+    var say = '<div class="say ' + (mistake ? 'bad' : 'good') + '">' + sayHtml + '</div>';
+    var nextLabel = finished ? 'Play again' : 'Next';
+    var after = finished ? '<div class="done">Mission finished: ' + NEED + ' in a row.' + (nextMission() ? ' Next: ' + nextMission().label + '.' : '') + '</div>' : '';
+    p.innerHTML = '<h2>' + state.m.label + '</h2>' + dots() + say + after +
+      '<div class="row">' + (finished && nextMission() ? '<button type="button" class="btn primary" id="nm">' + nextMission().label + '</button>' : '') + '<button type="button" class="btn' + (finished && nextMission() ? '' : ' primary') + '" id="nx">' + nextLabel + '</button></div>';
+    $('nx').onclick = function () { if (finished) state.streak = 0; newRound(); };
+    if ($('nm')) $('nm').onclick = function () { start(nextMission().id); };
+    $('go').disabled = true; $('box').disabled = true;
+  }
+  function nextMission() {
+    var i = SHOWN.indexOf(state.m.id);
+    for (var k = i + 1; k < SHOWN.length; k++) if (!load('done:' + SHOWN[k], false)) return MISSIONS.filter(function (x) { return x.id === SHOWN[k]; })[0];
+    return null;
+  }
+
+  // ---------------------------------------------------------------- Predict the Top Result
+  function roundPredict() {
+    var r = nextFrom(PREDICT, 'predict');
+    var keys = E.read(r.q).keys;
+    var order = shuffle(r.ids);
+    $('box').value = r.q; $('box').disabled = true; $('go').disabled = true;
+    $('panel').innerHTML = '<h2>Predict the Top Result</h2>' + dots() +
+      '<div class="ask">Someone searches for <b class="q">' + esc(r.q) + '</b>Read the three pages. Which one will the search engine rank <b>1st</b>? Click it.</div>' +
+      '<div class="say warn">Look for the search terms in each title and in each text.</div>';
+    $('view').innerHTML = '<div class="meta">Three pages from the search engine\'s list</div><div class="cards">' + order.map(function (id) {
+      var p = E.page(id);
+      return '<div class="res pick" data-id="' + id + '" role="button" tabindex="0"><div class="n">?</div><div class="t">' + esc(p.title) + '</div><div class="u">' + esc(p.url) + '</div><div class="x">' + esc(p.text) + '</div></div>';
+    }).join('') + '</div>';
+    Array.prototype.forEach.call($('view').querySelectorAll('.res.pick'), function (el) {
+      var pickIt = function () { revealPredict(r, el.getAttribute('data-id'), keys); };
+      el.onclick = pickIt; el.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickIt(); } };
+    });
+  }
+  function revealPredict(r, chosen, keys) {
+    var all = E.search(r.q).results.filter(function (x) { return r.ids.indexOf(x.page.id) >= 0; });
+    var win = all[0];
+    var right = win.page.id === chosen;
+    $('view').innerHTML = '<div class="meta">The search engine\'s ranking for <b>' + esc(r.q) + '</b> (these three pages)</div>' +
+      all.map(function (x, i) { return resultHtml(x, i, keys, { why: true, cls: x.page.id === chosen ? (right ? 'win' : 'lose') : '' }); }).join('') +
+      (all.length < 3 ? '<div class="meta">' + (3 - all.length) + ' of the pages has none of the search terms, so it is not in the results at all.</div>' : '');
+    var c = E.page(chosen), second = all.filter(function (x) { return x.page.id === chosen; })[0];
+    var why = win.matched > (second ? second.matched : 0)
+      ? '<b>' + esc(win.page.title) + '</b> has more of the search terms (' + win.matched + ').'
+      : 'Both have ' + win.matched + ' search term' + (win.matched > 1 ? 's' : '') + ', but <b>' + esc(win.page.title) + '</b> has more of them in its title.';
+    finishRound(!right, (right ? 'Right' : 'Wrong') + ': "' + r.q + '" picked ' + c.title,
+      (right ? 'Right! ' : 'Not this time. ') + why);
+  }
+
+  // ---------------------------------------------------------------- Find It
+  function roundFind() {
+    var r = nextFrom(FIND, 'find');
+    state.round = { r: r, searches: 0, mistake: '', terms: '' };
+    $('box').disabled = false; $('go').disabled = false;
+    $('panel').innerHTML = '<h2>Find It</h2>' + dots() +
+      '<div class="ask">Find the answer:<b class="q">' + esc(r.ask) + '</b></div>' +
+      '<div class="say warn" id="fsay">Type clear search terms: at most 4 key words, no small words. Then open the page that answers it.</div>';
+    $('view').innerHTML = '<div class="meta">Type your search terms at the top, then press Search.</div>';
+    $('box').focus();
+    state.onSearch = function () {
+      var q = $('box').value, rd = E.read(q), prob = searchProblem(rd);
+      if (!q.trim()) return;
+      if (prob) { $('fsay').className = 'say bad'; $('fsay').innerHTML = prob + ' Change your search terms and try again.'; state.round.mistake = state.round.mistake || 'search "' + q + '"'; return; }
+      state.round.searches++; state.round.terms = q;
+      var res = E.search(q).results;
+      $('fsay').className = 'say warn';
+      $('fsay').innerHTML = state.round.searches > 2 ? 'That is a lot of searches. Which words would only the page you want have?' : 'Read the titles. Open the page that answers the question.';
+      if (state.round.searches > 2) state.round.mistake = state.round.mistake || 'more than 2 searches';
+      $('view').innerHTML = '<div class="meta">' + res.length + ' result' + (res.length === 1 ? '' : 's') + ' for <b>' + esc(q) + '</b>. The top 5:</div>' +
+        res.slice(0, 5).map(function (x, i) { return resultHtml(x, i, rd.keys, { pick: true }); }).join('') + (res.length ? '' : '<div class="say bad">No results. Try other words.</div>');
+      Array.prototype.forEach.call($('view').querySelectorAll('.res.pick'), function (el) {
+        var open = function () { openFind(el.getAttribute('data-id')); };
+        el.onclick = open; el.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+      });
+    };
+  }
+  function openFind(id) {
+    var R = state.round, r = R.r, p = E.page(id);
+    if (id !== r.id) {
+      finishRound(true, 'Find It: "' + r.ask + '" searched "' + R.terms + '", opened ' + p.title,
+        'That page is <b>' + esc(p.title) + '</b>. It does not answer the question. Read each title before you open a page.');
+      return;
+    }
+    $('go').disabled = true; $('box').disabled = true;
+    $('view').innerHTML = '<div class="page"><div class="u">' + esc(p.url) + '</div><h3>' + esc(p.title) + '</h3><p>' + esc(p.text) + '</p></div>';
+    $('panel').innerHTML = '<h2>Find It</h2>' + dots() + '<div class="ask">' + esc(r.ask) + '</div>' +
+      '<div class="row"><input id="ans" autocomplete="off" aria-label="Your answer" placeholder="Your answer"><button type="button" class="btn primary" id="ok">Check</button></div>';
+    $('ans').focus();
+    var check = function () {
+      var a = $('ans').value.trim().toLowerCase().replace(/\s+/g, ' ').replace(/\.$/, '');
+      if (!a) return;
+      var right = r.ans.test(a), bad = R.mistake;
+      var line = 'Find It: "' + r.ask + '" searched "' + R.terms + '", answered "' + $('ans').value.trim() + '"' + (bad ? ' (' + bad + ')' : '');
+      if (!right) finishRound(true, line, 'Not quite. The page says: ' + esc(p.text) + ' The answer is <b>' + esc(r.say) + '</b>.');
+      else if (bad) finishRound(true, line, 'The answer is right, but this time ' + (bad.indexOf('search "') === 0 ? 'a search broke the rules (' + esc(bad) + ')' : 'it took more than 2 searches') + '. Clear search terms find it first time.');
+      else finishRound(false, line, 'Right: <b>' + esc(r.say) + '</b>. Your search terms <b>' + esc(R.terms) + '</b> found it.');
+    };
+    $('ok').onclick = check; $('ans').onkeydown = function (e) { if (e.key === 'Enter') check(); };
+  }
+
+  // ---------------------------------------------------------------- Fix the Search
+  function roundFix() {
+    var r = nextFrom(FIX, 'fix');
+    state.round = { r: r };
+    state.onSearch = null;
+    $('box').value = r.bad; $('box').disabled = true; $('go').disabled = true;
+    var s = E.search(r.bad), rd = s.read;
+    $('view').innerHTML = '<div class="meta">' + esc(r.who) + '\'s search: <b>' + esc(r.bad) + '</b>. ' + s.results.length + ' result' + (s.results.length === 1 ? '' : 's') + (s.results.length ? '. The top 3:' : '.') + '</div>' +
+      (searchNote(rd) ? '<div class="say warn">' + searchNote(rd) + '</div>' : '') +
+      s.results.slice(0, 3).map(function (x, i) { return resultHtml(x, i, rd.keys); }).join('');
+    var opts = shuffle(Object.keys(FAULTS));
+    $('panel').innerHTML = '<h2>Fix the Search</h2>' + dots() +
+      '<div class="ask">' + esc(r.who) + ' searched <b>' + esc(r.bad) + '</b>. ' + esc(r.want) + '<b class="q">What is wrong with the search?</b></div>' +
+      '<div class="choices">' + opts.map(function (k) { return '<button type="button" data-f="' + k + '">' + FAULTS[k] + '</button>'; }).join('') + '</div>';
+    Array.prototype.forEach.call($('panel').querySelectorAll('.choices button'), function (b) {
+      b.onclick = function () {
+        var f = b.getAttribute('data-f');
+        if (f !== r.fault) {
+          finishRound(true, 'Fix the Search: "' + r.bad + '" said ' + FAULTS[f], 'Not this one. ' + faultWhy(r) );
+          return;
+        }
+        fixTerms(r);
+      };
+    });
+  }
+  function faultWhy(r) {
+    if (r.fault === 'spelling') return 'Look at the yellow note: no page has one of the words, because it is spelt wrong.';
+    if (r.fault === 'meaning') return '<b>' + esc(r.bad) + '</b> can mean two different things, and the results show both.';
+    return 'Many pages have <b>' + esc(r.bad) + '</b>, so the page ' + esc(r.who) + ' wants is not ranked 1st.';
+  }
+  function fixTerms(r) {
+    $('box').disabled = false; $('go').disabled = false; $('box').value = ''; $('box').focus();
+    $('panel').innerHTML = '<h2>Fix the Search</h2>' + dots() +
+      '<div class="ask">Right. ' + esc(r.want) + '<b class="q">Type better search terms, so that page is ranked 1st.</b></div>' +
+      '<div class="say warn" id="fsay">At most 4 key words, spelt right, no small words.</div>';
+    state.onSearch = function () {
+      var q = $('box').value, s = E.search(q), rd = s.read, prob = searchProblem(rd);
+      if (!q.trim()) return;
+      var target = E.page(r.id), rank = E.rankOf(q, r.id);
+      var list = s.results.slice(0, 3).map(function (x, i) { return resultHtml(x, i, rd.keys, { cls: x.page.id === r.id ? 'win' : '' }); }).join('');
+      $('view').innerHTML = '<div class="meta">Results for <b>' + esc(q) + '</b>. The top 3:</div>' + list;
+      var line = 'Fix the Search: "' + r.bad + '" fixed to "' + q + '" (rank ' + (rank || 'none') + ')';
+      if (prob) finishRound(true, line, prob);
+      else if (rank !== 1) finishRound(true, line, '<b>' + esc(target.title) + '</b> is ' + (rank ? 'ranked ' + rank + ', not 1st' : 'not in the results') + '. Use words that only that page has, like a word from its title.');
+      else finishRound(false, line, 'Fixed! <b>' + esc(target.title) + '</b> is ranked 1st for <b>' + esc(q) + '</b>.');
+    };
+  }
+
+  $('go').onclick = function () { if (state.onSearch && !$('go').disabled) state.onSearch(); };
+  $('box').addEventListener('keydown', function (e) { if (e.key === 'Enter' && state.onSearch && !$('go').disabled) state.onSearch(); });
+  var first = SHOWN.filter(function (id) { return !load('done:' + id, false); })[0] || SHOWN[0];
+  start(first);
+})();
+</script>
+</body>
+</html>
