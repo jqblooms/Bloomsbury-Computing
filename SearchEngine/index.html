@@ -272,7 +272,7 @@
     $('view').innerHTML = '<div class="meta">The search engine\'s ranking for <b>' + esc(r.q) + '</b> (these three pages)</div>' +
       all.map(function (x, i) { return resultHtml(x, i, keys, { why: true, cls: x.page.id === chosen ? (right ? 'win' : 'lose') : '' }); }).join('') +
       (all.length < 3 ? '<div class="meta">' + (3 - all.length) + ' of the pages has none of the search terms, so it is not in the results at all.</div>' : '');
-    var c = E.page(chosen), second = all.filter(function (x) { return x.page.id === chosen; })[0];
+    var c = E.page(chosen), second = right ? all[1] : all.filter(function (x) { return x.page.id === chosen; })[0];
     var why = win.matched > (second ? second.matched : 0)
       ? '<b>' + esc(win.page.title) + '</b> has more of the search terms (' + win.matched + ').'
       : 'Both have ' + win.matched + ' search term' + (win.matched > 1 ? 's' : '') + ', but <b>' + esc(win.page.title) + '</b> has more of them in its title.';
