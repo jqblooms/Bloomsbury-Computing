@@ -203,7 +203,9 @@
     var w0 = { x: x0, y: y0, px: x0, py: y0, vx: 0, vy: 0, m: wm, w: 1 / wm, wheel: true, contact: null };
     var w1 = { x: x0 + AXLE, y: y0, px: x0 + AXLE, py: y0, vx: 0, vy: 0, m: wm, w: 1 / wm, wheel: true, contact: null };
     P.push(w0, w1);
-    return { lv: lv, P: P, B: B, wheels: [P.length - 2, P.length - 1], t: 0, state: 'run', breakAt: -1, firstBreak: -1, maxStress: 0 };
+    // Road is rated for the round's truck (James 2026-11-20): a road piece bends under a heavy truck no more than it
+    // does under a 4.5 t one, so 2-square road pieces work in every round. The truss still carries the full weight.
+    return { lv: lv, P: P, B: B, wheels: [P.length - 2, P.length - 1], bendScale: Math.max(1, lv.truck / 4.5), t: 0, state: 'run', breakAt: -1, firstBreak: -1, maxStress: 0 };
   }
 
   function solveBeam(s, bm, h2) {
@@ -308,7 +310,7 @@
       substep(s, h);
       for (var i = 0; i < s.B.length; i++) {
         var bm = s.B[i]; if (bm.broken) continue;
-        bm.stress = Math.max(Math.abs(bm.fs) / bm.str, bm.mat === 'road' ? bm.ms / ROAD_BEND : 0);
+        bm.stress = Math.max(Math.abs(bm.fs) / bm.str, bm.mat === 'road' ? bm.ms / (ROAD_BEND * s.bendScale) : 0);
         if (bm.stress > s.maxStress) s.maxStress = bm.stress;
         if (bm.stress > 1) { bm.broken = true; if (s.firstBreak < 0) s.firstBreak = i; if (s.breakAt < 0) s.breakAt = s.t; }
       }

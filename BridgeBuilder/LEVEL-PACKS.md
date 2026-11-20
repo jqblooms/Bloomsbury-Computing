@@ -41,6 +41,8 @@ under 0.7 of its limit and costs no more than the pool, the flimsy bridge breaks
 
 ## Difficulty
 
+Road is rated for the round's truck (physics.js bendScale, 2026-11-20): a road piece bends under a heavy truck no more than under a 4.5 t one, so 2-square road pieces and sloped roads work in every round; the truss still carries the full weight.
+
 Rounds 1 to 10 for reference: truck 1.5 to 4.5 tonnes, spans 6 to 18, the sound bridge costs 0.66 to 0.75 of the
 pool. A round's pool is what a student gets for full marks on that round's one exam question; a failed bridge keeps
 at most one pool. Each band rises smoothly from the end of the band before it:
