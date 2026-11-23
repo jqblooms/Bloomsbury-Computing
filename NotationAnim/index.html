@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prefix, Infix and Postfix</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    /* Prefix, infix and postfix, animated in four corners: infix to postfix, infix to prefix (brackets, move, remove)
+       and working out postfix and prefix with a stack. A Four Corners quiz view asks one question with four answers.
+       Every frame comes from NotationAnim (frames.js), which uses NotationLab/core.js. */
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr); gap: 12px; height: 100vh; padding: 12px 16px; box-sizing: border-box; }
+    main.quiz { grid-template-rows: auto auto auto auto minmax(0, 1fr); }
+    header { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    header h1 { margin: 0; font-size: 26px; font-weight: 800; }
+    header p { margin: 0; color: var(--muted); font-size: 15px; }
+    #msg { color: var(--bad); font-weight: 700; }
+    .ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .ctl label { color: var(--muted); font-size: 14px; }
+    .ctl input { width: 11em; font: 700 16px var(--font-mono); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+    button { font: inherit; font-weight: 700; padding: 5px 14px; border-radius: 999px; border: 0; background: var(--brand); color: var(--on-brand); cursor: pointer; }
+    button.secondary { background: var(--surface-3); color: var(--ink); }
+    section { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+              display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; overflow: hidden; min-height: 0; }
+    h2 { margin: 0; font: 800 clamp(20px, 2.2vw, 28px) var(--font-body); color: var(--brand); text-align: center; }
+    h2 small { display: block; font: 500 14px var(--font-body); color: var(--muted); margin-top: 2px; }
+    .stage { position: relative; flex: none; }
+    .chip { position: absolute; height: 44px; border-radius: 9px; display: grid; place-items: center; font: 800 22px/1 var(--font-mono);
+            background: var(--surface-3); color: var(--ink); box-sizing: border-box;
+            transition: left .6s ease-in-out, top .5s ease-in-out, opacity .45s, transform .45s; }
+    .chip.op { background: var(--brand); color: var(--on-brand); }
+    .chip.br { background: transparent; color: var(--ink-soft); font-size: 26px; }
+    .chip.num { background: #ffd43b; color: #1a1200; }
+    .chip.now { outline: 3px solid var(--brand); outline-offset: 1px; }
+    .chip.br.now { color: var(--brand); outline: 0; }
+    .chip.done { opacity: .35; }
+    .chip.sm { font-size: 17px; }
+    .tray { position: absolute; border: 3px solid var(--line-strong); border-top: 0; border-radius: 0 0 10px 10px; box-sizing: border-box; }
+    .cap { position: absolute; font: 700 13px var(--font-body); color: var(--muted); text-align: center; }
+    .eq { font: 700 18px var(--font-mono); color: var(--ink-soft); min-height: 1.4em; text-align: center; }
+    .note { font-size: 15px; color: var(--muted); min-height: 1.4em; text-align: center; max-width: 36em; }
+    /* Four Corners */
+    .q { grid-column: 1 / -1; text-align: center; }
+    .q .ask { font-size: 22px; font-weight: 700; }
+    .q .expr { font: 800 clamp(26px, 3.4vw, 40px) var(--font-mono); color: var(--brand); margin-top: 4px; }
+    .corners { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .corner { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border: 2px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-1); }
+    .corner b { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font: 800 24px var(--font-body); background: var(--surface-3); color: var(--ink); }
+    .corner .ans { font: 800 clamp(24px, 3.2vw, 42px) var(--font-mono); }
+    .corner .why { font-size: 14px; color: var(--muted); margin-top: 2px; }
+    .corner.right { border-color: var(--good); }
+    .corner.right b { background: var(--good); color: #fff; }
+    .corner.wrong { opacity: .55; }
+    .qbar { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: center; }
+    #reveal { grid-column: 1 / -1; }
+    [hidden] { display: none !important; }
+    @media (max-width: 760px) { main, main.quiz { grid-template-columns: 1fr; grid-template-rows: none; height: auto; min-height: 100vh; } .corners { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { .chip { transition-duration: .01s; } }
+  </style>
+</head>
+<body>
+<main id="main">
+  <header>
+    <div><h1>Prefix, Infix and Postfix</h1><p id="sub">Change an infix sum into postfix and prefix. Then work each one out with a stack. <span id="msg"></span></p></div>
+    <div class="ctl"><span id="exprCtl"><label for="expr">Infix</label> <input id="expr" value="(8 - 2) * 3 + 4" maxlength="24" aria-label="Infix expression"></span>
+      <button type="button" id="go">Start again</button><button type="button" class="secondary" id="pause">Pause</button>
+      <button type="button" class="secondary" id="mode">Four Corners</button></div>
+  </header>
+  <section class="anim" id="toPost"><h2>Infix to Postfix<small>brackets round every operation, move each operator to the end, remove the brackets</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+  <section class="anim" id="toPre"><h2>Infix to Prefix<small>brackets round every operation, move each operator to the front, remove the brackets</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+  <section class="anim" id="evPost"><h2>Work Out Postfix<small>read left to right; the first value popped goes on the right</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+  <section class="anim" id="evPre"><h2>Work Out Prefix<small>read right to left; the first value popped goes on the left</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+  <div class="q" hidden><div class="ask"></div><div class="expr"></div></div>
+  <div class="corners" hidden></div>
+  <div class="qbar" hidden><button type="button" id="show">Reveal</button><button type="button" class="secondary" id="next">Next question</button></div>
+  <section id="reveal" hidden><h2></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+</main>
+<script src="../NotationLab/core.js?v=20261123anim"></script>
+<script src="frames.js?v=20261123anim"></script>
+<script>
+var NC = NotationCore, A = NotationAnim, paused = false, run = 0, quiz = false;
+var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+async function wait(ms) { await sleep(ms); while (paused) await sleep(150); }
+var W = { val: 44, op: 44, br: 20 }, GAP = 6;
+
+function parts(sec) { return { stage: sec.querySelector('.stage'), eq: sec.querySelector('.eq'), note: sec.querySelector('.note') }; }
+function chip(stage, cls, text, x, y) {
+  var e = document.createElement('div'); e.className = 'chip ' + cls; e.textContent = text;
+  if (String(text).length > 2) e.classList.add('sm');
+  e.style.left = x + 'px'; e.style.top = y + 'px'; stage.appendChild(e); return e;
+}
+function place(e, x, y) { e.style.transition = 'none'; e.style.left = x + 'px'; if (y != null) e.style.top = y + 'px'; void e.offsetWidth; e.style.transition = ''; }
+
+// ------------------------------------------------ infix to postfix or prefix
+function convertLab(sec, t, target, once) {
+  var me = run, P = parts(sec), data = A.convert(t, target), ROW = 50;
+  var all = data.chips.reduce(function (s, c) { return s + W[c.kind] + GAP; }, 0);
+  P.stage.innerHTML = ''; P.stage.style.width = all + 'px'; P.stage.style.height = '104px';
+  var el = {};
+  data.chips.forEach(function (c) { var e = chip(P.stage, c.kind, c.text, 0, ROW); e.style.width = W[c.kind] + 'px'; e.style.opacity = 0; el[c.id] = e; });
+  var kind = {}; data.chips.forEach(function (c) { kind[c.id] = c.kind; });
+  function xs(order) { var x = Math.round((all - order.reduce(function (s, id) { return s + W[kind[id]] + GAP; }, 0)) / 2), out = {}; order.forEach(function (id) { out[id] = x; x += W[kind[id]] + GAP; }); return out; }
+  function show(f, prev) {
+    var pos = xs(f.order), shown = {};
+    f.order.forEach(function (id) {
+      shown[id] = 1; var e = el[id];
+      if (!prev || prev.order.indexOf(id) < 0) { place(e, pos[id], ROW); e.style.opacity = 1; } else e.style.left = pos[id] + 'px';
+    });
+    Object.keys(el).forEach(function (id) { if (!shown[id]) el[id].style.opacity = 0; el[id].classList.toggle('now', f.focus.indexOf(id) >= 0); });
+    P.eq.textContent = f.text; P.note.textContent = f.note;
+  }
+  (async function loop() {
+    for (;;) {
+      var prev = null;
+      for (var i = 0; i < data.frames.length; i++) {
+        if (me !== run) return;
+        var f = data.frames[i], mover = f.step === 2 && f.focus.length ? el[f.focus[1]] : null;
+        if (mover) { f.focus.forEach(function (id) { el[id].classList.add('now'); }); P.note.textContent = f.note; mover.style.top = '0px'; await wait(600); if (me !== run) return; }
+        if (f.step === 3) { prev.order.forEach(function (id) { if (kind[id] === 'br') el[id].style.opacity = 0; }); await wait(600); if (me !== run) return; }
+        show(f, prev);
+        if (mover) { await wait(700); if (me !== run) return; mover.style.top = ROW + 'px'; }
+        prev = f;
+        await wait(i === 0 ? 2000 : 1500);
+      }
+      await wait(2500); if (me !== run || once) return;
+      P.note.textContent = 'Starting again.'; await wait(900);
+    }
+  })();
+}
+
+// ------------------------------------------------ working out with a stack
+function stackLab(sec, list, form, once) {
+  var me = run, P = parts(sec), steps = A.stack(list, form), STEP = 50, TOP = 0;
+  var depth = Math.max.apply(null, steps.map(function (s) { return s.stack.length; }));
+  // The stack is a pile on the left (bottom at the bottom); the tokens run along the top and the sum is worked under them.
+  var SX = 10, WX = 92, WY = 66, BASE = Math.max(depth, 2) * 48 + 6, Wd = WX + Math.max(list.length * STEP, 5 * STEP);
+  P.stage.innerHTML = ''; P.stage.style.width = Wd + 'px'; P.stage.style.height = (BASE + 26) + 'px';
+  var tray = document.createElement('div'); tray.className = 'tray'; tray.style.left = (SX - 7) + 'px'; tray.style.top = '0px';
+  tray.style.width = '64px'; tray.style.height = (BASE + 4) + 'px'; P.stage.appendChild(tray);
+  var cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = 'stack'; cap.style.left = (SX - 7) + 'px'; cap.style.width = '64px'; cap.style.top = (BASE + 8) + 'px'; P.stage.appendChild(cap);
+  var x0 = WX + Math.round((Wd - WX - list.length * STEP) / 2);
+  var tok = list.map(function (t, i) { return chip(P.stage, NC.isOp(t) ? 'op' : 'num', t, x0 + i * STEP, TOP); });
+  tok.forEach(function (e) { e.style.width = '44px'; });
+  var slotY = function (k) { return BASE - 48 * (k + 1); };
+  (async function loop() {
+    for (;;) {
+      var pile = [], work = [];
+      tok.forEach(function (e) { e.classList.remove('done', 'now'); });
+      P.eq.textContent = 'Stack: empty'; P.note.textContent = form === 'postfix' ? 'Start at the left.' : 'Start at the right.';
+      await wait(1500);
+      for (var k = 0; k < steps.length; k++) {
+        if (me !== run) return;
+        var s = steps[k], src = tok[s.i];
+        src.classList.add('now'); P.note.textContent = s.note;
+        await wait(700); if (me !== run) return;
+        if (s.kind === 'push') {
+          var c = chip(P.stage, 'num', s.token, parseFloat(src.style.left), TOP); c.style.width = '44px';
+          await sleep(30); c.style.left = SX + 'px'; c.style.top = slotY(pile.length) + 'px'; pile.push(c);
+          await wait(800);
+        } else {
+          // left value, operator, right value, =, answer
+          var first = pile.pop(), second = pile.pop(), firstSlot = form === 'postfix' ? 2 : 0;
+          first.style.left = (WX + firstSlot * STEP) + 'px'; first.style.top = WY + 'px';
+          await wait(800); if (me !== run) return;
+          second.style.left = (WX + (2 - firstSlot) * STEP) + 'px'; second.style.top = WY + 'px';
+          await wait(800); if (me !== run) return;
+          var o = chip(P.stage, 'op', s.token, parseFloat(src.style.left), TOP); o.style.width = '44px';
+          await sleep(30); o.style.left = (WX + STEP) + 'px'; o.style.top = WY + 'px';
+          await wait(700); if (me !== run) return;
+          var eqc = chip(P.stage, 'br', '=', WX + 3 * STEP, WY); eqc.style.width = '44px';
+          var r = chip(P.stage, 'num', s.value, WX + 4 * STEP, WY); r.style.width = '44px'; r.style.opacity = 0; r.style.transform = 'scale(.5)';
+          await sleep(30); r.style.opacity = 1; r.style.transform = 'scale(1)';
+          await wait(1200); if (me !== run) return;
+          [first, second, o, eqc].forEach(function (e) { e.style.opacity = 0; });
+          r.style.left = SX + 'px'; r.style.top = slotY(pile.length) + 'px'; pile.push(r);
+          await wait(800);
+          [first, second, o, eqc].forEach(function (e) { e.remove(); });
+        }
+        src.classList.remove('now'); src.classList.add('done');
+        P.eq.textContent = 'Stack: ' + s.stack.join(' ');
+      }
+      P.eq.textContent = 'Answer: ' + steps[steps.length - 1].value;
+      P.note.textContent = 'One value is left. That is the answer.';
+      await wait(3500); if (me !== run || once) return;
+      pile.forEach(function (e) { e.remove(); });
+    }
+  })();
+}
+
+// ------------------------------------------------ the four corners view
+var tree = A.check('(8 - 2) * 3 + 4');
+function startAll() {
+  var inp = document.getElementById('expr'), t = A.check(inp.value);
+  document.getElementById('msg').textContent = t ? '' : 'Use single digits, + - * / and brackets, with whole-number answers.';
+  if (t) tree = t;
+  inp.value = NC.toInfix(tree);
+  run++; paused = false; document.getElementById('pause').textContent = 'Pause';
+  convertLab(document.getElementById('toPost'), tree, 'postfix');
+  convertLab(document.getElementById('toPre'), tree, 'prefix');
+  stackLab(document.getElementById('evPost'), NC.toPostfix(tree), 'postfix');
+  stackLab(document.getElementById('evPre'), NC.toPrefix(tree), 'prefix');
+  setTimeout(fit, 0);
+}
+
+// ------------------------------------------------ Four Corners quiz
+var POOL = A.allQuestions(), cur = null, lastKey = '', revealed = false;
+function nextQuestion() {
+  var pick;
+  do { pick = POOL[Math.floor(Math.random() * POOL.length)]; } while (POOL.length > 1 && pick.expr + pick.kind === lastKey);
+  lastKey = pick.expr + pick.kind;
+  cur = A.question(A.check(pick.expr), pick.kind, true); revealed = false; run++;
+  document.querySelector('.q .ask').textContent = cur.prompt;
+  document.querySelector('.q .expr').textContent = cur.shown;
+  var box = document.querySelector('.corners'); box.innerHTML = '';
+  cur.answers.forEach(function (a, i) {
+    var d = document.createElement('div'); d.className = 'corner';
+    d.innerHTML = '<b>' + 'ABCD'.charAt(i) + '</b><div><div class="ans"></div><div class="why"></div></div>';
+    d.querySelector('.ans').textContent = a; box.appendChild(d);
+  });
+  document.getElementById('reveal').hidden = true;
+  document.getElementById('show').disabled = false;
+}
+function reveal() {
+  if (!cur || revealed) return;
+  revealed = true; run++; paused = false; document.getElementById('pause').textContent = 'Pause';
+  document.querySelectorAll('.corner').forEach(function (d, i) {
+    d.classList.add(i === cur.right ? 'right' : 'wrong');
+    d.querySelector('.why').textContent = i === cur.right ? 'Right.' : cur.why[i];
+  });
+  var sec = document.getElementById('reveal'); sec.hidden = false;
+  var conv = cur.kind === 'postfix' || cur.kind === 'prefix';
+  sec.querySelector('h2').textContent = conv ? 'Infix to ' + (cur.form === 'prefix' ? 'Prefix' : 'Postfix') : 'Work Out ' + (cur.form === 'prefix' ? 'Prefix' : 'Postfix');
+  if (conv) convertLab(sec, cur.tree, cur.form, true); else stackLab(sec, cur.list, cur.form, true);
+  document.getElementById('show').disabled = true;
+  setTimeout(fit, 0);
+}
+function setMode(q) {
+  quiz = q; run++;
+  var m = document.getElementById('main'); m.classList.toggle('quiz', q);
+  document.querySelectorAll('section.anim').forEach(function (s) { s.hidden = q; });
+  ['.q', '.corners', '.qbar'].forEach(function (s) { document.querySelector(s).hidden = !q; });
+  document.getElementById('reveal').hidden = true;
+  document.getElementById('exprCtl').hidden = q; document.getElementById('go').hidden = q;
+  document.getElementById('mode').textContent = q ? 'Animations' : 'Four Corners';
+  document.getElementById('sub').firstChild.textContent = q ? 'Read the question. Go to the corner with your answer. Then reveal. ' :
+    'Change an infix sum into postfix and prefix. Then work each one out with a stack. ';
+  if (q) nextQuestion(); else startAll();
+}
+
+document.getElementById('go').addEventListener('click', startAll);
+document.getElementById('expr').addEventListener('keydown', function (e) { if (e.key === 'Enter') startAll(); });
+document.getElementById('pause').addEventListener('click', function () { paused = !paused; this.textContent = paused ? 'Play' : 'Pause'; });
+document.getElementById('mode').addEventListener('click', function () { setMode(!quiz); });
+document.getElementById('show').addEventListener('click', reveal);
+document.getElementById('next').addEventListener('click', nextQuestion);
+// Clicker: PageDown reveals, then moves to the next question.
+addEventListener('keydown', function (e) { if (quiz && (e.key === 'PageDown' || e.key === 'ArrowRight')) { e.preventDefault(); if (revealed) nextQuestion(); else reveal(); } });
+if (/[?&]mode=corners\b/.test(location.search)) setMode(true); else startAll();
+
+// Each picture shrinks to fit its box, so everything fits on one classroom screen at any size.
+function fit() {
+  document.querySelectorAll('section').forEach(function (sec) {
+    if (sec.hidden) return;
+    var st = sec.querySelector('.stage'); st.style.zoom = 1;
+    var used = 0; [].forEach.call(sec.children, function (c) { if (c !== st) used += c.offsetHeight; });
+    var free = sec.clientHeight - 24 - 24 - used, wide = sec.clientWidth - 24;
+    var k = innerWidth <= 760 ? Math.min(1, wide / st.offsetWidth) : Math.min(1, free / st.offsetHeight, wide / st.offsetWidth);
+    st.style.zoom = Math.max(0.4, k);
+  });
+}
+addEventListener('resize', fit); fit();
+</script>
+</body>
+</html>
