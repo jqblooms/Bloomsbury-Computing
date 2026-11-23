@@ -9418,6 +9418,611 @@
    ]
   },
   {
+   "setId": "acsl-notation",
+   "title": "Prefix, Infix and Postfix",
+   "year": "Competition",
+   "unit": "ACSL Junior Contest 2",
+   "questions": [
+    {
+     "qid": "acn-form-post",
+     "text": "Infix: A + B * C\nTick (✓) one box to show this expression written in postfix.\nA + A * B C\nB A B + C *\nC A B C * +\nD A + B * C\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Infix",
+       "text": "A + B * C"
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show this expression written in postfix."
+      },
+      {
+       "type": "options",
+       "items": [
+        "+ A * B C",
+        "A B + C *",
+        "A B C * +",
+        "A + B * C"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-post-1",
+     "text": "Postfix: 9 4 - 3 *\nWork out the value of this postfix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Postfix",
+       "text": "9 4 - 3 *"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this postfix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-post-2",
+     "text": "Postfix: 5 2 3 * + 4 -\nWork out the value of this postfix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Postfix",
+       "text": "5 2 3 * + 4 -"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this postfix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-post-3",
+     "text": "Postfix: 8 2 / 3 4 * +\nWork out the value of this postfix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Postfix",
+       "text": "8 2 / 3 4 * +"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this postfix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-post-pow",
+     "text": "Postfix: 2 3 ↑ 1 +\nWork out the value of this postfix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Postfix",
+       "text": "2 3 ↑ 1 +"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this postfix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-post-long",
+     "text": "Postfix: 4 2 ↑ 3 1 + / 5 *\nWork out the value of this postfix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Postfix",
+       "text": "4 2 ↑ 3 1 + / 5 *"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this postfix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-pre-1",
+     "text": "Prefix: - * 4 5 6\nWork out the value of this prefix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Prefix",
+       "text": "- * 4 5 6"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this prefix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-pre-2",
+     "text": "Prefix: * + 2 3 - 9 4\nWork out the value of this prefix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Prefix",
+       "text": "* + 2 3 - 9 4"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this prefix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-pre-order",
+     "text": "Prefix: - 9 / 8 2\nTick (✓) one box to show the value of this prefix expression.\nA -5\nB 8.75\nC 5\nD 0.5\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Prefix",
+       "text": "- 9 / 8 2"
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show the value of this prefix expression."
+      },
+      {
+       "type": "options",
+       "items": [
+        "-5",
+        "8.75",
+        "5",
+        "0.5"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-eval-pre-long",
+     "text": "Prefix: + * - 7 2 3 / ↑ 2 3 4\nWork out the value of this prefix expression.\nValue ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Prefix",
+       "text": "+ * - 7 2 3 / ↑ 2 3 4"
+      },
+      {
+       "type": "para",
+       "text": "Work out the value of this prefix expression."
+      },
+      {
+       "type": "line",
+       "label": "Value",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-to-post-1",
+     "text": "Infix: A * (B + C)\nWrite this expression in postfix.\nPostfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Infix",
+       "text": "A * (B + C)"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in postfix."
+      },
+      {
+       "type": "line",
+       "label": "Postfix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-to-pre-1",
+     "text": "Infix: (A + B) / C\nWrite this expression in prefix.\nPrefix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Infix",
+       "text": "(A + B) / C"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in prefix."
+      },
+      {
+       "type": "line",
+       "label": "Prefix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-to-post-2",
+     "text": "Infix: A + B * C - D\nWrite this expression in postfix.\nPostfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Infix",
+       "text": "A + B * C - D"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in postfix."
+      },
+      {
+       "type": "line",
+       "label": "Postfix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-to-pre-2",
+     "text": "Infix: A - B / C + D\nWrite this expression in prefix.\nPrefix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Infix",
+       "text": "A - B / C + D"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in prefix."
+      },
+      {
+       "type": "line",
+       "label": "Prefix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-to-post-pow",
+     "text": "Infix: A * B ↑ 2 + C\nWrite this expression in postfix. You may type ^ for ↑.\nPostfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Infix",
+       "text": "A * B ↑ 2 + C"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in postfix. You may type ^ for ↑."
+      },
+      {
+       "type": "line",
+       "label": "Postfix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-arrows",
+     "text": "Infix: 2 ↑ 3 ↑ 2\nTick (✓) one box to show this expression written in postfix.\nA 2 3 ↑ 2 ↑\nB 2 3 2 ↑ ↑\nC ↑ ↑ 2 3 2\nD 2 ↑ 3 2 ↑\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Infix",
+       "text": "2 ↑ 3 ↑ 2"
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show this expression written in postfix."
+      },
+      {
+       "type": "options",
+       "items": [
+        "2 3 ↑ 2 ↑",
+        "2 3 2 ↑ ↑",
+        "↑ ↑ 2 3 2",
+        "2 ↑ 3 2 ↑"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-implied",
+     "text": "Contest form: 2(C - 3D)\nWrite this expression in postfix.\nPostfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Contest form",
+       "text": "2(C - 3D)"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in postfix."
+      },
+      {
+       "type": "line",
+       "label": "Postfix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-post-to-in-1",
+     "text": "Postfix: A B + C *\nWrite this expression in infix.\nInfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Postfix",
+       "text": "A B + C *"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in infix."
+      },
+      {
+       "type": "line",
+       "label": "Infix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-pre-to-in-1",
+     "text": "Prefix: - A * B C\nWrite this expression in infix.\nInfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Prefix",
+       "text": "- A * B C"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in infix."
+      },
+      {
+       "type": "line",
+       "label": "Infix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-post-to-in-2",
+     "text": "Postfix: A B C - D * +\nWrite this expression in infix.\nInfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Postfix",
+       "text": "A B C - D * +"
+      },
+      {
+       "type": "para",
+       "text": "Write this expression in infix."
+      },
+      {
+       "type": "line",
+       "label": "Infix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-tree-post",
+     "text": "Here is an expression tree.\nExpression tree. The top is node 1. Node 1 (*): left node 2, right node 3. Node 2 (+): left A, right B. Node 3 (-): left C, right D.\nWrite the expression in postfix.\nPostfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Here is an expression tree."
+      },
+      {
+       "type": "tree",
+       "prefix": "* + A B - C D"
+      },
+      {
+       "type": "para",
+       "text": "Write the expression in postfix."
+      },
+      {
+       "type": "line",
+       "label": "Postfix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-tree-in",
+     "text": "Here is an expression tree.\nExpression tree. The top is node 1. Node 1 (+): left node 2, right C. Node 2 (*): left A, right B.\nWrite the expression in infix.\nInfix ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Here is an expression tree."
+      },
+      {
+       "type": "tree",
+       "prefix": "+ * A B C"
+      },
+      {
+       "type": "para",
+       "text": "Write the expression in infix."
+      },
+      {
+       "type": "line",
+       "label": "Infix",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acn-pre-to-post",
+     "text": "Prefix: * + A B C\nTick (✓) one box to show this expression written in postfix.\nA A B C + *\nB C B A + *\nC A B + C *\nD * + A B C\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "expr",
+       "label": "Prefix",
+       "text": "* + A B C"
+      },
+      {
+       "type": "para",
+       "text": "Tick (✓) one box to show this expression written in postfix."
+      },
+      {
+       "type": "options",
+       "items": [
+        "A B C + *",
+        "C B A + *",
+        "A B + C *",
+        "* + A B C"
+       ]
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "setId": "y10-unit3-1-practice",
    "title": "Unit 3.1 Revision: All Topics",
    "year": "Year 10",
