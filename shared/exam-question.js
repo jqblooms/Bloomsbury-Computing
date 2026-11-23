@@ -24,7 +24,9 @@
 //   table       one line per filled blank cell: "<first cell of its row>: <value>", or "<column head>, row n: <value>"
 //               when the blank is in the first column
 //   sum         "Carry: 01100110" (an empty carry box is 0) and "Answer: 10011001" (an empty box is "?")
-//   line        "<label>: <value>"
+//   line        "<label>: <value>" (mono: true draws a wider monospace input, for an expression or a bit string)
+//   expr, tree  nothing to fill in: { type: 'expr', text, label? } one expression drawn large in monospace;
+//               { type: 'tree', prefix: '+ A * B C' } an expression tree drawn as SVG from its prefix form
 //   lines       the typed text of the answer box, as typed, at the place of the lines block
 // With no lines block, a free box's typed text comes first. Blanks the student works out are drawn empty: the blocks
 // never hold an answer. Colours come from the site theme (bc-theme.css), so it reads in both themes.
@@ -89,6 +91,16 @@
     '.eq-in[readonly]{cursor:default}' +
     '.eq-table td .eq-in{min-width:7em;text-align:left;padding:7px 14px}' +
     '.eq-line .eq-in{display:inline-block;width:auto;min-width:12em;height:auto;min-height:0;padding:2px 6px;border-bottom:2px dotted var(--ink);text-align:left}' +
+    '.eq-line .eq-in.is-mono{min-width:16em;font-family:var(--font-mono,monospace);font-weight:600;letter-spacing:.04em}' +
+    '.eq-expr{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;max-width:100%;font:600 17px/1.3 var(--font-body,sans-serif);color:var(--ink)}' +
+    '.eq-expr code{display:inline-block;max-width:100%;overflow-x:auto;padding:8px 16px;border:2px solid var(--ink);border-radius:4px;' +
+      'background:var(--code-bg,var(--surface-2));color:var(--ink);font:600 24px/1.3 var(--font-mono,monospace);white-space:pre;word-spacing:.25em}' +
+    '.eq-tree{max-width:100%;overflow-x:auto}' +
+    '.eq-tree svg{display:block;height:auto;max-width:100%}' +
+    '.eq-tree line{stroke:var(--ink);stroke-width:2}' +
+    '.eq-tree circle{fill:var(--surface);stroke:var(--ink);stroke-width:2}' +
+    '.eq-tree circle.is-op{fill:var(--surface-2)}' +
+    '.eq-tree text{fill:var(--ink);font:700 20px var(--font-mono,monospace);text-anchor:middle;dominant-baseline:central}' +
     '.eq-tk{display:block;width:100%;min-width:2.4em;height:100%;min-height:2.2em;margin:0;padding:0;border:0;background:transparent;' +
       'color:var(--brand,var(--ink));font:700 24px/1 var(--font-body,sans-serif);cursor:pointer}' +
     '.eq-tk:hover:not(:disabled){background:var(--surface-2)}' +
@@ -143,9 +155,9 @@
   function gridGiven(b) { return (b.rows || []).reduce(function (m, r) { return Math.max(m, r.length); }, 0); }
 
   // ia (interactive): { st: state object, ro: read only, ip: key prefix for this block }. Without it, paper only.
-  function cellIn(ia, k, max, label, mode) {
+  function cellIn(ia, k, max, label, mode, mono) {
     var v = ia.st[ia.ip + k] == null ? '' : String(ia.st[ia.ip + k]);
-    return '<input class="eq-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" data-k="' + esc(ia.ip + k) + '"' +
+    return '<input class="eq-in' + (mono ? ' is-mono' : '') + '" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" data-k="' + esc(ia.ip + k) + '"' +
       (mode ? ' data-mode="' + mode + '" inputmode="numeric"' : '') + ' maxlength="' + max + '" aria-label="' + esc(label) + '" value="' + esc(v) + '"' +
       (ia.ro ? ' readonly' : '') + '>';
   }
@@ -153,6 +165,38 @@
     var on = !!ia.st[ia.ip + k];
     return '<button type="button" class="eq-tk" data-k="' + esc(ia.ip + k) + '" aria-pressed="' + on + '" aria-label="' + esc(label) + '"' +
       (ia.ro ? ' disabled' : '') + '>' + (on ? TICK : '') + '</button>';
+  }
+
+  // An expression tree from its prefix form ('+ A * B C', ^ for the power arrow): each value is one token.
+  function treeOf(prefix) {
+    var t = String(prefix || '').replace(/\^/g, '↑').split(/\s+/).filter(function (x) { return x; }), p = 0;
+    function walk() {
+      var tk = t[p++];
+      if (tk == null) return null;
+      if (!/^[-+*\/↑]$/.test(tk)) return { v: tk };
+      var l = walk(), r = walk();
+      return l && r ? { v: tk, op: true, l: l, r: r } : null;
+    }
+    var root = walk();
+    return root && p === t.length ? root : null;
+  }
+  function treeSvg(prefix) {
+    var root = treeOf(prefix);
+    if (!root) return '';
+    var col = 0, depth = 0, nodes = [], R = 20, DX = 46, DY = 64;
+    (function place(n, d) {          // in-order: x by order left to right, y by depth
+      if (n.l) place(n.l, d + 1);
+      n.x = col++; n.d = d; if (d > depth) depth = d;
+      if (n.r) place(n.r, d + 1);
+      nodes.push(n);
+    })(root, 0);
+    var X = function (n) { return R + 6 + n.x * DX; }, Y = function (n) { return R + 6 + n.d * DY; };
+    var w = 2 * (R + 6) + (col - 1) * DX, h = 2 * (R + 6) + depth * DY, lines = '', dots = '';
+    nodes.forEach(function (n) {
+      if (n.op) [n.l, n.r].forEach(function (c) { lines += '<line x1="' + X(n) + '" y1="' + Y(n) + '" x2="' + X(c) + '" y2="' + Y(c) + '"/>'; });
+      dots += '<circle' + (n.op ? ' class="is-op"' : '') + ' cx="' + X(n) + '" cy="' + Y(n) + '" r="' + R + '"/><text x="' + X(n) + '" y="' + Y(n) + '">' + esc(n.v) + '</text>';
+    });
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" role="img" aria-label="Expression tree">' + lines + dots + '</svg>';
   }
 
   var DRAW = {
@@ -244,8 +288,14 @@
     // { type: 'line', label: 'Logic gate' }: one answer line, "Logic gate ........" on the paper.
     line: function (b, ia) {
       return '<div class="eq-line"><span>' + esc(b.label || '') + '</span>' +
-        (ia ? cellIn(ia, 'v', 60, b.label || 'Answer') : '<span class="eq-line-dots"></span>') + '</div>';
+        (ia ? cellIn(ia, 'v', 60, b.label || 'Answer', null, b.mono) : '<span class="eq-line-dots"></span>') + '</div>';
     },
+    // { type: 'expr', text: '- * 3 4 5', label?: 'Prefix' }: one expression, large and monospace.
+    expr: function (b) {
+      return '<div class="eq-expr">' + (b.label ? '<span>' + esc(b.label) + ':</span>' : '') + '<code>' + esc(b.text) + '</code></div>';
+    },
+    // { type: 'tree', prefix: '+ A * B C' }: an expression tree.
+    tree: function (b) { return '<div class="eq-tree">' + treeSvg(b.prefix) + '</div>'; },
     // { type: 'lines', rows?: 3 }: answer lines for writing; the game mounts the answer box here.
     lines: function (b, ia, bi) {
       if (ia) return '<div class="eq-lines" data-lines="' + bi + '"></div>';

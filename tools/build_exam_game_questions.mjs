@@ -72,10 +72,12 @@ const BLOCKS = {
   code: { lines: strs, lang: (v) => v === 'python' || v === 'pseudocode', numbered: (v) => v === true },
   options: { items: (v) => strs(v) && v.length >= 2 && v.length <= 8 },
   tickGrid: { head: (v) => strs(v) && v.length >= 2, rows: (v) => Array.isArray(v) && v.length >= 1 && v.every((r) => strs(r) && r.length >= 1), caption: isStr },
-  line: { label: isStr },
+  line: { label: isStr, mono: (v) => v === true },
+  expr: { text: isStr, label: isStr },
+  tree: { prefix: (v) => isStr(v) && /^[A-Z0-9+\-*\/^↑]( [A-Z0-9+\-*\/^↑])*$/.test(v) },
   lines: { rows: (v) => Number.isInteger(v) && v >= 1 && v <= 8 }
 };
-const REQUIRED = { para: ['text'], table: ['head', 'rows'], truthTable: ['inputs', 'outputs', 'rows'], gate: ['gate'], register: [], sum: ['rows'], code: ['lines'], options: ['items'], tickGrid: ['head', 'rows'], line: [], lines: [] };
+const REQUIRED = { para: ['text'], table: ['head', 'rows'], truthTable: ['inputs', 'outputs', 'rows'], gate: ['gate'], register: [], sum: ['rows'], code: ['lines'], options: ['items'], tickGrid: ['head', 'rows'], line: [], lines: [], expr: ['text'], tree: ['prefix'] };
 function walkKeys(v, where) {
   if (Array.isArray(v)) v.forEach((x) => walkKeys(x, where));
   else if (v && typeof v === 'object') for (const k of Object.keys(v)) { if (ANSWER_KEYS.test(k)) fail(where + ' has an answer-like field "' + k + '" in its blocks'); walkKeys(v[k], where); }
