@@ -10023,6 +10023,570 @@
    ]
   },
   {
+   "setId": "acsl-bitstring",
+   "title": "Bit-String Flicking",
+   "year": "Competition",
+   "unit": "ACSL Junior Contest 2",
+   "questions": [
+    {
+     "qid": "acslb-not",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nNOT 01101\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "NOT 01101"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-and",
+     "text": "Work out the value of this expression. Every string has 5 bits.\n11100 AND 10110\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "11100 AND 10110"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-or",
+     "text": "Work out the value of this expression. Every string has 5 bits.\n10010 OR 00110\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "10010 OR 00110"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-xor",
+     "text": "Work out the value of this expression. Every string has 5 bits.\n10110 XOR 11100\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "10110 XOR 11100"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-lshift",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nLSHIFT-2 11011\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "LSHIFT-2 11011"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-rshift",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nRSHIFT-3 10110\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "RSHIFT-3 10110"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-lcirc",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nLCIRC-2 10011\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "LCIRC-2 10011"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-rcirc",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nRCIRC-1 01110\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "RCIRC-1 01110"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-big",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nRCIRC-13 11010\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "RCIRC-13 11010"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-pad",
+     "text": "Work out the value of this expression.\n110 XOR 10101\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression."
+      },
+      {
+       "type": "expr",
+       "text": "110 XOR 10101"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-prec-and",
+     "text": "Work out the value of this expression. Every string has 5 bits.\n11001 OR 01010 AND 00111\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "11001 OR 01010 AND 00111"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-prec-xor",
+     "text": "Work out the value of this expression. Every string has 5 bits.\n10110 XOR 11100 AND 01011\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "10110 XOR 11100 AND 01011"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-chain",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nNOT RSHIFT-1 10110\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "NOT RSHIFT-1 10110"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-brackets",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nLCIRC-1 (10101 OR 00110) AND 11011\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "LCIRC-1 (10101 OR 00110) AND 11011"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-contest",
+     "text": "Work out the value of this expression. Every string has 5 bits.\nNOT (RCIRC-2 01101 XOR LSHIFT-1 10011) OR 00100\nAnswer ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Work out the value of this expression. Every string has 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "NOT (RCIRC-2 01101 XOR LSHIFT-1 10011) OR 00100"
+      },
+      {
+       "type": "line",
+       "label": "Answer",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-first",
+     "text": "Look at this expression.\n01101 OR 10011 XOR 11010 AND 00111\nState which operator is worked first.\nOperator ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Look at this expression."
+      },
+      {
+       "type": "expr",
+       "text": "01101 OR 10011 XOR 11010 AND 00111"
+      },
+      {
+       "type": "para",
+       "text": "State which operator is worked first."
+      },
+      {
+       "type": "line",
+       "label": "Operator",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-solve-and",
+     "text": "x is a string of 5 bits. Find every value of x that makes this true.\nx AND 11010 = 01010\nUse * for a bit that can be 0 or 1, or list every value.\nx ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "x is a string of 5 bits. Find every value of x that makes this true."
+      },
+      {
+       "type": "expr",
+       "text": "x AND 11010 = 01010"
+      },
+      {
+       "type": "para",
+       "text": "Use * for a bit that can be 0 or 1, or list every value."
+      },
+      {
+       "type": "line",
+       "label": "x",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-solve-or",
+     "text": "x is a string of 5 bits. Find every value of x that makes this true.\nx OR 01001 = 11101\nUse * for a bit that can be 0 or 1, or list every value.\nx ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "x is a string of 5 bits. Find every value of x that makes this true."
+      },
+      {
+       "type": "expr",
+       "text": "x OR 01001 = 11101"
+      },
+      {
+       "type": "para",
+       "text": "Use * for a bit that can be 0 or 1, or list every value."
+      },
+      {
+       "type": "line",
+       "label": "x",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-solve-xor",
+     "text": "x is a string of 5 bits. Find every value of x that makes this true.\nx XOR 10101 = 11100\nUse * for a bit that can be 0 or 1, or list every value.\nx ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "x is a string of 5 bits. Find every value of x that makes this true."
+      },
+      {
+       "type": "expr",
+       "text": "x XOR 10101 = 11100"
+      },
+      {
+       "type": "para",
+       "text": "Use * for a bit that can be 0 or 1, or list every value."
+      },
+      {
+       "type": "line",
+       "label": "x",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-solve-not",
+     "text": "x is a string of 5 bits. Find every value of x that makes this true.\n(NOT x) AND 10110 = 00100\nUse * for a bit that can be 0 or 1, or list every value.\nx ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "x is a string of 5 bits. Find every value of x that makes this true."
+      },
+      {
+       "type": "expr",
+       "text": "(NOT x) AND 10110 = 00100"
+      },
+      {
+       "type": "para",
+       "text": "Use * for a bit that can be 0 or 1, or list every value."
+      },
+      {
+       "type": "line",
+       "label": "x",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-solve-circ",
+     "text": "x is a string of 5 bits. Find every value of x that makes this true.\n(LCIRC-1 x) AND 11001 = 10001\nUse * for a bit that can be 0 or 1, or list every value.\nx ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "x is a string of 5 bits. Find every value of x that makes this true."
+      },
+      {
+       "type": "expr",
+       "text": "(LCIRC-1 x) AND 11001 = 10001"
+      },
+      {
+       "type": "para",
+       "text": "Use * for a bit that can be 0 or 1, or list every value."
+      },
+      {
+       "type": "line",
+       "label": "x",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "acslb-count",
+     "text": "x is a string of 5 bits.\nx AND 10010 = 00010\nState how many values of x make this true.\nNumber of values ........\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "x is a string of 5 bits."
+      },
+      {
+       "type": "expr",
+       "text": "x AND 10010 = 00010"
+      },
+      {
+       "type": "para",
+       "text": "State how many values of x make this true."
+      },
+      {
+       "type": "line",
+       "label": "Number of values",
+       "mono": true
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "setId": "y10-unit3-1-practice",
    "title": "Unit 3.1 Revision: All Topics",
    "year": "Year 10",
@@ -10108,6 +10672,60 @@
     "y10e-own-smartphone",
     "y10e-own-benefits",
     "y10e-own-traffic"
+   ]
+  },
+  {
+   "setId": "acsl-contest2",
+   "title": "Contest 2 Revision: Notation and Bit Strings",
+   "year": "Competition",
+   "unit": "ACSL Junior Contest 2",
+   "questions": [],
+   "qids": [
+    "acn-form-post",
+    "acn-eval-post-1",
+    "acn-eval-post-2",
+    "acn-eval-post-3",
+    "acn-eval-post-pow",
+    "acn-eval-post-long",
+    "acn-eval-pre-1",
+    "acn-eval-pre-2",
+    "acn-eval-pre-order",
+    "acn-eval-pre-long",
+    "acn-to-post-1",
+    "acn-to-pre-1",
+    "acn-to-post-2",
+    "acn-to-pre-2",
+    "acn-to-post-pow",
+    "acn-arrows",
+    "acn-implied",
+    "acn-post-to-in-1",
+    "acn-pre-to-in-1",
+    "acn-post-to-in-2",
+    "acn-tree-post",
+    "acn-tree-in",
+    "acn-pre-to-post",
+    "acslb-not",
+    "acslb-and",
+    "acslb-or",
+    "acslb-xor",
+    "acslb-lshift",
+    "acslb-rshift",
+    "acslb-lcirc",
+    "acslb-rcirc",
+    "acslb-big",
+    "acslb-pad",
+    "acslb-prec-and",
+    "acslb-prec-xor",
+    "acslb-chain",
+    "acslb-brackets",
+    "acslb-contest",
+    "acslb-first",
+    "acslb-solve-and",
+    "acslb-solve-or",
+    "acslb-solve-xor",
+    "acslb-solve-not",
+    "acslb-solve-circ",
+    "acslb-count"
    ]
   }
  ]

@@ -163,7 +163,7 @@ export function writeLesson(id, label, steps, validators) {
 }
 // Adds the lesson to the Competition section's ACSL Junior Contest 2 unit, in contest order. A small text edit:
 // lessons.json is shared by several builders, so only that one list is rewritten.
-const ORDER = ['acsl-c2-notation', 'acsl-c2-bits', 'acsl-c2-loops', 'acsl-c2-contest'];
+const ORDER = ['acsl-c2-notation', 'acsl-c2-bits', 'acsl-c2-revision', 'acsl-c2-loops', 'acsl-c2-contest'];
 export function registerLesson(id) {
   const lp = path.join(ROOT, 'LessonData', 'lessons.json');
   const raw = fs.readFileSync(lp, 'utf8');

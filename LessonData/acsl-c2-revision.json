@@ -1,0 +1,184 @@
+{
+ "id": "acsl-c2-revision",
+ "label": "Contest 2 Revision: Notation and Bit Strings",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Prefix and Postfix (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "acslrev-do-now",
+   "validatorKey": "acslrev_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Prefix and Postfix (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does postfix never need brackets?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each operator comes straight after the two values it works on, so the order of the work is already fixed by the order of the symbols.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Use a stack. Write it down as you go.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acslrev-do-now-a\">(a) Work out the postfix <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">8 2 3 * -</code> [1]</label><input id=\"acslrev-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Prefix and Postfix (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acslrev-do-now-b\">(b) Work out the prefix <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">+ * 3 4 2</code> [1]</label><input id=\"acslrev-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Prefix and Postfix (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acslrev-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acslrev-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the stack",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Work out the postfix <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">9 4 1 + -</code>. Read from the <strong>left</strong>.",
+      "visual": "<div class=\"wt-big\">9 4 1 + -</div>"
+     },
+     {
+      "text": "A number: <strong>push</strong> it. Push 9, then 4, then 1.",
+      "visual": "<div style=\"display:flex;gap:6px;justify-content:center;margin:6px 0\"><span style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">9</span><span style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">4</span><span class=\"wt-hl\" style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">1</span></div><div class=\"wt-note\">stack: bottom on the left, top on the right</div>"
+     },
+     {
+      "text": "<strong>+</strong> is an operator: pop two values. The first one popped (1) goes on the <strong>right</strong>: 4 + 1 = 5. Push 5.",
+      "visual": "<div style=\"display:flex;gap:6px;justify-content:center;margin:6px 0\"><span style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">9</span><span class=\"wt-hl\" style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">5</span></div><div class=\"wt-note\">stack: bottom on the left, top on the right</div>"
+     },
+     {
+      "text": "<strong>-</strong>: pop two. The first one popped (5) goes on the right: 9 - 5 = 4. One value is left: the answer is 4.",
+      "visual": "<div style=\"display:flex;gap:6px;justify-content:center;margin:6px 0\"><span class=\"wt-hl\" style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">4</span></div><div class=\"wt-note\">stack: bottom on the left, top on the right</div>"
+     },
+     {
+      "text": "<strong>Prefix.</strong> Work out <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">- * 2 5 3</code>. Read from the <strong>right</strong>. Push 3, then 5, then 2.",
+      "visual": "<div style=\"display:flex;gap:6px;justify-content:center;margin:6px 0\"><span style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">3</span><span style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">5</span><span class=\"wt-hl\" style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">2</span></div><div class=\"wt-note\">stack: bottom on the left, top on the right</div>"
+     },
+     {
+      "text": "<strong>*</strong>: pop two. In prefix the first one popped (2) goes on the <strong>left</strong>: 2 * 5 = 10. Push 10.",
+      "visual": "<div style=\"display:flex;gap:6px;justify-content:center;margin:6px 0\"><span style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">3</span><span class=\"wt-hl\" style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">10</span></div><div class=\"wt-note\">stack: bottom on the left, top on the right</div>"
+     },
+     {
+      "text": "<strong>-</strong>: pop two. The first one popped (10) goes on the left: 10 - 3 = 7. Now do the same with the expressions in your question.",
+      "visual": "<div style=\"display:flex;gap:6px;justify-content:center;margin:6px 0\"><span class=\"wt-hl\" style=\"display:inline-block;min-width:38px;padding:6px 10px;border-radius:8px;background:var(--surface-3);text-align:center;font:700 20px var(--font-mono,monospace)\">7</span></div><div class=\"wt-note\">stack: bottom on the left, top on the right</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Bit Strings (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "acslrev-do-now-2",
+   "validatorKey": "acslrev_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Bit Strings (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must every answer here have exactly 5 bits?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Shifts and circulates keep the length of their string, and AND, OR and XOR give a string as long as the longer one.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Every string has 5 bits. Type each answer as 5 bits.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acslrev-do-now-2-a\">(a) Work out <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">RSHIFT-2 11011</code> [1]</label><input id=\"acslrev-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Bit Strings (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acslrev-do-now-2-b\">(b) Work out <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">10010 OR 01101 AND 00111</code> [1]</label><input id=\"acslrev-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Bit Strings (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acslrev-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acslrev-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: shifts and the order",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Work out <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">LCIRC-1 10110</code>. Every bit moves 1 place left.",
+      "visual": "<div class=\"wt-big\">LCIRC-1 10110</div>"
+     },
+     {
+      "text": "The left bit (1) falls off. LCIRC is a <strong>circulate</strong>, so it comes back on the right. A shift would put a 0 there instead.",
+      "visual": "<div class=\"wt-big\">0110 &larr; 1</div>"
+     },
+     {
+      "text": "So <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">LCIRC-1 10110</code> = <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">01101</code>.",
+      "visual": "<div class=\"wt-big\">01101</div>"
+     },
+     {
+      "text": "<strong>The order.</strong> Work out <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">11001 XOR 00101 AND 01011</code>. The order is: brackets, NOT, shifts and circulates, AND, XOR, OR. So AND goes first, wherever it is in the line.",
+      "visual": "<div class=\"wt-note\">AND before XOR before OR</div>"
+     },
+     {
+      "text": "AND first: <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">00101 AND 01011 = 00001</code>. AND gives 1 only where both bits are 1.",
+      "visual": "<div class=\"wt-big\">00001</div>"
+     },
+     {
+      "text": "Then XOR: <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">11001 XOR 00001 = 11000</code>. XOR gives 1 where the bits are different. Now do the same with the expressions in your question.",
+      "visual": "<div class=\"wt-big\">11000</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-contest-ext",
+   "embedContainerId": "acslrev-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do contest questions mix the topics?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>In the contest you do not know which topic comes next, so you must spot the type of question first.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these contest questions. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"acslrev-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Contest 2 Revision: Notation and Bit Strings",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">ACSL Junior Contest 2</p><h2 class=\"lesson-h2\">Contest 2 Revision: Notation and Bit Strings</h2><p>Competition</p></div><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Four of the five contest questions are on these two topics. Why is a quick, sure method worth more than a clever one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each question has one answer and no part marks, so one slip loses the whole point. A method you can repeat step by step makes slips rare.</p></div></details><ul class=\"lesson-facts\"><li><strong>1 minutes.</strong> <strong>Today:</strong> the key facts for both topics, then contest questions in a game.</li><li><strong>In the contest:</strong> two questions on prefix, infix and postfix and two on bit-string flicking.</li></ul>"
+  },
+  {
+   "id": "facts-notation",
+   "label": "Key Facts: Prefix, Infix and Postfix",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Prefix, Infix and Postfix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Prefix and postfix use the same stack. What changes between them, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The reading direction and the side the first popped value goes on. Prefix puts the operator before its values, so it is read from the other end.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;width:100%;font-size:18px;line-height:1.4\"><tr><th style=\"padding:4px 8px;border-bottom:2px solid var(--line-strong);text-align:left\">Form</th><th style=\"padding:4px 8px;border-bottom:2px solid var(--line-strong);text-align:left\">The operator goes</th><th style=\"padding:4px 8px;border-bottom:2px solid var(--line-strong);text-align:left\">Example</th></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">Infix</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">between the two values</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\"><code style=\"font-family:var(--font-mono,monospace);font-weight:700\">(6 + 2) * 3</code></td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">Prefix</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">before the two values</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\"><code style=\"font-family:var(--font-mono,monospace);font-weight:700\">* + 6 2 3</code></td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">Postfix</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">after the two values</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\"><code style=\"font-family:var(--font-mono,monospace);font-weight:700\">6 2 + 3 *</code></td></tr></table><ul class=\"lesson-facts\"><li><strong>Order in infix:</strong> brackets, then <code style=\"font-family:var(--font-mono,monospace);font-weight:700\">↑</code> (power), then * and /, then + and -.</li><li>Two of the same rank: left to right. Two power arrows: right to left.</li><li>A number next to a letter or a bracket means multiply: 2B is 2 * B.</li></ul></div><div><ul class=\"lesson-facts\"><li><strong>Postfix:</strong> read from the <strong>left</strong>. A number: push it. An operator: pop two, work them out, push the answer. The first value popped goes on the <strong>right</strong>.</li><li><strong>Prefix:</strong> read from the <strong>right</strong>, the same stack. The first value popped goes on the <strong>left</strong>.</li><li><strong>Infix to prefix or postfix:</strong> put brackets round every operation, move each operator to the front (prefix) or the end (postfix) of its brackets, then remove the brackets.</li></ul></div></div>"
+  },
+  {
+   "id": "facts-bits",
+   "label": "Key Facts: Bit-String Flicking",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Bit-String Flicking</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a * in a solve-for-x answer stand for more than one value of x?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A * bit can be 0 or 1 and the expression is still true, so each * doubles the number of values the pattern stands for.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;width:100%;font-size:18px;line-height:1.4\"><tr><th style=\"padding:4px 8px;border-bottom:2px solid var(--line-strong);text-align:left\">Operator</th><th style=\"padding:4px 8px;border-bottom:2px solid var(--line-strong);text-align:left\">What it does</th></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">NOT</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">flips every bit</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">AND</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">1 only where both bits are 1</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">OR</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">1 where at least one bit is 1</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">XOR</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">1 where the two bits are different</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">LSHIFT-n, RSHIFT-n</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">move every bit n places; bits fall off and zeros come in</td></tr><tr><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">LCIRC-n, RCIRC-n</td><td style=\"padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top\">move every bit n places; bits that fall off come back at the other end</td></tr></table></div><div><ul class=\"lesson-facts\"><li><strong>The order:</strong> brackets, NOT, shifts and circulates, AND, XOR, OR. Two of the same: left to right. A chain like NOT LSHIFT-1: the one next to the bits goes first.</li><li><strong>Different lengths:</strong> pad the shorter string with zeros on the left.</li><li><strong>Big counts:</strong> on 5 bits a circulate of 5 changes nothing, so use only the remainder.</li><li><strong>Solve for x:</strong> go column by column. Write <strong>*</strong> for a bit that can be 0 or 1. Undo the last operator first.</li></ul></div></div>"
+  },
+  {
+   "id": "how-to-play",
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before it costs you a point in the contest.</p></div></details><p class=\"lesson-lead\"><strong>1 minutes.</strong> </p><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top. Keep paper for the stack and the bit columns.</li><li><strong>Answer the contest questions</strong> on notation and bit strings to earn coins, then build a bridge to get the truck across.</li><li><strong>Type bit strings</strong> with or without spaces. For solve for x, use * or list every value.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
+  },
+  {
+   "id": "game",
+   "label": "Play: Data Bridge",
+   "type": "embedded-app",
+   "appId": "bridge-builder",
+   "embedContainerId": "acslrev-game",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write the stack or the columns on paper even in a game?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each step on paper can be checked. A step done only in your head is easy to slip on and hard to find again.</p></div></details><p class=\"lesson-lead\"><strong>31 minutes.</strong> Earn coins with contest questions on both topics, then build. Stop when your teacher starts the plenary.</p><div id=\"acslrev-game\"></div>",
+   "embedQuery": "set=acsl-contest2&goal=3"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Prefix, Infix and Postfix (1 of 2)",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-notation",
+   "embedContainerId": "acslrev-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Prefix, Infix and Postfix (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which step of the stack method do you check most carefully, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The order of the two popped values, because a minus or a divide gives a different answer when the two values swap.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> New expressions every time. Your progress is saved.</p><div id=\"acslrev-plenary\"></div>"
+  },
+  {
+   "id": "plenary-2",
+   "label": "Plenary: Bit-String Flicking (2 of 2)",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-bits",
+   "embedContainerId": "acslrev-plenary-2",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Bit-String Flicking (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which bit-string mistake will you watch for in the contest, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each person names their own, for example working left to right instead of by the order, because one early slip spoils every later step.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Type bits with or without spaces. Your progress is saved.</p><div id=\"acslrev-plenary-2\"></div>"
+  }
+ ],
+ "validators": {
+  "acslrev_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read from the left. At an operator, pop two values: the first one popped goes on the right.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*14\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read from the right. At an operator, pop two values: the first one popped goes on the left.",
+    "marks": 1
+   }
+  ],
+  "acslrev_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*0\\s*0\\s*1\\s*1\\s*0\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Every bit moves 2 places right. The bits that fall off are lost. Zeros come in on the left.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*0\\s*1\\s*1\\s*1\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "AND comes before OR. Work the AND first, then the OR.",
+    "marks": 1
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

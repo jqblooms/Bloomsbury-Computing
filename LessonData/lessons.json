@@ -362,6 +362,7 @@
           "lessons": [
             "acsl-c2-notation",
             "acsl-c2-bits",
+            "acsl-c2-revision",
             "acsl-c2-loops",
             "acsl-c2-contest"
           ]
