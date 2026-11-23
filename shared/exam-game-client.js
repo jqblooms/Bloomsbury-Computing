@@ -34,7 +34,7 @@
   var RETRY_MS = [2000, 5000];
   function noRetry(e) { var m = e && e.message; return m === 'Unknown request.' || m === 'Sign in to play.'; }
   function request(op, payload) {
-    if (op !== 'submit' && op !== 'submitMany') return requestOnce(op, payload);
+    if (op !== 'submit' && op !== 'submitMany' && op !== 'masterySubmit' && op !== 'masterySave') return requestOnce(op, payload);
     var n = 0;
     var go = function () {
       return requestOnce(op, payload).catch(function (e) {
@@ -55,7 +55,7 @@
       pending[reqId] = { resolve: resolve, reject: reject, timer: setTimeout(function () {
         delete pending[reqId];
         reject(new Error('No answer from the site. Check you are signed in, then try again.'));
-      }, op === 'submitMany' || op === 'help' ? 60000 : op === 'submit' ? 45000 : 20000) };
+      }, op === 'submitMany' || op === 'help' ? 60000 : op === 'submit' || op === 'masterySubmit' ? 45000 : op === 'masterySave' || op === 'masteryLoad' ? 30000 : 20000) };
       try { window.parent.postMessage({ type: 'BC_EXAM_GAME_REQUEST', reqId: reqId, op: op, payload: payload || {} }, '*'); }
       catch (err) { delete pending[reqId]; reject(err); }
     });
@@ -130,7 +130,7 @@
   // sets and texts at once, so a round needs no server call. The student's history comes ONCE per set from the server
   // ('history'), with a copy kept in localStorage per set as the fallback; each submit result updates it. The pick
   // follows the server's rules (examGameNext_ in ExamGame.gs): no repeats until the pool is used up, then weakest first.
-  var QFILE_G = 'f9895d94';
+  var QFILE_G = 'eee5abeb';
   var base = (function () {
     var s = document.currentScript && document.currentScript.src;
     return s ? s.replace(/[^\/]*$/, '') : '../shared/';
@@ -386,6 +386,13 @@
     stubFailed: function () { return stubFailed; },
     // A saved round from before blocks were kept: its questions' blocks from the questions file, once it has loaded.
     blocksFor: function (qid) { return fileBlocks[qid] || null; },
+    // Practice Sets (MasterySets/): any mastery op straight to the server (masterySubmit and masterySave retry like a
+    // submit), and the questions file itself (combined sets already filled in).
+    call: function (op, payload) {
+      if (!/^mastery[A-Z]/.test(String(op))) return Promise.reject(new Error('Unknown request.'));
+      return request(op, payload);
+    },
+    file: function () { return loadFile(); },
     newRid: function () { return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); },
     useStub: function (on) { stub = on !== false; },
     isStub: function () { return stub; },
