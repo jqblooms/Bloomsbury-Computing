@@ -684,7 +684,7 @@ function extCards() {
 }
 
 const topicSrc = drillHead(ID, 'Topic drill and plenary: single operators, shifts and circulates (big counts too), different lengths, the order of operators, and solving for x with *. Every answer comes from BitCore.') +
-  `DrillData.register(${JSON.stringify(ID)}, {\n  title: "ACSL: Bit-String Flicking",\n  subtitle: "NOT, AND, OR, XOR, shifts, circulates, the order and solving for x",\n  categories: ${catsSrc([
+  `DrillData.register(${JSON.stringify(ID)}, {\n  title: "ACSL: Bit-String Flicking",\n  subtitle: "NOT, AND, OR, XOR, shifts, circulates, the order and solving for x",\n  aiFallback: true,\n  aiHelp: true,\n  waitForNext: true,\n  categories: ${catsSrc([
     ['ops', 'NOT, AND, OR, XOR'], ['moves', 'Shifts and circulates'], ['pad', 'Different lengths'], ['prec', 'The order of operators'], ['solve', 'Solve for x']])},\n` +
   `  cards: (function () {\n${CORE}\n  return (${topicCards.toString()})(BitCore);\n  })()\n});\n`;
 const extSrc = drillHead(ID + '-ext', 'Do Now Extension: 5-bit binary and single-bit AND, OR and NOT. Every card has a worked example and two nudges.') +

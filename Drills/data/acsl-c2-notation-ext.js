@@ -5,6 +5,9 @@
 DrillData.register("acsl-c2-notation-ext", {
   title: "ACSL Contest 2 Extension: Order of Operations",
   subtitle: "Do Now Extension",
+  aiFallback: true,
+  aiHelp: true,
+  waitForNext: true,
   categories: [
     ["ox-rank", "* and / Before + and -"],
     ["ox-left", "Left to Right"],

@@ -5,6 +5,9 @@
 DrillData.register("acsl-c2-notation", {
   title: "ACSL Contest 2: Prefix, Infix and Postfix",
   subtitle: "ACSL Junior Division",
+  aiFallback: true,
+  aiHelp: true,
+  waitForNext: true,
   categories: [
     ["ev-post", "Evaluate Postfix"],
     ["ev-pre", "Evaluate Prefix"],

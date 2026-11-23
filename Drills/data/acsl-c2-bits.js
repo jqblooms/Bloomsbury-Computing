@@ -4,6 +4,9 @@
 DrillData.register("acsl-c2-bits", {
   title: "ACSL: Bit-String Flicking",
   subtitle: "NOT, AND, OR, XOR, shifts, circulates, the order and solving for x",
+  aiFallback: true,
+  aiHelp: true,
+  waitForNext: true,
   categories: [
     ["ops","NOT, AND, OR, XOR"],
     ["moves","Shifts and circulates"],
