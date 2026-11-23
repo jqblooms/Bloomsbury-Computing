@@ -1,12 +1,13 @@
-// Practice Sets (?group=y11-mastery): real exam questions one at a time, in sets mastered in order (js/scheduler.js).
-// Questions come from shared/exam-game-questions.json (the combined sets y11-mastery-1 to 5); marking and progress go
+// Practice Sets (?group=y11-mastery or y10-mastery): real exam questions one at a time, in sets mastered in order (js/scheduler.js).
+// Questions come from shared/exam-game-questions.json (the combined sets y11-mastery-1 to 5, y10-mastery-1 to 4); marking and progress go
 // through the shell to MasterySets.gs (ExamGame.call). Progress is saved on the server after every answer, with a copy
 // in localStorage per student as the backup. Teachers get the class list on the start screen.
 // Local test without the site: ?examStub=1 (an answer containing "right" gets full marks, nothing is saved online).
 (function () {
   'use strict';
   var GROUPS = {
-    'y11-mastery': { title: 'Year 11 Practice Sets', sets: ['y11-mastery-1', 'y11-mastery-2', 'y11-mastery-3', 'y11-mastery-4', 'y11-mastery-5'] }
+    'y11-mastery': { title: 'Year 11 Practice Sets', sets: ['y11-mastery-1', 'y11-mastery-2', 'y11-mastery-3', 'y11-mastery-4', 'y11-mastery-5'] },
+    'y10-mastery': { title: 'Year 10 Practice Sets', sets: ['y10-mastery-1', 'y10-mastery-2', 'y10-mastery-3', 'y10-mastery-4'] }
   };
   var params = new URLSearchParams(location.search);
   var groupId = GROUPS[params.get('group')] ? params.get('group') : 'y11-mastery';

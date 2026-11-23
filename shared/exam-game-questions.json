@@ -11427,6 +11427,82 @@
     "ns-23j12-2d",
     "tc-23n12-2d"
    ]
+  },
+  {
+   "setId": "y10-mastery-1",
+   "title": "Practice Set 1",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10c-23n11-1c",
+    "y10c-25n13-2a",
+    "y10p-23j13-2a",
+    "y10i-23n12-3c",
+    "y10p-23n13-3c",
+    "y10c-25n13-2bii",
+    "y10e-24n11-6a",
+    "y10p-23n12-3ai",
+    "y10i-25j11-5b",
+    "y10c-26j11-2aiii"
+   ]
+  },
+  {
+   "setId": "y10-mastery-2",
+   "title": "Practice Set 2",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10i-24j12-5b",
+    "y10p-24m12-2bi",
+    "y10e-23n12-4a",
+    "y10i-26j13-3c",
+    "y10c-23j13-2ci",
+    "y10p-23n11-1d",
+    "y10c-21m12-8a",
+    "y10p-23n13-3b",
+    "y10p-25n12-4b",
+    "y10e-25n11-1g"
+   ]
+  },
+  {
+   "setId": "y10-mastery-3",
+   "title": "Practice Set 3",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10c-21m12-8bi",
+    "y10c-23n12-3b",
+    "y10p-26j12-2d",
+    "y10c-23n11-1ei",
+    "y10e-24n12-4e",
+    "y10c-21m12-8bii",
+    "y10p-23n12-3aii",
+    "y10p-24m12-2bii",
+    "y10e-25n12-7d",
+    "y10p-24m12-2biii"
+   ]
+  },
+  {
+   "setId": "y10-mastery-4",
+   "title": "Practice Set 4",
+   "year": "Year 10",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10p-23j13-2b",
+    "y10e-25m12-4b",
+    "y10p-26j11-2b",
+    "y10c-22j11-2a",
+    "y10c-23j13-2cii",
+    "y10i-24n11-5b",
+    "y10c-22n11-2c",
+    "y10p-25j11-5c",
+    "y10i-25n13-2b",
+    "y10i-26j11-2a"
+   ]
   }
  ]
 }
