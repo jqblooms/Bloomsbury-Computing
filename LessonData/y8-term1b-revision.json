@@ -1,0 +1,189 @@
+{
+ "id": "y8-term1b-revision",
+ "label": "Year 8 Term 1b Revision",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: AND (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y8t1b-do-now",
+   "validatorKey": "y8t1b_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: AND (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a range like this need AND, and not OR?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Both edges must hold at the same time: the number must be above the bottom edge and below the top edge.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> From 2.4.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Age</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Age &gt;= 13 AND Age &lt;= 19 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Teen\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not teen\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8t1b-do-now-a\">(a) What does the program output when 19 is input? [1]</label><input id=\"y8t1b-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: AND (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8t1b-do-now-b\">(b) What does the program output when 12 is input? [1]</label><input id=\"y8t1b-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: AND (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y8t1b-do-now-c\">(c) What is the smallest whole number that outputs Teen? [1]</label><input id=\"y8t1b-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: AND (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8t1b-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8t1b-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: AND",
+    "steps": [
+     {
+      "text": "This is a different program. Do the same steps with your program.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Temp &gt;= 20 AND Temp &lt;= 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Nice\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not nice\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div>"
+     },
+     {
+      "text": "30 is input. Line 3 has two conditions. 30 &gt;= 20 is TRUE. 30 &lt;= 30 is TRUE, because 30 is equal to 30. With AND, both are TRUE, so the THEN branch runs.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Temp &gt;= 20 AND Temp &lt;= 30 THEN</div><div class=\"lesson-code-line wt-hl\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Nice\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not nice\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Output: <span class=\"wt-hl\">Nice</span></div>"
+     },
+     {
+      "text": "31 is input. 31 &gt;= 20 is TRUE. 31 &lt;= 30 is FALSE. With AND, one FALSE makes the whole condition FALSE, so the ELSE branch runs.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Temp &gt;= 20 AND Temp &lt;= 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Nice\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not nice\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Output: <span class=\"wt-hl\">Not nice</span></div>"
+     },
+     {
+      "text": "The smallest whole number for Nice: try the number in the first condition. 20 &gt;= 20 is TRUE and 20 &lt;= 30 is TRUE. One less does not work: it is not &gt;= 20.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Temp &gt;= 20 AND Temp &lt;= 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Nice\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not nice\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Smallest for Nice: <span class=\"wt-hl\">20</span></div>"
+     },
+     {
+      "text": "Now do yours. Put the number into each condition and write TRUE or FALSE above it.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Temp &gt;= 20 AND Temp &lt;= 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Nice\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not nice\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Library Functions and Data Types (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y8t1b-do-now-2",
+   "validatorKey": "y8t1b_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Library Functions and Data Types (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it quicker to call a library function than to write the code yourself?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The code is already written and tested. You only need to know what goes in and what comes out.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> From 2.1 and 2.2.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Price : REAL</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Name : STRING</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Price &lt;- 4.75</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Name &lt;- \"Pen\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT ROUND(Price, 0)</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT LENGTH(Name)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8t1b-do-now-2-a\">(a) What does line 5 output? [1]</label><input id=\"y8t1b-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Library Functions and Data Types (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8t1b-do-now-2-b\">(b) What does line 6 output? [1]</label><input id=\"y8t1b-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Library Functions and Data Types (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y8t1b-do-now-2-c\">(c) Which data type holds only TRUE or FALSE? [1]</label><input id=\"y8t1b-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Library Functions and Data Types (2 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8t1b-do-now-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8t1b-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: library functions",
+    "steps": [
+     {
+      "text": "This is a different program. Do the same steps with your program.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Cost : REAL</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Item : STRING</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Cost &lt;- 8.4</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Item &lt;- \"Lamp\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT ROUND(Cost, 0)</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT LENGTH(Item)</div></div>"
+     },
+     {
+      "text": "Line 5 calls ROUND. The value of Cost goes in, then 0 decimal places. 8.4 is nearer to 8 than to 9.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Cost : REAL</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Item : STRING</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;Cost &lt;- 8.4</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Item &lt;- \"Lamp\"</div><div class=\"lesson-code-line wt-hl\">5&nbsp;&nbsp;OUTPUT ROUND(Cost, 0)</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT LENGTH(Item)</div></div><div class=\"wt-note\">Output: <span class=\"wt-hl\">8</span></div>"
+     },
+     {
+      "text": "Line 6 calls LENGTH. It counts the characters in the text. L, a, m, p: four characters. The quotes do not count.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Cost : REAL</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Item : STRING</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Cost &lt;- 8.4</div><div class=\"lesson-code-line wt-hl\">4&nbsp;&nbsp;Item &lt;- \"Lamp\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT ROUND(Cost, 0)</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;OUTPUT LENGTH(Item)</div></div><div class=\"wt-note\">Output: <span class=\"wt-hl\">4</span></div>"
+     },
+     {
+      "text": "A data type: look at the value. Quotes: text. A whole number: INTEGER. A number with a decimal part: REAL. Now do yours.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line wt-hl\">1&nbsp;&nbsp;DECLARE Cost : REAL</div><div class=\"lesson-code-line wt-hl\">2&nbsp;&nbsp;DECLARE Item : STRING</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Cost &lt;- 8.4</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Item &lt;- \"Lamp\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT ROUND(Cost, 0)</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT LENGTH(Item)</div></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "title",
+   "label": "Year 8 Term 1b Revision",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 8</p><h2 class=\"lesson-h2\">Year 8 Term 1b Revision</h2><p>Models, library functions, data types, IF and AND, OR, NOT</p></div><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check your notes now, before the questions start?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A gap you find now can be fixed before it costs marks in a question.</p></div></details><ul class=\"lesson-facts\"><li><strong>1 minutes.</strong> <strong>Today:</strong> the key facts for each topic, then exam questions in Data Bridge.</li></ul>"
+  },
+  {
+   "id": "facts-models",
+   "label": "Key Facts: Models and Data",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Models and Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a model give a wrong prediction even when its rules are right?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The prediction is worked out from the data that goes in. Wrong or missing data gives a wrong prediction.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>model</strong> is a simple computer version of a real system. It predicts what will happen.</li><li>A <strong>simulator</strong> is a model you use like the real thing, for example a flight simulator.</li><li>The parts: <strong>inputs</strong> (the data), <strong>rules</strong> (the calculations), <strong>outputs</strong> (the predictions).</li></ul></div><div><ul class=\"lesson-facts\"><li>Models are <strong>safer</strong>, <strong>cheaper</strong> and <strong>faster</strong>, and you can ask \"What if?\"</li><li><strong>Garbage in, garbage out:</strong> good data is correct, up to date and complete.</li><li>The <strong>data requirements</strong> are the data the rule uses. A different job needs different data.</li></ul></div></div>"
+  },
+  {
+   "id": "facts-libraries",
+   "label": "Key Facts: Library Functions",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Library Functions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do you only need to know what goes in and what comes out of a library function?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Someone else wrote and tested the lines inside, so you can use it without reading them.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>library</strong> is code that is already written and tested, ready to use.</li><li>Call a <strong>library function</strong>: its name, then the values it needs in brackets. It gives back one value.</li><li>DECLARE, INPUT and OUTPUT are part of the language, not library functions.</li></ul></div><div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Call</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>What it gives back</b></th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">MOD(20, 6)</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">the remainder</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">DIV(20, 6)</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">the whole number of times</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">ROUND(3.456, 1)</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">the number rounded to 1 decimal place</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">LENGTH(\"Hat Yai\")</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">how many characters</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">UCASE(\"cat\")</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">the text in capital letters</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">RANDOM()</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">a random number from 0 to 1</td></tr></table></div></div>"
+  },
+  {
+   "id": "facts-types",
+   "label": "Key Facts: Data Types and Constants",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Data Types and Constants</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does \"13\" in quotes not act like the number 13?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Quotes make a value text. The computer does not do sums with text.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Data type</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Holds</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Example</b></th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">INTEGER</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">a whole number</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">13</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">REAL</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">a number with a decimal part</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">2.5</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">STRING</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">text, in quotes</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">\"Cafe\"</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">BOOLEAN</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">only TRUE or FALSE</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">TRUE</td></tr></table></div><div><ul class=\"lesson-facts\"><li><strong>DECLARE</strong> gives each variable its data type before it is used.</li><li>A value of the wrong type stops the program on that line.</li><li>A <strong>constant</strong> holds a value that never changes while the program runs: CONSTANT VAT &lt;- 0.07</li><li>Change a constant in one place and every line that uses it changes.</li></ul></div></div>"
+  },
+  {
+   "id": "facts-conditions",
+   "label": "Key Facts: Conditional Statements",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Conditional Statements</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must you test every branch of an IF?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A mistake in one branch only shows when that branch runs, so each branch needs its own test value.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Selection:</strong> IF a condition is TRUE, the THEN branch runs. If it is FALSE, the ELSE branch runs.</li><li>Comparison operators: = , &lt;&gt; (not equal), &gt; , &lt; , &gt;= , &lt;=</li><li><strong>&gt; and &gt;=:</strong> &gt;= is TRUE when the two values are equal. &gt; is not.</li></ul></div><div><ul class=\"lesson-facts\"><li><strong>Nested IF:</strong> an IF inside the ELSE gives three outcomes.</li><li>Check the highest number first. A high number also passes the lower checks.</li><li>Test every branch, and test the edge numbers.</li></ul></div></div>"
+  },
+  {
+   "id": "facts-logic",
+   "label": "Key Facts: AND, OR and NOT",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: AND, OR and NOT</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is OR the right choice for a number outside a range?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A number outside the range is below the bottom edge or above the top edge. It can never be both.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>Operator</b></th><th style=\"padding:5px 10px;text-align:left;font-size:16px\"><b>The whole condition is TRUE when</b></th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">AND</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">both conditions are TRUE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">OR</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">at least one condition is TRUE</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">NOT</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">the condition is FALSE (it swaps TRUE and FALSE)</td></tr></table></div><div><ul class=\"lesson-facts\"><li><strong>Inside a range:</strong> Mark &gt;= 50 AND Mark &lt;= 100</li><li><strong>Outside a range:</strong> Mark &lt; 0 OR Mark &gt; 100</li><li>AND does the same job as an IF inside an IF.</li><li>Put the values in and write TRUE or FALSE above each condition.</li></ul></div></div>"
+  },
+  {
+   "id": "how-to-play",
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before a test.</p></div></details><p class=\"lesson-lead\"><strong>1 minutes.</strong> </p><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the exam questions</strong> on data types, IF and AND, OR, NOT to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
+  },
+  {
+   "id": "game",
+   "label": "Play: Data Bridge",
+   "type": "embedded-app",
+   "appId": "bridge-builder",
+   "embedContainerId": "y8t1b-game",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why put each value into the condition on paper, even in a game?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each step on paper can be checked. A step done only in your head is easy to slip on.</p></div></details><p class=\"lesson-lead\"><strong>26 minutes.</strong> Earn coins with exam questions on every topic, then build. Stop when your teacher starts the plenary.</p><div id=\"y8t1b-game\"></div>",
+   "embedQuery": "set=y8-term1b-revision&goal=3"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Data Types and Constants (1 of 2)",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-2-data-types",
+   "embedContainerId": "y8t1b-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Data Types and Constants (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which data type mistake will you watch for, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each person names their own, for example a number in quotes, because it stops the program or gives the wrong result.</p></div></details><p class=\"lesson-lead\"><strong>2 minutes.</strong> New questions every time. Your progress is saved.</p><div id=\"y8t1b-plenary\"></div>"
+  },
+  {
+   "id": "plenary-2",
+   "label": "Plenary: Conditional Statements (2 of 2)",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-3-conditions",
+   "embedContainerId": "y8t1b-plenary-2",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Conditional Statements (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which part of an IF do you check most carefully, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each person names their own, for example the edge number with &gt; and &gt;=, because one value can change the branch.</p></div></details><p class=\"lesson-lead\"><strong>2 minutes.</strong> New questions every time. Your progress is saved.</p><div id=\"y8t1b-plenary-2\"></div>"
+  }
+ ],
+ "validators": {
+  "y8t1b_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*Teen\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put 19 into both conditions on line 3. Are they both TRUE?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*Not\\s+teen\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put 12 into the first condition on line 3. With AND, one FALSE is enough."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*13(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Try the number written in the first condition. Is it TRUE for that number?"
+   }
+  ],
+  "y8t1b_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "ROUND with 0 decimal places gives the nearest whole number. Is 4.75 nearer to 4 or to 5?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "LENGTH counts the characters in the text. The quotes do not count."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(boolean|bool)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It is not a number and not text. Which data type has only two values?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
