@@ -1,0 +1,193 @@
+{
+ "id": "y7-term1b-revision",
+ "label": "Year 7 Term 1b Revision",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Input and Data Types (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y7t1b-do-now",
+   "validatorKey": "y7t1b_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Input and Data Types (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must what the user types be changed into a number before the program can do maths with it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>What the user types arrives as text. The program must turn it into a number first.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> From 2.1 and 2.2. Follow the program one line at a time.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">item = input(&quot;Item? &quot;)</div><div class=\"lesson-code-line\">price = float(input(&quot;Price? &quot;))</div><div class=\"lesson-code-line\">print(item + &quot; costs &quot; + str(price * 2))</div></div><p class=\"lesson-lead\" style=\"margin-top:6px\">The user types: <strong style=\"padding:1px 8px;border-radius:6px;background:rgba(253,214,99,.18)\">pen</strong> then <strong style=\"padding:1px 8px;border-radius:6px;background:rgba(253,214,99,.18)\">1.5</strong></p></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y7t1b-do-now-a\">(a) The user types pen then 1.5. What does it print? [1]</label><input id=\"y7t1b-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Input and Data Types (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y7t1b-do-now-b\">(b) What is the data type of price? [1]</label><input id=\"y7t1b-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Input and Data Types (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7t1b-do-now-c\">(c) The user types cap then 4. What does it print? [1]</label><input id=\"y7t1b-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Input and Data Types (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y7t1b-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y7t1b-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: input and data types",
+    "steps": [
+     {
+      "text": "This is a different program. The user types Pai, then 30. Do the same steps with your program.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = int(input(&quot;Temp? &quot;))</div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 4))</div></div>"
+     },
+     {
+      "text": "Line 1: the first thing typed goes into city. city holds \"Pai\".",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\"><span class=\"wt-hl\">city = input(&quot;City? &quot;)</span></div><div class=\"lesson-code-line\">temp = int(input(&quot;Temp? &quot;))</div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 4))</div></div><div class=\"wt-note\">city: <span class=\"wt-hl\">\"Pai\"</span>, text</div>"
+     },
+     {
+      "text": "Line 2: int() turns \"30\" into a whole number. temp holds 30, a whole number.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\"><span class=\"wt-hl\">temp = int(input(&quot;Temp? &quot;))</span></div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 4))</div></div><div class=\"wt-note\">temp: <span class=\"wt-hl\">30</span>, a whole number</div>"
+     },
+     {
+      "text": "Line 3: work out the brackets first. temp + 4 is 34. str() makes it the text \"34\".",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = int(input(&quot;Temp? &quot;))</div><div class=\"lesson-code-line\"><span class=\"wt-hl\">print(city + &quot; is &quot; + str(temp + 4))</span></div></div><div class=\"wt-note\"><span class=\"wt-hl\">\"34\"</span></div>"
+     },
+     {
+      "text": "Then + joins the text from left to right, spaces and all.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = int(input(&quot;Temp? &quot;))</div><div class=\"lesson-code-line\"><span class=\"wt-hl\">print(city + &quot; is &quot; + str(temp + 4))</span></div></div><div class=\"wt-note\">It prints <span class=\"wt-hl\">Pai is 34</span></div>"
+     },
+     {
+      "text": "Now do yours. Write down what each variable holds, line by line.",
+      "visual": "<div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">city = input(&quot;City? &quot;)</div><div class=\"lesson-code-line\">temp = int(input(&quot;Temp? &quot;))</div><div class=\"lesson-code-line\">print(city + &quot; is &quot; + str(temp + 4))</div></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Sequence or Selection? (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y7t1b-do-now-2",
+   "validatorKey": "y7t1b_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Sequence or Selection? (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a problem with a clue word need a decision in the algorithm?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>What happens is not always the same. Something must be checked to choose the path.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> From 3.1. Read each problem.</p><div class=\"lesson-do-now-columns\"><div><div class=\"wt-note\">Problem A: Move 10 steps, turn 90 degrees, then say \"Hello\".</div><div class=\"wt-note\">Problem B: If the score is bigger than 10, say \"Win\". Otherwise say \"Try again\".</div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y7t1b-do-now-2-a\">(a) Which construct does Problem A need? [1]</label><input id=\"y7t1b-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Sequence or Selection? (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y7t1b-do-now-2-b\">(b) Which construct does Problem B need? [1]</label><input id=\"y7t1b-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Sequence or Selection? (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y7t1b-do-now-2-c\">(c) Write one clue word from Problem B. [1]</label><input id=\"y7t1b-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Sequence or Selection? (2 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y7t1b-do-now-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y7t1b-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: which construct?",
+    "steps": [
+     {
+      "text": "These are different problems. Do the same steps with your problems.",
+      "visual": "<div class=\"wt-note\">Problem X: <span class=\"wt-hl\">Say \"Ready\", wait 1 second, then say \"Go\".</span></div><div class=\"wt-note\">Problem Y: Play a sound only when the cat touches the ball.</div>"
+     },
+     {
+      "text": "Problem X: look for a clue word. There is no clue word. Every step always happens, one after another, in order.",
+      "visual": "<div class=\"wt-note\">Problem X: no clue word, the steps always run in order.</div>"
+     },
+     {
+      "text": "Problem Y: look for a clue word. \"only when\" is a clue. What happens depends on the cat touching the ball, so a decision is needed.",
+      "visual": "<div class=\"wt-note\">Problem Y: Play a sound <span class=\"wt-hl\">only when</span> the cat touches the ball.</div>"
+     },
+     {
+      "text": "Ask the same question for each of your problems: does what happens depend on something? Then name the construct.",
+      "visual": "<div class=\"wt-note\">Clue words: only when ... (and the others on your notes)</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "title",
+   "label": "Year 7 Term 1b Revision",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 7</p><h2 class=\"lesson-h2\">Year 7 Term 1b Revision</h2><p>Algorithm constructs, project plans, variables, input and output, data types</p></div><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check your notes now, before the questions start?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A gap you find now can be fixed before it costs marks in a test.</p></div></details><ul class=\"lesson-facts\"><li><strong>1 minutes.</strong> <strong>Today:</strong> the key facts for each topic, then exam questions in Data Bridge.</li></ul>"
+  },
+  {
+   "id": "facts-constructs",
+   "label": "Key Facts: Sequence and Selection",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Sequence and Selection</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do most algorithms use both sequence and selection?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Most jobs have steps that always happen and also a point where something is checked.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>construct</strong> is a way to join the steps of an algorithm.</li><li><strong>Sequence:</strong> steps run in order, one after another. Change the order and the result can change.</li><li><strong>Selection:</strong> a decision asks a question. The answer (True or False) chooses the path.</li></ul></div><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\"><b>Clue in the problem</b></th><th style=\"padding:6px 10px;text-align:left\"><b>Construct</b></th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">if</td><td style=\"padding:6px 10px;text-align:left\">Selection</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">only when</td><td style=\"padding:6px 10px;text-align:left\">Selection</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">otherwise</td><td style=\"padding:6px 10px;text-align:left\">Selection (the False path)</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">no clue word</td><td style=\"padding:6px 10px;text-align:left\">Sequence</td></tr></tbody></table></div></div>"
+  },
+  {
+   "id": "facts-plans",
+   "label": "Key Facts: Project Plans",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Project Plans</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must some tasks wait for other tasks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A task can need the result of an earlier task before it can start.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>project</strong> is a big job with a goal and an end date. A software project makes a program, an app or a game.</li><li>It is split into <strong>tasks</strong>: one small job each.</li><li>The stages: <strong>plan</strong>, <strong>design</strong>, <strong>build</strong>, <strong>test</strong>.</li></ul></div><div><ul class=\"lesson-facts\"><li>A <strong>project plan</strong> lists the tasks, their <strong>order</strong>, <strong>who</strong> does each one, the <strong>deadline</strong> and what each task <strong>needs</strong>.</li><li>A plan helps: you know what to do first, you finish on time, nothing is forgotten, and everyone knows who does what.</li></ul></div></div>"
+  },
+  {
+   "id": "facts-variables",
+   "label": "Key Facts: Variables and Data Types",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Variables and Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a phone number stored as a String?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Nobody does maths with a phone number, and it can start with 0.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>variable</strong> is a named store in memory. It holds one value.</li><li><strong>=</strong> means store: score = 5 puts 5 in score. A new value replaces the old one.</li><li>score = score + 1 uses the old value, then stores the new one.</li></ul></div><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\"><b>Data type</b></th><th style=\"padding:6px 10px;text-align:left\"><b>Python</b></th><th style=\"padding:6px 10px;text-align:left\"><b>Stores</b></th><th style=\"padding:6px 10px;text-align:left\"><b>Example</b></th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">Integer</td><td style=\"padding:6px 10px;text-align:left\">int</td><td style=\"padding:6px 10px;text-align:left\">a whole number</td><td style=\"padding:6px 10px;text-align:left\">12</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">Real</td><td style=\"padding:6px 10px;text-align:left\">float</td><td style=\"padding:6px 10px;text-align:left\">a number with a decimal point</td><td style=\"padding:6px 10px;text-align:left\">2.5</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">String</td><td style=\"padding:6px 10px;text-align:left\">str</td><td style=\"padding:6px 10px;text-align:left\">text, in quote marks</td><td style=\"padding:6px 10px;text-align:left\">\"Mia\"</td></tr></tbody></table></div></div>"
+  },
+  {
+   "id": "facts-io",
+   "label": "Key Facts: Input and Output",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Input and Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does \"5\" + \"5\" not give 10?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Quote marks make text. + joins text, so the two pieces are put side by side.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>print()</strong> shows output on the screen. Text needs quote marks. A variable does not.</li><li><strong>input()</strong> waits for the user to type, then gives what they typed.</li><li>input() always gives a <strong>String</strong>. The first thing typed goes into the first input().</li></ul></div><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\"><b>Function</b></th><th style=\"padding:6px 10px;text-align:left\"><b>It turns a value into</b></th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">int()</td><td style=\"padding:6px 10px;text-align:left\">a whole number (Integer)</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">float()</td><td style=\"padding:6px 10px;text-align:left\">a number with a decimal point (Real)</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">str()</td><td style=\"padding:6px 10px;text-align:left\">text (String), to join with + in print()</td></tr></tbody></table></div></div>"
+  },
+  {
+   "id": "facts-programs",
+   "label": "Key Facts: Programs Using Data Types",
+   "content": "<h2 class=\"lesson-h2\">Key Facts: Programs Using Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a spelling slip in a variable name give no error at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Storing to a new name just makes a new variable. Python does not know you meant the old one.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes.</strong> Add anything you had forgotten to your notes.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Choose the data type with two questions: <strong>Will the program do maths with it?</strong> If not, it is a String. <strong>Can it have a decimal point?</strong> Then it is a Real, if not an Integer.</li><li>A Real and an Integer together give a Real. / always gives a Real.</li></ul></div><div><ul class=\"lesson-facts\"><li>A number joined to text with + needs <strong>str()</strong> first.</li><li>Use the <strong>same name every time</strong>. score and Score are two different variables: capital letters count.</li><li>Using a name that was never stored stops the program with an error.</li></ul></div></div>"
+  },
+  {
+   "id": "how-to-play",
+   "label": "Data Bridge: Use Your Notes",
+   "content": "<h2 class=\"lesson-h2\">Data Bridge: Use Your Notes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer from your notes, and not from memory alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Checking your notes while you answer fixes a gap before a test.</p></div></details><p class=\"lesson-lead\"><strong>1 minutes.</strong> </p><ol class=\"lesson-facts\" style=\"font-size:22px;line-height:1.6\"><li><strong>Open your notes</strong> with the pen icon at the top.</li><li><strong>Answer the exam questions</strong> on variables, input and output and data types to earn coins, then build a bridge to get the truck across.</li><li><strong>If the bridge breaks</strong>, answer new questions to earn coins, then try the same level again.</li></ol>"
+  },
+  {
+   "id": "game",
+   "label": "Play: Data Bridge",
+   "type": "embedded-app",
+   "appId": "bridge-builder",
+   "embedContainerId": "y7t1b-game",
+   "content": "<h2 class=\"lesson-h2\">Play: Data Bridge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write down what each variable holds, even in a game?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each step on paper can be checked. A step done only in your head is easy to slip on.</p></div></details><p class=\"lesson-lead\"><strong>26 minutes.</strong> Earn coins with exam questions, then build. Stop when your teacher starts the plenary.</p><div id=\"y7t1b-game\"></div>",
+   "embedQuery": "set=y7-term1b-revision&goal=3"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Choosing Algorithm Constructs (1 of 2)",
+   "type": "embedded-app",
+   "appId": "drill-y7-3-1-constructs",
+   "embedContainerId": "y7t1b-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Choosing Algorithm Constructs (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which clue word will you look for first, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each person names their own, with a reason from their notes.</p></div></details><p class=\"lesson-lead\"><strong>2 minutes.</strong> New questions every time. Your progress is saved.</p><div id=\"y7t1b-plenary\"></div>"
+  },
+  {
+   "id": "plenary-2",
+   "label": "Plenary: Project Plans (2 of 2)",
+   "type": "embedded-app",
+   "appId": "drill-y7-3-2-plans",
+   "embedContainerId": "y7t1b-plenary-2",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Project Plans (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which part of a project plan is the easiest to forget, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each person names their own, with a reason from their notes.</p></div></details><p class=\"lesson-lead\"><strong>2 minutes.</strong> New questions every time. Your progress is saved.</p><div id=\"y7t1b-plenary-2\"></div>"
+  }
+ ],
+ "validators": {
+  "y7t1b_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*pen\\s+costs\\s+3\\.0\\s*[\"'\\u201d]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out price * 2 first. float() keeps the decimal point. Then join the text with the spaces."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at line 2. Which function is used, and can its value have a decimal point?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*cap\\s+costs\\s+8\\.0\\s*[\"'\\u201d]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 2 turns what is typed into a number with a decimal point. Work out price * 2, then join the text."
+   }
+  ],
+  "y7t1b_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(a\\s+)?sequence\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look for a clue word in Problem A. Does what happens depend on anything?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(a\\s+)?selection\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Problem B has a clue word. Does what happens depend on the score?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*(if|otherwise|if\\s+and\\s+otherwise|if,?\\s+otherwise)\\s*[\"'\\u201d]?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find the word that starts a decision, or the word that gives the other path."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

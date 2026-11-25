@@ -11579,6 +11579,34 @@
     "y8l-own-largest",
     "y8l-own-weekend"
    ]
+  },
+  {
+   "setId": "y7-term1b-revision",
+   "title": "Year 7 Term 1b Revision",
+   "year": "Year 7",
+   "unit": "Unit 2 Text-based Programming",
+   "questions": [],
+   "qids": [
+    "y7t-21j21-3",
+    "y7t-21j22-2",
+    "y7t-21j26-3",
+    "y7t-23j26-2",
+    "y7t-own-int",
+    "y7t-own-real",
+    "y7t-own-str",
+    "y7t-own-phone",
+    "y7t-own-phonewhy",
+    "y7t-own-times",
+    "y7t-own-type",
+    "y7t-own-typeint",
+    "y7t-own-div",
+    "y7t-own-join",
+    "y7t-own-strwhy",
+    "y7t-own-case",
+    "y7t-own-casewhy",
+    "y7t-own-typo",
+    "y7t-own-typowhy"
+   ]
   }
  ]
 }
