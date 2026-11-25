@@ -60,7 +60,7 @@ DrillData.register("y8-term1b-practice", {
       { id: "l-round", category: "t8b-lib", randomize: function () {
           var t, d, x;
           do { t = drillRange(20, 99); d = drillPick([3, 6, 7, 9]); x = t / d * 10; }
-          while ((t === 53 && d === 6) || (t * 10) % d === 0 || Math.abs(x - Math.floor(x) - 0.5) < 0.02);
+          while ((t === 53 && d === 6) || Math.round(t / d * 10) === 41 || (t * 10) % d === 0 || Math.abs(x - Math.floor(x) - 0.5) < 0.02);
           var p = ["DECLARE Total : INTEGER", "Total <- " + t, "OUTPUT ROUND(Total / " + d + ", 1)"];
           var ans = out(p), full = Math.floor(t / d * 1000) / 1000;
           return { prompt: "What does this program output?\n" + code(p), answers: [ans], keywords: [drillNumberRe(Number(ans))],
