@@ -122,7 +122,7 @@ window.FACT_CHAIN_PACKS['y10-performance'] = {
       accept: ['3 billion', 'three billion', '3000 million', '3000000000', '3,000,000,000', '3 x 10^9'],
       model: '3 billion' },
     { id: 'perf5', q: 'Explain why a higher clock speed can improve the performance of a CPU.',
-      accept: ['more instructions per second', 'more instructions each second', 'more instructions in a second', 'more instructions every second', 'more fde cycles per second', 'more fde cycles each second', 'more fde cycles in a second', 'more cycles per second', 'more cycles each second', 'more cycles in a second', 'more instructions a second', 'more cycles a second', 'more fde cycles a second'],
+      accept: ['more instructions per second', 'more instructions each second', 'more instructions in a second', 'more instructions every second', 'more fde cycles per second', 'more fde cycles each second', 'more fde cycles in a second', 'more cycles per second', 'more cycles each second', 'more cycles in a second', 'more instructions a second', 'more cycles a second', 'more fde cycles a second', 'more instructions are processed per second', 'more instructions processed per second', 'more instructions fde cycles are processed per second'],
       model: 'More instructions (FDE cycles) are processed per second' },
     { id: 'perf6', q: 'State what is meant by a core.',
       accept: ['processing unit', 'fetch, decode and execute', 'fetch decode and execute', 'fetch decode execute', 'fetches, decodes and executes', 'performs the fde cycle', 'runs the fde cycle', 'executes instructions', 'processes instructions', 'execute instructions', 'process instructions', 'processor'],
