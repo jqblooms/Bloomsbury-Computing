@@ -1,0 +1,166 @@
+window.FACT_CHAIN_PACKS = window.FACT_CHAIN_PACKS || {};
+window.FACT_CHAIN_PACKS['y10-instruction-sets'] = {
+  id: 'y10-instruction-sets',
+  title: 'Instruction Sets',
+  year: 'Year 10',
+  part: 'cu',
+  intro: 'The commands a CPU can carry out, how they are stored as machine code, and how the CU decodes them.',
+  chain: [
+    { text: 'An instruction set is a list of all the commands that can be processed by the CPU.',
+      gaps: ['commands', 'list', 'processed'],
+      accept: {
+        'commands': ['instructions', 'machine code commands', 'machine code instructions'],
+        'list': ['set', 'table'],
+        'processed': ['executed', 'carried out', 'run', 'performed']
+      },
+      hl: ['cpu'] },
+    { text: 'A CPU can only process the commands in its instruction set, as the CU and the ALU have circuits for only those commands.',
+      gaps: ['circuits', 'instruction set'],
+      accept: { 'circuits': ['circuit', 'circuitry', 'hardware', 'wiring'] },
+      hl: ['cu', 'alu'] },
+    { text: 'Machine code is instructions in binary.',
+      gaps: ['binary', 'Machine code'],
+      accept: {
+        'binary': ['0s and 1s', '1s and 0s', 'zeros and ones', 'ones and zeros', '0 and 1', '1 and 0'],
+        'Machine code': ['machine language']
+      },
+      hl: ['ram'] },
+    { text: 'Programs are stored as machine code because memory can only store 0s and 1s.',
+      gaps: ['0s and 1s', 'machine code'],
+      accept: {
+        '0s and 1s': ['binary', '1s and 0s', 'zeros and ones', 'ones and zeros', '0 and 1', '1 and 0', '1s and 0s'],
+        'machine code': ['binary', 'machine language']
+      },
+      hl: ['ram'] },
+    { text: 'The instruction set gives each command its own binary code.',
+      gaps: ['binary code', 'each command'],
+      accept: {
+        'binary code': ['code', 'binary number', 'binary pattern', 'opcode'],
+        'each command': ['every command', 'each instruction', 'every instruction']
+      },
+      hl: ['cu'] },
+    { text: 'Each instruction has two parts: the opcode and the operand.',
+      gaps: ['opcode', 'operand'],
+      accept: {
+        'opcode': ['op code', 'operation code'],
+        'operand': []
+      },
+      hl: ['cir'] },
+    { text: 'The opcode says which command to carry out.',
+      gaps: ['opcode', 'which command'],
+      accept: {
+        'opcode': ['op code', 'operation code'],
+        'which command': ['what command', 'which instruction', 'what to do', 'the command']
+      },
+      hl: ['cir'] },
+    { text: 'The operand says what to use, such as an address.',
+      gaps: ['operand', 'address'],
+      accept: { 'address': ['memory address', 'location', 'memory location', 'value', 'number'] },
+      hl: ['cir'] },
+    { text: 'The instruction set is used in the decode stage of the FDE cycle.',
+      gaps: ['decode stage', 'instruction set'],
+      accept: { 'decode stage': ['decode', 'decoding', 'decoding stage', 'decode step'] },
+      hl: ['cu'] },
+    { text: 'The CU decodes the instruction using the instruction set.',
+      gaps: ['CU', 'instruction set', 'decodes'],
+      accept: {
+        'CU': ['control unit', 'the control unit'],
+        'decodes': ['decode', 'decoded']
+      },
+      hl: ['cu', 'cir'] },
+    { text: 'To decode, the instruction is split into the opcode and the operand.',
+      gaps: ['split', 'opcode', 'operand'],
+      accept: {
+        'split': ['separated', 'divided', 'broken'],
+        'opcode': ['op code', 'operation code']
+      },
+      hl: ['cu', 'cir'] },
+    { text: 'The instruction set tells the CU which command each opcode means.',
+      gaps: ['opcode', 'which command'],
+      accept: {
+        'opcode': ['op code', 'operation code', 'binary code', 'code'],
+        'which command': ['what command', 'which instruction', 'what instruction']
+      },
+      hl: ['cu'] },
+    { text: 'Machine code made for one CPU may not run on a CPU with a different instruction set.',
+      gaps: ['different instruction set', 'may not run'],
+      accept: {
+        'different instruction set': ['other instruction set', 'another instruction set', 'different set of instructions'],
+        'may not run': ['might not run', 'may not work', 'might not work', 'cannot run', 'will not run', 'may not be processed']
+      },
+      hl: ['cpu', 'cu'] },
+    { text: 'On that CPU, the same opcode can mean a different command, or nothing.',
+      gaps: ['different command', 'same opcode', 'nothing'],
+      accept: {
+        'different command': ['different instruction', 'another command', 'another instruction', 'other command', 'wrong command'],
+        'same opcode': ['same code', 'same binary', 'same op code', 'same machine code'],
+        'nothing': ['no command', 'not be in the list', 'not exist']
+      },
+      hl: ['cu'] }
+  ],
+  quick: [
+    { id: 'isa1', q: 'State what is meant by an instruction set.',
+      accept: ['list of all the commands', 'list of all commands', 'list of the commands', 'list of commands', 'list of all the instructions', 'list of all instructions', 'list of the instructions', 'list of instructions', 'list of all the machine code', 'list of the machine code', 'list of machine code', 'commands that can be processed', 'commands that can be executed', 'commands the cpu can process', 'commands a cpu can process', 'instructions that can be processed', 'instructions the cpu can process', 'instructions a cpu can process', 'set of all the commands', 'set of commands', 'all the commands'],
+      model: 'A list of all the commands that can be processed by the CPU' },
+    { id: 'isa2', q: 'The CPU has a list of every machine code command it can process. Give the name of this list.',
+      accept: ['instruction set'],
+      model: 'Instruction set' },
+    { id: 'isa3', q: 'Explain why a CPU can only process the commands in its own instruction set.',
+      accept: ['circuit', 'circuits', 'circuitry', 'built for', 'built to', 'hardware'],
+      model: 'The CU and the ALU have circuits for only those commands' },
+    { id: 'isa4', q: 'State what is meant by machine code.',
+      accept: ['binary', '0s and 1s', '1s and 0s', 'zeros and ones', 'ones and zeros', '0 and 1', '1 and 0'],
+      model: 'Instructions in binary' },
+    { id: 'isa5', q: 'Explain why programs are stored in memory as machine code.',
+      accept: ['0s and 1s', '1s and 0s', 'zeros and ones', 'ones and zeros', 'only store binary', 'only binary', 'binary', 'on or off', 'switches'],
+      model: 'Memory can only store 0s and 1s' },
+    { id: 'isa6', q: 'What does the instruction set give each command?',
+      accept: ['binary code', 'own code', 'a code', 'its code', 'opcode', 'binary number', 'binary pattern', 'unique code'],
+      model: 'Its own binary code' },
+    { id: 'isa7', q: 'Name the two parts of a machine code instruction.',
+      accept: ['opcode and operand', 'opcode and the operand', 'operand and opcode', 'operand and the opcode', 'opcode, operand', 'operand, opcode', 'op code and operand', 'operation code and operand'],
+      model: 'The opcode and the operand' },
+    { id: 'isa8', q: 'Which part of an instruction says which command to carry out?',
+      accept: ['opcode', 'op code', 'operation code'],
+      model: 'The opcode' },
+    { id: 'isa9', q: 'Which part of an instruction says what to use?',
+      accept: ['operand'],
+      model: 'The operand' },
+    { id: 'isa10', q: 'Give an example of what an operand can be.',
+      accept: ['address', 'memory address', 'location', 'memory location', 'value', 'number', 'data'],
+      model: 'An address' },
+    { id: 'isa11', q: 'In which stage of the FDE cycle is the instruction set used?',
+      accept: ['decode', 'decoding', 'decode stage'],
+      model: 'The decode stage' },
+    { id: 'isa12', q: 'Which component decodes the instruction?',
+      accept: ['control unit', 'cu'],
+      model: 'The control unit (CU)' },
+    { id: 'isa13', q: 'When an instruction is decoded, what is it split into?',
+      accept: ['opcode and operand', 'opcode and the operand', 'operand and opcode', 'operand and the opcode', 'opcode, operand', 'operand, opcode', 'op code and operand', 'two parts'],
+      model: 'The opcode and the operand' },
+    { id: 'isa14', q: 'Explain why the CU needs the instruction set to decode an instruction.',
+      accept: ['which command', 'what command', 'which instruction', 'what instruction', 'what each opcode means', 'what the opcode means', 'opcode means', 'meaning of the opcode', 'meaning of each opcode', 'look up', 'looks up', 'only 0s and 1s', 'only binary'],
+      model: 'The instruction set tells the CU which command each opcode means' },
+    { id: 'isa15', q: 'Explain why machine code made for one CPU may not run on another CPU.',
+      accept: ['different instruction set', 'different instruction sets', 'instruction set is different', 'instruction sets are different', 'another instruction set', 'other instruction set', 'not the same instruction set', 'own instruction set', 'its own instruction set'],
+      model: 'The other CPU has a different instruction set' },
+    { id: 'isa16', q: 'On a CPU with a different instruction set, what can the same opcode mean?',
+      accept: ['different command', 'another command', 'different instruction', 'another instruction', 'other command', 'wrong command', 'nothing', 'not in the list', 'not in its instruction set'],
+      model: 'A different command, or nothing' },
+    { id: 'isa17', q: 'Which CPUs can run a machine code program?',
+      accept: ['same instruction set'],
+      model: 'Only CPUs with the same instruction set as the one it was made for' }
+  ],
+  spot: [
+    { wrong: 'An instruction set is a list of all the addresses that can be processed by the CPU.', fix: ['commands', 'instructions', 'machine code commands'],
+      model: 'An instruction set is a list of all the commands that can be processed by the CPU.' },
+    { wrong: 'Machine code is instructions in denary.', fix: ['binary', '0s and 1s', '1s and 0s'],
+      model: 'Machine code is instructions in binary.' },
+    { wrong: 'The operand says which command to carry out.', fix: ['opcode', 'op code', 'operation code'],
+      model: 'The opcode says which command to carry out.' },
+    { wrong: 'The ALU decodes the instruction using the instruction set.', fix: ['cu', 'control unit'],
+      model: 'The CU decodes the instruction using the instruction set.' },
+    { wrong: 'The instruction set is used in the execute stage of the FDE cycle.', fix: ['decode', 'decode stage', 'decoding'],
+      model: 'The instruction set is used in the decode stage of the FDE cycle.' }
+  ]
+};
