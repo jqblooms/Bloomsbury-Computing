@@ -48,19 +48,24 @@
   var T = window.BBTeacher, TM = null;
   var guard = T.makeGuard({ store: store, post: function (m) { try { window.parent.postMessage(m, '*'); } catch (e) {} } });
   var ui = { mat: 'road', sel: null, hover: null, undo: [], speed: 1, acc: 0, endShown: false, drawn: 0 };
+  // Learn mode (James 2026-11-26): worked examples (op similar) and the AI help at any time, free in the game; a wrong
+  // answer can be tried again or swapped for a new question. Its own save and best; never reported to the lesson.
+  var LEARN = load('mode', 'play') === 'learn';
+  function gameKey() { return (LEARN ? 'learn:' : 'game:') + setId; }
+  function bestKey() { return (LEARN ? 'learnbest:' : 'best:') + setId; }
 
   function newGame() {
-    S = { v: 2, round: 1, coins: 0, phase: 'exam', design: null, exam: null, best: load('best:' + setId, 0),
+    S = { v: 2, round: 1, coins: 0, phase: 'exam', design: null, exam: null, best: load(bestKey(), 0),
       stats: { marks: 0, max: 0, rounds: 0, log: [] } };
     save();
   }
-  function save() { if (S) guard.store('game:' + setId, S); }
+  function save() { if (S) guard.store(gameKey(), S); }
   // v2: each round has its own layout. A v1 save (every round the same two cliffs) is reset with a short message.
   function validSave(s) { return s && s.v === 2 && s.round >= 1 && s.round <= ROUNDS && /^(exam|build|testing)$/.test(s.phase); }
 
   // ---------------------------------------------------------------- results for the lesson slide
   function postResult() {
-    if (window.parent === window || !S || TM) return;
+    if (window.parent === window || !S || TM || LEARN) return;   // Learn mode never counts as finishing the slide
     var done = (S.best || 0) >= GOAL;
     if (done) guard.store('done:' + setId, true);
     var before = !!load('done:' + setId, false);
@@ -75,6 +80,7 @@
   function updateHud() {
     if (!S) return;
     $('hudRound').textContent = S.round; $('hudRounds').textContent = ROUNDS; $('hudCoins').textContent = S.coins;
+    if ($('hudMode')) $('hudMode').hidden = !LEARN || !!TM;
     syncTeacherBar();
   }
   function coinPop(n) {
@@ -102,10 +108,10 @@
     if (api().warm) api().warm(setId);
     var cur = sets.filter(function (s) { return s.setId === setId; })[0];
     setTitle = cur ? (cur.title || cur.setId) : setId;
-    var saved = load('game:' + setId, null), wasOld = !!(saved && saved.v === 1);
-    if (wasOld) store('game:' + setId, null);
+    var saved = load(gameKey(), null), wasOld = !!(saved && saved.v === 1);
+    if (wasOld) store(gameKey(), null);
     if (!validSave(saved)) saved = null;
-    var best = load('best:' + setId, 0);
+    var best = load(bestKey(), 0);
     var h = '<div class="bb-card bb-start"><div class="bb-start-art"><canvas id="startArt" width="480" height="150"></canvas></div>' +
       '<h1>Data Bridge</h1>' +
       '<p class="bb-lead">Build a bridge so the data truck can cross from one server rack to the next. Answer exam questions to earn coins for the bridge.</p>' +
@@ -114,21 +120,30 @@
         '<div class="bb-choice-row">' + sets.map(function (s) {
           return '<button class="bb-pill' + (s.setId === setId ? ' is-on' : '') + '" data-set="' + esc(s.setId) + '">' + esc(s.title || s.setId) + '</button>';
         }).join('') + '</div>') +
+      '<p class="bb-label">Pick a mode</p><div class="bb-choice-row bb-modes" role="group" aria-label="Mode">' +
+      '<button class="bb-pill' + (LEARN ? '' : ' is-on') + '" data-mode="play" aria-pressed="' + !LEARN + '">Play</button>' +
+      '<button class="bb-pill' + (LEARN ? ' is-on' : '') + '" data-mode="learn" aria-pressed="' + LEARN + '">Learn</button></div>' +
+      '<p class="bb-mode-note">' + (LEARN
+        ? 'Learn mode: see a worked example and ask the AI for help at any time. Help is free. A wrong answer? Try again or get a new question. Learn mode does not finish the game for your lesson.'
+        : 'Play mode: answer exam questions on your own to earn coins. This counts for your lesson.') + '</p>' +
       (wasOld ? '<p class="bb-label">Data Bridge has new levels, so your saved game starts again from round 1.</p>' : '') +
       (best ? '<p class="bb-label">Your best: crossed ' + best + ' of ' + ROUNDS + ' rounds</p>' : '');
     if (saved) {
-      h += '<div class="bb-start-go"><button class="bc-btn bb-big" id="cont">Continue: round ' + saved.round + '</button>' +
+      h += '<div class="bb-start-go"><button class="bc-btn bb-big" id="cont">' + (LEARN ? 'Continue Learn: round ' : 'Continue: round ') + saved.round + '</button>' +
         '<button class="bc-btn is-outline" id="fresh">New game</button></div>';
-    } else h += '<div class="bb-start-go"><button class="bc-btn bb-big" id="go">Start</button></div>';
+    } else h += '<div class="bb-start-go"><button class="bc-btn bb-big" id="go">' + (LEARN ? 'Start Learn mode' : 'Start') + '</button></div>';
     $('screen').innerHTML = h + '</div>';
     paintStartArt();
     Array.prototype.forEach.call(document.querySelectorAll('[data-set]'), function (b) {
       b.onclick = function () { setId = b.getAttribute('data-set'); drawStart(); };
     });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-mode]'), function (b) {
+      b.onclick = function () { LEARN = b.getAttribute('data-mode') === 'learn'; store('mode', LEARN ? 'learn' : 'play'); drawStart(); };
+    });
     if ($('go')) $('go').onclick = function () { newGame(); startRound(); };
     if ($('cont')) $('cont').onclick = function () { S = saved; resume(); };
     if ($('fresh')) $('fresh').onclick = function () {
-      if (this.getAttribute('data-sure')) { store('game:' + setId, null); drawStart(); return; }
+      if (this.getAttribute('data-sure')) { store(gameKey(), null); drawStart(); return; }
       this.setAttribute('data-sure', '1'); this.textContent = 'Click again to start over';
     };
   }
@@ -368,7 +383,7 @@
     var cost = Ph.designCost(S.design), round = S.round, coinsBefore = S.coins;
     if (TM && TM.noOver && state !== 'won') { teacherRetry(state, quiet); return; }
     Ph.afterTest(S, state, cost);
-    if (state === 'won') { guard.store('best:' + setId, Math.max(load('best:' + setId, 0), S.best || 0)); }
+    if (state === 'won') { guard.store(bestKey(), Math.max(load(bestKey(), 0), S.best || 0)); }
     S.stats.log.push(state === 'won' ? 'Round ' + round + ': crossed.' : 'Round ' + round + ': bridge failed.');
     save(); postResult();
     var won = state === 'won';
@@ -382,7 +397,7 @@
       (!won ? '<p class="bb-lead">Tip: use triangles, and steel where the colours turned red.</p>' : '') +
       '<div class="bb-start-go"><button class="bc-btn bb-big" id="nextBtn">' + btnText + '</button></div></div>';
     var go = function () {
-      if (S.phase === 'won') { guard.store('game:' + setId, null); if (TM) { teacherJump(1); return; } newGame(); }
+      if (S.phase === 'won') { guard.store(gameKey(), null); if (TM) { teacherJump(1); return; } newGame(); }
       sim = null; startRound();
     };
     if (quiet || !$('over')) {
@@ -510,7 +525,7 @@
       r.qs = keep.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1, blocks: q.blocks || null }; });
       r.items = r.qs.map(blankItem);
       r.pool = LV.pool;
-      r.rate = r.pool / total;
+      r.rate = Math.max(0, r.pool - (r.base || 0)) / total;   // Learn mode: a new question pays only what the round has left
       save();
       showRound();
     }).catch(function (e) {
@@ -559,8 +574,9 @@
       var first = !load('seenRound', false);
       $('screen').innerHTML = '<div class="bb-card bb-q bb-intro"><h2>Exam round ' + r.n + '</h2>' +
         '<p class="bb-lead">' + esc(roundLine(Ph.level(r.n))) + '</p>' +
-        '<p class="bb-q-text">' + roundSize() + '.\nFull marks pays ' + r.pool + ' coins.</p>' +
+        '<p class="bb-q-text">' + roundSize() + '.\nFull marks pays ' + payNow() + ' coins.</p>' +
         (S.coins ? '<p class="bb-lead">You also have ' + S.coins + ' coins saved.</p>' : '') +
+        (LEARN ? '<p class="bb-lead"><span class="bb-pill bb-learn-tag">Learn mode</span> You can see a worked example and ask the AI for help. Both are free.</p>' : '') +
         (first ? '<p class="bb-lead">Marks are the only way to earn coins. Then you spend them on your bridge.</p>' : '') +
         '<div class="bb-start-go"><button class="bc-btn bb-big" id="go">Start</button></div></div>';
       $('go').onclick = function () { r.intro = false; store('seenRound', true); save(); showRound(); };
@@ -570,13 +586,15 @@
     var scrollY = window.scrollY, firstShow = !$('roundForm');
     var h = '<div class="bb-card bb-q" id="roundForm"><div class="bb-round-head"><h2>Exam round ' + r.n + '</h2>' +
       '<span class="bb-pill">' + roundSize() + '</span>' +
-      '<span class="bb-pill">Full marks pays ' + r.pool + ' coins</span></div>';
+      '<span class="bb-pill">Full marks pays ' + payNow() + ' coins</span>' +
+      (LEARN ? '<span class="bb-pill bb-learn-tag">Learn mode</span>' : '') + '</div>';
     r.qs.forEach(function (q, i) {
       var it = r.items[i], edit = canSend(it);
       h += '<section class="bb-qblock" id="qb' + i + '"><div class="bb-q-meta"><span class="bb-qnum">Question' + (r.qs.length > 1 ? ' ' + (i + 1) : '') + '</span>' +
         '<span class="bb-pill">' + q.marks + (q.marks === 1 ? ' mark' : ' marks') + '</span>' +
         (it.attempt === 2 && it.open ? '<span class="bb-pill is-warn">Second try: half coins</span>' : '') + '</div>' +
         '<div class="bb-q-text" id="qText' + i + '"></div>' +
+        (LEARN && !TM ? '<div class="bb-ex" id="ex' + i + '"></div>' : '') +
         '<p class="bb-label" id="ansLabel' + i + '">Your answer' + (edit ? ' (you must type it)' : '') + ':</p><div id="ans' + i + '" class="bb-ans"></div>' +
         '<div class="bb-fb" id="fb' + i + '" hidden></div><div id="help' + i + '"></div><p class="bb-q-err" id="err' + i + '" hidden></p></section>';
     });
@@ -589,6 +607,7 @@
       ansBoxes[i] = mountAnswer(q, it, i, !edit || sending);
       if (!edit || sending) ansBoxes[i].setReadOnly(true);
       if (it.fb) showItemFeedback(i);
+      if (LEARN) { drawExample(i); mountHelp(i); }
       if (it.err) { $('err' + i).hidden = false; $('err' + i).textContent = it.err; }
     });
     updateActs();
@@ -609,9 +628,71 @@
     if (fb.feedback) box.querySelector('.bb-fb-text').textContent = fb.feedback;
     if ($('again' + i)) $('again' + i).onclick = function () { openRetry([i]); };
     // After a mistake: I need help (shared/exam-help.js, the slides' Haiku help for this question, never the answer).
-    if (fb.marks < fb.max && !TM && window.BCExamHelp && $('help' + i)) {
-      window.BCExamHelp.mount($('help' + i), { qid: S.exam.qs[i].qid, answer: function () { return it.marked || it.answer || ''; } });
+    if (fb.marks < fb.max) mountHelp(i);
+  }
+  // The AI help for question i. Play: after a mistake. Learn: at any time, free (no coins, no round lost).
+  function mountHelp(i) {
+    var it = S.exam.items[i];
+    if (TM || !window.BCExamHelp || !$('help' + i)) return;
+    window.BCExamHelp.mount($('help' + i), { qid: S.exam.qs[i].qid, label: LEARN ? 'Ask the AI for help (free)' : 'I need help',
+      answer: function () { return it.marked || it.answer || ''; } });
+  }
+  function payNow() { var r = S.exam; return Math.max(0, r.pool - (LEARN ? r.base || 0 : 0)); }
+
+  // ---------------------------------------------------------------- Learn mode: worked examples (op similar)
+  // A similar but different question from the topic with its model answer, from the server. Never this question's
+  // own answer. Kept per qid for this page load, so a redraw keeps it.
+  var exState = {};   // qid -> { open, loading, err, data, shown: [qids] }
+  function drawExample(i) {
+    var box = $('ex' + i), q = S.exam.qs[i]; if (!box) return;
+    var e = exState[q.qid] || (exState[q.qid] = { open: false, loading: false, err: '', data: null, shown: [] });
+    if (!e.open) {
+      box.innerHTML = '<button type="button" class="bc-btn is-outline bb-ex-btn" id="exGo' + i + '">See a worked example</button>' +
+        (e.err ? '<p class="bb-q-err">' + esc(e.err) + '</p>' : '');
+      $('exGo' + i).onclick = function () { e.open = true; if (!e.data) loadExample(i); else drawExample(i); };
+      return;
     }
+    if (e.loading || !e.data) { box.innerHTML = '<div class="bb-ex-card"><p class="bb-ex-note">Finding a worked example...</p></div>'; return; }
+    var d = e.data;
+    box.innerHTML = '<div class="bb-ex-card" role="region" aria-label="Worked example">' +
+      '<div class="bb-ex-head"><b>Worked example</b><span class="bb-ex-note">A different question, with its answer. Use it to see how to answer yours.</span></div>' +
+      '<p class="bb-ex-label">Example question (' + d.marks + (d.marks === 1 ? ' mark' : ' marks') + ')</p><div class="bb-ex-q" id="exQ' + i + '"></div>' +
+      '<p class="bb-ex-label">Model answer</p><div class="bb-ex-model" id="exM' + i + '"></div>' +
+      (d.fallback ? '<p class="bb-ex-label">How to work it out</p><div class="bb-ex-model" id="exF' + i + '"></div>' : '') +
+      '<div class="bb-q-actions">' + (d.count > 1 ? '<button type="button" class="bc-btn is-outline" id="exMore' + i + '">Show another example</button>' : '') +
+      '<button type="button" class="bc-btn is-text" id="exHide' + i + '">Hide example</button></div></div>';
+    if (window.BCExamQuestion) window.BCExamQuestion.render($('exQ' + i), { text: d.text, blocks: d.blocks || null });
+    else $('exQ' + i).textContent = d.text;
+    $('exM' + i).textContent = d.model;
+    if (d.fallback) $('exF' + i).textContent = d.fallback;
+    if ($('exMore' + i)) $('exMore' + i).onclick = function () { loadExample(i); };
+    $('exHide' + i).onclick = function () { e.open = false; drawExample(i); };
+  }
+  function loadExample(i) {
+    var q = S.exam.qs[i], e = exState[q.qid], r = S.exam;
+    if (e.loading) return;
+    if (!api().similar) { e.open = false; e.err = 'Worked examples are not ready yet. Reload the page.'; drawExample(i); return; }
+    e.loading = true; e.err = '';
+    drawExample(i);
+    call(function () { return api().similar(setId, q.qid, e.shown); }).then(function (d) {
+      e.loading = false;
+      if (d && d.qid && d.model) {
+        e.data = d;
+        if (e.shown.indexOf(d.qid) < 0) e.shown.push(d.qid); else e.shown = [d.qid];   // every example seen: start again
+      } else { e.open = false; e.err = 'There is no worked example for this question yet. Ask the AI for help instead.'; }
+      if (S.exam === r) drawExample(i);
+    }, function (err) {
+      e.loading = false; e.open = !!e.data; e.err = errText(err);
+      if (S.exam === r) drawExample(i);
+    });
+  }
+  // Learn mode: swap a question that did not get full marks for a new one. The round keeps its coins; the new
+  // question pays what the round has left.
+  function newQuestion() {
+    var r = S.exam;
+    if (sending || !LEARN) return;
+    r.base = r.paid || 0; r.qs = null; r.items = null; r.intro = false;
+    save(); startRound(true);
   }
 
   function openRetry(list) {
@@ -637,6 +718,9 @@
     var h = '';
     if (open.length) h += '<button class="bc-btn bb-big" id="submitAll"' + (ready && !sending ? '' : ' disabled') + '>' + (sending ? 'Marking...' : sendFailed ? 'Send again' : open.length === 1 ? 'Submit' : 'Submit all') + '</button>';
     if (!open.length && retry.length) h += '<button class="bc-btn is-outline" id="againAll">' + (r.items.length === 1 ? 'Try again' : 'Try again on the wrong ones') + '</button>';
+    // Learn mode: a question that did not get full marks can be swapped for a new one (no coins lost, same round).
+    var notFull = r.items.some(function (it) { return it.fb && it.fb.marks < it.fb.max; });
+    if (LEARN && !TM && !sending && !open.length && !retry.length && notFull && r.pool - (r.paid || 0) > 0) h += '<button class="bc-btn is-outline" id="newQ">Try a new question</button>';
     if (!sending && !unmarked) h += '<button class="bc-btn' + (open.length ? ' is-outline' : ' bb-big') + '" id="toBuild">Build the bridge</button>';
     else if (!sending && (sendFailed || stuck)) h += '<button class="bc-btn is-text bb-skip" id="skipRound">Skip (no coins)</button>';
     acts.innerHTML = h;
@@ -645,6 +729,7 @@
     if (se) { se.hidden = !sendFailed || sending; se.textContent = sendFailed; }
     if ($('submitAll')) $('submitAll').onclick = submitAll;
     if ($('againAll')) $('againAll').onclick = function () { openRetry(retry); };
+    if ($('newQ')) $('newQ').onclick = newQuestion;
     if ($('toBuild')) $('toBuild').onclick = finishRound;
     var tot = $('roundTotal');
     if (r.items.some(function (it) { return it.fb && it.fb.marks != null; })) { tot.hidden = false; tot.textContent = 'This round: +' + (r.paid || 0) + ' coins'; }

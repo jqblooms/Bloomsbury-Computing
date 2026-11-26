@@ -10,6 +10,8 @@
 //   ExamGame.submitMany([{ qid, answer, attempt, image, rid }]) -> Promise [result | { qid, error }]
 //     a whole round in ONE request, marked in parallel on the server; each item is a submit result (plus qid) or
 //     its own error. A shell without the op gets the answers one request each instead.
+//   ExamGame.similar(setId, qid, skip) -> Promise { qid, text, blocks?, marks, model, fallback?, count } | null
+//     a worked example (Data Bridge Learn mode): a similar but different question from the set, with its model answer
 //   Both submits retry by themselves after about 2 s and 5 s; rid (ExamGame.newRid()) makes a resend safe: the
 //   server answers a send it already marked with the stored result, not a new attempt.
 // Stub mode (no shell): ?examStub=1, ExamGame.useStub(true), or automatically when the page is not in a frame.
@@ -63,9 +65,12 @@
 
   // ---------------------------------------------------------------- stub (local testing only)
   var STUB_QS = [
-    { qid: 'stub-1', marks: 2, text: 'Practice question\nGive the two\'s complement 8-bit binary integer for the denary number -6.\nShow all your working.', bin: '11111010' },
-    { qid: 'stub-2', marks: 2, text: 'Practice question\nConvert the two\'s complement 8-bit binary integer 11110000 to denary.\nShow all your working.', den: -16 },
-    { qid: 'stub-3', marks: 1, text: 'Practice question\nGive the two\'s complement 8-bit binary integer for the denary number 9.', bin: '00001001' }
+    { qid: 'stub-1', marks: 2, text: 'Practice question\nGive the two\'s complement 8-bit binary integer for the denary number -6.\nShow all your working.', bin: '11111010',
+      model: '6 = 00000110, flip: 11111001, add 1: 11111010' },
+    { qid: 'stub-2', marks: 2, text: 'Practice question\nConvert the two\'s complement 8-bit binary integer 11110000 to denary.\nShow all your working.', den: -16,
+      model: '-128 + 64 + 32 + 16 = -16' },
+    { qid: 'stub-3', marks: 1, text: 'Practice question\nGive the two\'s complement 8-bit binary integer for the denary number 9.', bin: '00001001',
+      model: '00001001' }
   ];
   var stubOpen = {}, stubTurn = 0, stubLast = null;
   function lastBits(t) { var m = String(t).replace(/([01]{4})\s([01]{4})/g, '$1$2').match(/[01]{8}/g); return m ? m[m.length - 1] : ''; }
@@ -93,6 +98,14 @@
       if (!String(p.question || '').trim()) return { ok: false, reason: 'empty', message: 'Type your question first.', left: 3 - t.length };
       t.push({ q: String(p.question), a: 'Practice help: read the question again and find its command word. Then look at your notes for this topic.' });
       return { ok: true, reply: t[t.length - 1].a, left: 3 - t.length, turns: t.slice() };
+    },
+    // A worked example (Data Bridge Learn mode): another practice question with its model answer, never the asked one.
+    similar: function (p) {
+      var skip = Array.isArray(p.skip) ? p.skip : [];
+      var list = STUB_QS.filter(function (q) { return q.qid !== p.qid; });
+      var q = list.filter(function (x) { return skip.indexOf(x.qid) < 0; })[0] || list[0];
+      return q ? { qid: q.qid, text: q.text, marks: q.marks, model: q.model, count: list.length,
+        fallback: 'Practice worked answer:\n' + q.model + '\nAnswer: ' + (q.bin || q.den) } : null;
     },
     next: function (p) {
       var n = Math.max(1, Math.min(10, Number(p.count) || 1)), out = [];
@@ -378,6 +391,11 @@
     helpGet: function (qid) { return request('helpGet', { qid: String(qid || '') }); },
     help: function (qid, question, answer) {
       return request('help', { qid: String(qid || ''), question: String(question || '').slice(0, 300), answer: String(answer == null ? '' : answer).slice(0, 300) });
+    },
+    // A worked example for Learn mode: a similar but different question from the set with its model answer.
+    // -> { qid, text, blocks?, marks, model, fallback?, count } | null (nothing safe to show). skip: qids already shown.
+    similar: function (setId, qid, skip) {
+      return request('similar', { setId: String(setId || ''), qid: String(qid || ''), skip: Array.isArray(skip) ? skip.slice(0, 50).map(String) : [] });
     },
     // Stub only: what the last submit sent ({ qid, answerChars, imageChars }).
     lastStubSubmit: function () { return stubLast; },

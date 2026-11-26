@@ -166,3 +166,19 @@ html.bb-fs .bb-board canvas { max-width: none; }   /* game.js fitBoard sizes it 
   background: var(--surface); color: var(--ink); }
 .bb-tm input[type=number] { width: 72px; }
 .bb-tm .bc-btn { min-height: 28px; padding: 0 10px; font-size: 13px; }
+
+/* Learn mode (worked examples, free AI help) */
+.bb-stat[hidden] { display: none; }
+.bb-learn-tag { border-color: var(--good-line); background: var(--good-soft); color: var(--ink); font-weight: 700; }
+.bb-pill.bb-learn-tag { cursor: default; margin-right: 6px; }
+.bb-mode-note { max-width: 560px; margin: 8px auto 0; color: var(--ink-soft); font-size: 15px; line-height: 1.5; }
+.bb-ex { margin: 4px 0 6px; }
+.bb-ex-btn { font-size: 15px; }
+.bb-ex-card { padding: 14px 16px; border: 1px dashed var(--good-line); border-radius: var(--radius); background: var(--surface-2); }
+.bb-ex-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.bb-ex-head b { font: 800 18px var(--font-display); color: var(--ink); }
+.bb-ex-note { color: var(--muted); font-size: 14px; margin: 0; }
+.bb-ex-label { margin: 12px 0 4px; color: var(--muted); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.bb-ex-q { color: var(--ink-soft); font-size: 16px; line-height: 1.5; white-space: pre-wrap; }
+.bb-ex-model { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 16px; line-height: 1.5; white-space: pre-wrap; }
+.bb-ex .bb-q-actions { margin-top: 12px; }
