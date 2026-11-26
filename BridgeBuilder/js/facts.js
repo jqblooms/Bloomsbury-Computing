@@ -102,7 +102,8 @@
         }).join('') + '</p>' + FR.codeHtml(c.code);
       } else {
         var cue = FR.cueLine(p, it.line);
-        body = (cue ? '<p class="bb-label">The fact before it:</p><p class="bb-fact-line is-cue">' + esc(cue.text) + '</p><p class="bb-label">Write the next fact.</p>' :
+        body = c.ask ? '<p class="bb-label">Answer with the fact, in one sentence.</p><p class="bb-fact-line is-cue">' + esc(c.ask) + '</p>' +
+          FR.codeHtml(c.code) + '<textarea class="bb-fact-in" id="fin" rows="2" autocomplete="off" spellcheck="false" aria-label="The fact"></textarea>' : (cue ? '<p class="bb-label">The fact before it:</p><p class="bb-fact-line is-cue">' + esc(cue.text) + '</p><p class="bb-label">Write the next fact.</p>' :
           '<p class="bb-label">Write the first fact about ' + esc(p.title) + '.</p>') +
           FR.codeHtml(c.code) + '<textarea class="bb-fact-in" id="fin" rows="2" autocomplete="off" spellcheck="false" aria-label="The fact"></textarea>';
       }

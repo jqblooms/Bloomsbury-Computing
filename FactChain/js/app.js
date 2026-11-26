@@ -321,11 +321,13 @@
           return x.type === 'gap' ? '<input class="fc-gap" data-gap="' + esc(x.gap) + '" size="' + Math.max(6, x.gap.length + 2) + '" autocomplete="off" spellcheck="false" aria-label="Gap ' + (x.n + 1) + '">' : esc(x.text);
         }).join('') + '</p>' + code(c.code);
       } else {
-        body = '<p class="fc-muted">Fact ' + (i + 1) + ' of ' + p.chain.length + '. Type the whole fact.</p>' +
+        // A line's ask (a question whose answer is this fact) is the cue, so the student answers from knowing the
+        // topic, not from remembering which sentence came next (James 2026-11-26).
+        body = (c.ask ? '<p class="fc-fact">' + esc(c.ask) + '</p>' : '<p class="fc-muted">Fact ' + (i + 1) + ' of ' + p.chain.length + '. Type the whole fact.</p>') +
           code(c.code) + '<textarea class="fc-line fc-enter" id="line" rows="2" autocomplete="off" spellcheck="false" aria-label="Fact ' + (i + 1) + '"></textarea>';
       }
       var d = show(header(p, idx, practice) + '<div class="fc-card fc-split"><div>' +
-        '<p class="fc-muted">' + (parts ? 'Type the missing words.' : 'Write the next fact in the chain.') + '</p>' + chainSoFar(p, i) + body +
+        '<p class="fc-muted">' + (parts ? 'Type the missing words.' : c.ask ? 'Answer with the fact, in one sentence.' : 'Write the next fact in the chain.') + '</p>' + (!parts && c.ask ? '' : chainSoFar(p, i)) + body +
         '<div class="fc-actions"><button class="fc-btn is-main" id="check">Check</button></div><div id="out"></div></div>' +
         '<div class="fc-diagram fc-side"></div></div>');
       if (!parts) d.light(c.hl || []);

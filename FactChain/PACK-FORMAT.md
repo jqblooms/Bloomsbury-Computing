@@ -71,3 +71,13 @@ Data Bridge's topic picker lists every loaded pack, and each group as "All ... f
 
 ## Order rounds only for real sequences
 James 2026-11-26: facts with no order are never put in order. A pack may give `sequences: [[chain index, ...], ...]`, each list in its true order (at least 3 steps). The Put it in order round, in the Fact Chain app and in Data Bridge, uses only these; a pack without `sequences` has no order round. Leave out any step whose timing varies between sources (for example the PC increment in the fetch stage).
+
+## Gaps must be answerable from knowledge, not from memory of the sentence (James 2026-11-26)
+James: "the sentences often don't imply what text is required ... even if you knew the answer you wouldn't know what to put. You'd only know because you've seen that specific sentence stem before."
+- **A gap is only ever a key term or key value that the rest of the sentence pins down.** Someone who knows the topic but has never seen the sentence must give exactly that answer, or an accepted synonym. Good: "The ___ holds the address of the next instruction." (PC). "MOD gives the ___ of a division." (remainder). "2.4 GHz means 2.4 ___ FDE cycles per second." (billion).
+- **Never gap** verbs or filler ("processes", "runs", "carries out", "means", "includes"), words with several right answers ("data", "instructions"), or one item of a list whose items could swap places ("The ALU, the ___ and the registers"). Never gap a word the sentence itself gives away.
+- **Give the sentence the cue it needs.** Rewrite it so the definition or description points at one term: "The part of the CPU that decodes instructions is the ___." beats "The ___ decodes the instructions."
+- **One gap per line is fine.** A second gap is only allowed if each gap is still pinned down when the other one is blank. Mark that with gaps ordered most-pinned first, because round B blanks the first two.
+- **`ask` (required on every chain line):** a short question whose answer is the whole fact, for example "What does the PC hold?" It is the cue in the "write the whole fact" round, so a student answers from knowing the topic, never from "the fact before it". The marking checks the line's gaps, with Haiku as a second check.
+- Accept lists cover every synonym an examiner would accept.
+- **Quick-fire questions and spot items** follow the same test: the question must point at one answer.
