@@ -5,10 +5,10 @@
 // the answer a common mistake gives), most marks are typed answers found by tracing a program, and no question gives
 // away another. Content is Unit 2 as taught in Term 1b: 2.1 library functions (MOD, DIV, ROUND, LENGTH, UCASE,
 // RANDOM), 2.2 data types and CONSTANT, 2.3 IF, ELSE, nested IF, > and >=, testing every branch, 2.4 AND, OR, NOT
-// and ranges. Bands: accessible (a library function call, a data type, a rule's sign), middle (ROUND, RANDOM ranges,
-// a constant with a >= boundary, a value changed before a nested IF, AND and OR counts, an OR trace table) and
-// stretch (LENGTH with a space then MOD, checks in the wrong order, an AND that can never be TRUE, AND NOT and OR on
-// the same values, reasons for a constant). Every answer comes from running the program in shared/pseudocode-engine.js.
+// and ranges. James 2026-11-26: aimed at the easier questions of the Data Bridge set the class revised with
+// (y8-term1b-revision): one input, one trace, similar to those questions with new values, never the same. No RANDOM
+// ranges, no counts over several runs, no value changed before a nested IF. The harder ideas left: a constant with a
+// >= boundary, checks in the wrong order, an AND that can never be TRUE, and reasons for a constant. Every answer comes from running the program in shared/pseudocode-engine.js.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -38,11 +38,8 @@ const MODP = ['DECLARE People : INTEGER', 'DECLARE Left : INTEGER', 'People <- 4
 assert(out(MODP) === '3', 'MOD');
 const ROUNDP = ['DECLARE Total : INTEGER', 'Total <- 53', 'OUTPUT ROUND(Total / 6, 1)'];
 assert(out(ROUNDP) === '8.8', 'ROUND');
-const LENP = ['DECLARE Town : STRING', 'DECLARE Size : INTEGER', 'INPUT Town', 'Size <- LENGTH(Town)', 'OUTPUT MOD(Size, 4)'];
-assert(out(LENP, ['Chiang Mai']) === '2', 'LENGTH');
-const RANDP = ['DECLARE Spin : INTEGER', 'Spin <- ROUND(RANDOM() * 8, 0) + 2', 'OUTPUT Spin'];
-{ const seen = new Set(run(['DECLARE Spin : INTEGER', 'DECLARE I : INTEGER', 'FOR I <- 1 TO 400', '  Spin <- ROUND(RANDOM() * 8, 0) + 2', '  OUTPUT Spin', 'NEXT I']).map(Number)); // RANDOM is seeded per run, so draw many in one run
-  assert(Math.min(...seen) === 2 && Math.max(...seen) === 10 && seen.size === 9, 'RANDOM range ' + [...seen]); }
+const LENP = ['DECLARE Town : STRING', 'INPUT Town', 'OUTPUT LENGTH(Town)'];
+assert(out(LENP, ['Hat Yai']) === '7', 'LENGTH');
 const CALLS = ['DECLARE Name : STRING', 'DECLARE Score : INTEGER', 'INPUT Name', 'INPUT Score', 'OUTPUT UCASE(Name)', 'OUTPUT Score + 10',
   'OUTPUT ROUND(Score / 3, 0)', 'OUTPUT LENGTH(Name)'];
 assert(out(CALLS, ['Nok', 20]) === 'NOK,30,7,3', 'CALLS runs');
@@ -61,11 +58,10 @@ assert(out(TICKETS, [4]) === '120', 'TICKETS');
 
 // ---------------------------------------------------------------- 2.3 conditional statements
 const SPEED = ['DECLARE Speed : INTEGER', 'INPUT Speed'].concat(ifElse('Speed <= 60', 'Safe', 'Too fast'));
-const safe = [58, 60, 61, 75].filter((s) => out(SPEED, [s]) === 'Safe').length;
-assert(safe === 2, 'SPEED ' + safe);
-const MEDAL = ['DECLARE Points : INTEGER', 'INPUT Points', 'Points <- Points + 4', 'IF Points >= 70 THEN', '  OUTPUT "Gold"', 'ELSE',
+assert(out(SPEED, [60]) === 'Safe', 'SPEED');
+const MEDAL = ['DECLARE Points : INTEGER', 'INPUT Points', 'IF Points >= 70 THEN', '  OUTPUT "Gold"', 'ELSE',
   '  IF Points >= 40 THEN', '    OUTPUT "Silver"', '  ELSE', '    OUTPUT "Bronze"', '  ENDIF', 'ENDIF'];
-assert(out(MEDAL, [66]) === 'Gold', 'MEDAL');
+assert(out(MEDAL, [40]) === 'Silver', 'MEDAL');
 const ORDER = ['DECLARE Score : INTEGER', 'INPUT Score', 'IF Score >= 40 THEN', '  OUTPUT "Pass"', 'ELSE', '  IF Score >= 75 THEN', '    OUTPUT "Merit"',
   '  ELSE', '    OUTPUT "Fail"', '  ENDIF', 'ENDIF'];
 { const outs = new Set(); for (let s = 0; s <= 100; s++) outs.add(out(ORDER, [s])); assert(!outs.has('Merit') && outs.has('Pass'), 'ORDER never Merit'); }
@@ -77,9 +73,7 @@ assert([3, 5, 6, 8].every((a) => out(RIDE5_FIX, [a]) === (a <= 5 ? 'Free' : 'Pay
 
 // ---------------------------------------------------------------- 2.4 AND, OR and NOT
 const RIDE = ['DECLARE Age : INTEGER', 'DECLARE Height : INTEGER', 'INPUT Age', 'INPUT Height'].concat(ifElse('Age >= 8 AND Height >= 120', 'Ride', 'Sorry'));
-const pairs = [[8, 125], [12, 118], [7, 130], [11, 120]];
-const rides = pairs.filter((p) => out(RIDE, p) === 'Ride').length;
-assert(rides === 2, 'RIDE ' + rides);
+assert(out(RIDE, [11, 118]) === 'Sorry', 'RIDE');
 const FREE = ['DECLARE Age : INTEGER', 'INPUT Age'].concat(ifElse('Age < 6 OR Age >= 60', 'Free', 'Pay'));
 const FREE_AGES = [6, 60, 4];
 const tf = (b) => (b ? 'TRUE' : 'FALSE');
@@ -92,12 +86,10 @@ assert(RANGE_OPTS.filter((o) => rangeOk(o.replace(/^IF | THEN$/g, ''))).length =
 const LOCK = ['DECLARE Locked : BOOLEAN', 'DECLARE Code : INTEGER', 'Locked <- TRUE', 'INPUT Code', 'IF Code = 4321 THEN', '  Locked <- FALSE', 'ENDIF']
   .concat(ifElse('NOT Locked', 'Open', 'Closed'));
 assert(out(LOCK, [4321]) === 'Open' && out(LOCK, [1234]) === 'Closed', 'LOCK');
-const SEATS = ['DECLARE Adults : INTEGER', 'DECLARE Children : INTEGER', 'DECLARE Seats : INTEGER', 'INPUT Adults', 'INPUT Children', 'Seats <- Adults + Children']
-  .concat(ifElse('Seats < 1 AND Seats > 8', 'Rejected', 'Accepted'));
-assert(out(SEATS, [6, 5]) === 'Accepted', 'SEATS');
-const PRICE = ['DECLARE Age : INTEGER', 'DECLARE Member : BOOLEAN', 'DECLARE Price : INTEGER', 'Age <- 16', 'Member <- FALSE', 'Price <- 80',
-  'IF Age < 16 AND NOT Member THEN', '  Price <- Price - 20', 'ENDIF', 'IF Age >= 16 OR Member THEN', '  Price <- Price - 10', 'ENDIF', 'OUTPUT Price'];
-assert(out(PRICE) === '70', 'PRICE');
+const SEATS = ['DECLARE Seats : INTEGER', 'INPUT Seats'].concat(ifElse('Seats < 1 AND Seats > 8', 'Rejected', 'Accepted'));
+assert(out(SEATS, [11]) === 'Accepted', 'SEATS');
+const PRICE = ['DECLARE Member : BOOLEAN', 'Member <- FALSE'].concat(ifElse('NOT Member', 'Pay 80 baht', 'Pay 60 baht'));
+assert(out(PRICE) === 'Pay 80 baht', 'PRICE');
 
 // ---------------------------------------------------------------- the test
 const TYPES = ['INTEGER', 'REAL', 'STRING', 'BOOLEAN'];
@@ -113,11 +105,11 @@ const test = {
         options: ['3', '7', '7.5', '39'], answer: '3', scheme: 'MOD gives the remainder: 6 x 7 = 42, and 45 - 42 = 3.' }),
       { id: 'a4', type: 'short', input: 'number', marks: 1, prompt: 'What does this program output?', code: ROUNDP, accept: ['8.8'],
         scheme: '53 / 6 = 8.833..., rounded to 1 decimal place: 8.8.' },
-      choice({ id: 'a5', prompt: 'RANDOM() gives a number from 0 to 1. Which whole numbers can Spin hold?', code: RANDP,
-        options: ['2 to 10', '0 to 8', '2 to 8', '3 to 10'], answer: '2 to 10',
-        scheme: 'RANDOM() * 8 is 0 to 8. ROUND makes it a whole number 0 to 8. Adding 2 gives 2 to 10.' }),
-      { id: 'a6', type: 'short', input: 'number', marks: 1, prompt: 'The user types Chiang Mai. What does this program output?', code: LENP, numbered: true, accept: ['2'],
-        scheme: 'LENGTH("Chiang Mai") is 10, because the space is a character. MOD(10, 4) is 2. (1 forgets the space.)' }
+      choice({ id: 'a5', prompt: 'Which library function gives the whole number part of a division, with no remainder?',
+        options: ['DIV', 'MOD', 'ROUND', 'LENGTH'], answer: 'DIV',
+        scheme: 'DIV gives the whole number part. MOD gives the remainder.' }),
+      { id: 'a6', type: 'short', input: 'number', marks: 1, prompt: 'The user types Hat Yai. What does this program output?', code: LENP, numbered: true, accept: ['7'],
+        scheme: 'LENGTH counts every character, and the space is a character: Hat Yai is 7. (6 forgets the space.)' }
     ] },
     { title: 'Data Types and Constants', questions: [
       choice({ id: 'b1', prompt: 'A variable records whether a student has paid for a school trip. Which data type should it have?',
@@ -136,10 +128,10 @@ const test = {
       choice({ id: 'c1', prompt: 'The rule: you can join the club if you are 12 or older. Which line follows the rule?',
         options: ['IF Age >= 12 THEN', 'IF Age > 12 THEN', 'IF Age <= 12 THEN', 'IF Age < 12 THEN'], answer: 'IF Age >= 12 THEN',
         scheme: '"12 or older" includes 12, so >=.' }),
-      { id: 'c2', type: 'short', input: 'number', marks: 1, prompt: 'The user runs this program four times and types 58, then 60, then 61, then 75. How many times does it output Safe?',
-        code: SPEED, accept: [String(safe)], scheme: '58 and 60. 60 <= 60 is TRUE.' },
-      { id: 'c3', type: 'short', input: 'text', marks: 1, prompt: 'The user types 66. What does this program output?', code: MEDAL, numbered: true, accept: ['Gold'],
-        scheme: 'Line 3 makes Points 70 first (66 + 4). 70 >= 70 is TRUE, so Gold.' },
+      { id: 'c2', type: 'short', input: 'text', marks: 1, prompt: 'The user types 60. What does this program output?',
+        code: SPEED, accept: ['Safe'], scheme: '60 <= 60 is TRUE, so Safe.' },
+      { id: 'c3', type: 'short', input: 'text', marks: 1, prompt: 'The user types 40. What does this program output?', code: MEDAL, numbered: true, accept: ['Silver'],
+        scheme: '40 >= 70 is FALSE, so the ELSE branch runs. 40 >= 40 is TRUE, so Silver.' },
       choice({ id: 'c4', prompt: 'Which scores make this program output Merit?', code: ORDER, numbered: true,
         options: ['No score can', '75 or more', '40 to 74', 'Less than 40'], answer: 'No score can',
         scheme: 'Every score of 75 or more is also 40 or more, so line 3 is TRUE first and the Merit check is skipped.' }),
@@ -150,9 +142,9 @@ const test = {
         accept: ['IF Age <= 5 THEN', 'IF Age < 6 THEN', 'IF 5 >= Age THEN', 'IF 6 > Age THEN'], placeholder: 'IF ...', scheme: 'IF Age <= 5 THEN (or IF Age < 6 THEN)' }
     ] },
     { title: 'AND, OR and NOT', questions: [
-      { id: 'd1', type: 'short', input: 'number', marks: 1,
-        prompt: 'The user runs this program four times. Age and Height typed in: 8 and 125, then 12 and 118, then 7 and 130, then 11 and 120. How many times does it output Ride?',
-        code: RIDE, accept: [String(rides)], scheme: '8 and 125, 11 and 120. With AND, both conditions must be TRUE.' },
+      { id: 'd1', type: 'short', input: 'text', marks: 1,
+        prompt: 'The user types 11 for Age and 118 for Height. What does this program output?',
+        code: RIDE, accept: ['Sorry'], scheme: '11 >= 8 is TRUE, but 118 >= 120 is FALSE. AND needs both to be TRUE, so Sorry.' },
       { id: 'd2', type: 'table', marks: 3, prompt: 'Complete the table for each Age typed in. Write TRUE or FALSE for each condition, then the output.', code: FREE, numbered: true,
         columns: ['Age', 'Age < 6', 'Age >= 60', 'OUTPUT'], rows: 3, given: { '0,0': '6', '1,0': '60', '2,0': '4' },
         key: freeKey,
@@ -166,10 +158,10 @@ const test = {
       { id: 'd4', type: 'short', input: 'text', marks: 1, prompt: 'The user types 4321. What does this program output?', code: LOCK, numbered: true, accept: ['Open'],
         scheme: 'Line 6 makes Locked FALSE. NOT FALSE is TRUE, so Open.' },
       { id: 'd5', type: 'short', input: 'text', marks: 1,
-        prompt: 'The rule: a booking must be for 1 to 8 seats. The user types 6, then 5. What does this program output?', code: SEATS, numbered: true, accept: ['Accepted'],
-        scheme: 'Seats is 11. 11 < 1 is FALSE, so the AND is FALSE. No number is less than 1 and more than 8, so it always outputs Accepted.' },
-      { id: 'd6', type: 'short', input: 'number', marks: 1, prompt: 'What does this program output?', code: PRICE, numbered: true, accept: ['70'],
-        scheme: 'Line 7: 16 < 16 is FALSE, so no 20 off. Line 10: 16 >= 16 is TRUE, so 10 off. 80 - 10 = 70.' }
+        prompt: 'The rule: a booking must be for 1 to 8 seats. The user types 11. What does this program output?', code: SEATS, numbered: true, accept: ['Accepted'],
+        scheme: '11 < 1 is FALSE, so the AND is FALSE and the ELSE branch runs: Accepted. No number is less than 1 and more than 8, so it always outputs Accepted.' },
+      { id: 'd6', type: 'short', input: 'text', marks: 1, prompt: 'What does this program output?', code: PRICE, numbered: true, accept: ['Pay 80 baht', 'Pay 80'],
+        scheme: 'Member is FALSE. NOT FALSE is TRUE, so the THEN branch runs: Pay 80 baht.' }
     ] }
   ]
 };
@@ -178,7 +170,7 @@ const qs = test.sections.flatMap((s) => s.questions);
 // Topics for the dashboard's Practice tab, and the drill suggested for each. 2.4 has no drill of its own, so its
 // topics go to the revision drill.
 const TOPIC = {
-  a1: 'Library functions', a2: 'Library functions', a3: 'Library functions', a4: 'ROUND and RANDOM', a5: 'ROUND and RANDOM', a6: 'Library functions',
+  a1: 'Library functions', a2: 'Library functions', a3: 'Library functions', a4: 'ROUND and RANDOM', a5: 'Library functions', a6: 'Library functions',
   b1: 'Data types', b2: 'Data types', b3: 'Data types', b4: 'Constants', b5: 'Constants',
   c1: 'Comparing with > and >=', c2: 'Comparing with > and >=', c5: 'Comparing with > and >=', c6: 'Comparing with > and >=', c3: 'Nested IF', c4: 'Nested IF',
   d1: 'AND and OR', d2: 'AND and OR', d3: 'AND and OR', d5: 'AND and OR', d4: 'NOT', d6: 'NOT'
