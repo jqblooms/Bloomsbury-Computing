@@ -1,4 +1,4 @@
-// Fact Chain (James 2026-11-26): learn a chain of exam facts fast, then keep them. ?group=y10-3-1 (start screen with
+// Fact Chain (James 2026-11-26): learn a chain of exam facts fast, then keep them. ?group=y10-3-1 or y8-term1b (start screen with
 // the group's packs; &packs=a,b shows only those) or ?pack=<id>. Packs: FactChain/packs/<id>.js (PACK-FORMAT.md),
 // loaded by script tag; a pack that fails to load or is incomplete is left out.
 // Each pack is a short run of rounds, one question per screen: See it, Fill the gaps (fading A, B, C), Put it in
@@ -11,9 +11,13 @@
 // passes the Haiku check; &teacher=1 shows the class view).
 (function () {
   'use strict';
-  var GROUPS = {
-    'y10-3-1': { title: 'Fact Chain: Computer Architecture', packs: ['y10-cpu-parts', 'y10-buses-fde', 'y10-performance', 'y10-instruction-sets', 'y10-embedded', 'y10-control'] }
+  // Groups come from the registry FactChain/packs/index.js (shared with Data Bridge).
+  var GROUPS = {};
+  var INDEX = (window.FACT_CHAIN_INDEX && window.FACT_CHAIN_INDEX.groups) || {
+    'y10-3-1': { title: 'Computer Architecture', packs: ['y10-cpu-parts', 'y10-buses-fde', 'y10-performance', 'y10-instruction-sets', 'y10-embedded', 'y10-control'] }
   };
+  Object.keys(INDEX).forEach(function (g) { GROUPS[g] = { title: 'Fact Chain: ' + INDEX[g].title, packs: INDEX[g].packs.slice() }; });
+  var R = window.FactRounds;
   var ROUND_NAMES = { see: 'See it', gap0: 'Fill the gaps: A', gap1: 'Fill the gaps: B', gap2: 'Fill the gaps: C', order: 'Put it in order', recall: 'From memory', spot: 'Spot the mistake', quick: 'Quick-fire' };
   var params = new URLSearchParams(location.search);
   var embed = params.get('embed') === '1';
@@ -39,6 +43,11 @@
   var state = null, who = '', teacher = false;
   var saving = false, saveAgain = false;
   var cpu = null;            // the diagram on screen now
+  // The CPU diagram and "Build your CPU" only for a group whose packs have a part (Year 8 packs have none).
+  var hasCpu = function () { return packs.some(function (p) { return !!p.part; }); };
+  var NO_CPU = { light: function () {}, add: function () {}, built: function () {}, stop: function () {},
+    replay: function (c, done) { if (done) done(); }, trip: function (done) { if (done) done(); }, boot: function (done) { if (done) done(); } };
+  function code(lines) { return R && lines ? R.codeHtml(lines) : ''; }
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function $(id) { return document.getElementById(id); }
@@ -47,12 +56,13 @@
     cpu = null;
     app.innerHTML = html;
     var holder = app.querySelector('.fc-diagram');
-    if (holder) cpu = CPU.make(holder);
+    if (holder && hasCpu()) cpu = CPU.make(holder);
+    else if (holder) { holder.remove(); Array.prototype.forEach.call(app.querySelectorAll('.fc-split'), function (el) { el.classList.add('is-single'); }); }
     postHeight();
     if (!embed) window.scrollTo(0, 0);
     var first = app.querySelector('input:not([readonly]), textarea:not([readonly])');
     if (first) try { first.focus({ preventScroll: true }); } catch (e) {}
-    return cpu;
+    return cpu || NO_CPU;
   }
   function postHeight() {
     if (!embed || window.parent === window) return;
@@ -155,6 +165,7 @@
   }
 
   function rec(pack) { return L.packRec(state, pack.id); }
+  function backText() { return hasCpu() ? 'Back to your CPU' : 'Back to the packs'; }
   function builtIds() {
     var ids = [];
     if (allMastered()) return CPU.IDS.slice();
@@ -183,15 +194,15 @@
   function home() {
     var done = packs.filter(function (p) { return rec(p).mastered; }).length;
     var d = show('<div class="fc-card"><h1>' + esc(group.title) + '</h1>' +
-      '<p>Each pack is a chain of facts for the exam. Learn it in short rounds. A mistake only brings the fact back.</p>' +
-      '<p>Master a pack to add its part to your CPU.</p>' +
-      '<div class="fc-diagram fc-build"></div>' +
-      '<p class="fc-status" id="bootline">' + (done === packs.length ? 'Your CPU is complete.' : done + ' of ' + packs.length + ' packs mastered.') + '</p>' +
+      '<p>Each pack is a chain of facts' + (hasCpu() ? ' for the exam' : '') + '. Learn it in short rounds. A mistake only brings the fact back.</p>' +
+      (hasCpu() ? '<p>Master a pack to add its part to your CPU.</p><div class="fc-diagram fc-build"></div>' :
+        '<div class="fc-progress" aria-hidden="true">' + packs.map(function (p) { return '<i class="' + (rec(p).mastered ? 'is-done' : rec(p).step ? 'is-open' : '') + '"></i>'; }).join('') + '</div>') +
+      '<p class="fc-status" id="bootline">' + (done === packs.length ? (hasCpu() ? 'Your CPU is complete.' : 'Every pack is mastered.') : done + ' of ' + packs.length + ' packs mastered.') + '</p>' +
       '<div class="fc-packs">' + packs.map(function (p, i) {
         var r = rec(p);
         return '<button class="fc-pack' + (r.mastered ? ' is-done' : r.step ? ' is-open' : '') + '" data-i="' + i + '"><b>' + esc(p.title) + '</b><span>' + esc(packStatus(p)) + '</span></button>';
       }).join('') + '</div>' +
-      (allMastered() ? '<div class="fc-actions"><button class="fc-btn" id="reboot">Start your CPU again</button></div>' : '') +
+      (allMastered() && hasCpu() ? '<div class="fc-actions"><button class="fc-btn" id="reboot">Start your CPU again</button></div>' : '') +
       (teacher ? '<div class="fc-actions"><button class="fc-btn" id="cls">Class progress</button></div>' : '') + '</div>');
     var ids = builtIds();
     d.built(ids);
@@ -202,7 +213,7 @@
       d.built(CPU.IDS);
       d.boot(function () { $('bootline').textContent = 'Your CPU is complete. Every part works.'; });
     }
-    if (allMastered() && !state.booted) { state.booted = true; save(); runBoot(); }
+    if (allMastered() && !state.booted && hasCpu()) { state.booted = true; save(); runBoot(); }
     if ($('reboot')) $('reboot').onclick = runBoot;
     if ($('cls')) $('cls').onclick = classView;
   }
@@ -218,7 +229,7 @@
         '<div class="fc-actions"><button class="fc-btn is-main" id="light">Lightning round</button><button class="fc-btn" id="again">Practise the chain again</button></div>' :
         '<p class="fc-status">' + esc(packStatus(p)) + '</p>' +
         '<div class="fc-actions"><button class="fc-btn is-main" id="go">' + (r.step ? 'Continue' : 'Start') + '</button></div>') +
-      (onePack ? '' : '<div class="fc-actions"><button class="fc-btn" id="back">Back to your CPU</button></div>') + '</div>');
+      (onePack ? '' : '<div class="fc-actions"><button class="fc-btn" id="back">' + backText() + '</button></div>') + '</div>');
     var lit = [];
     p.chain.forEach(function (c) { (c.hl || []).forEach(function (id) { if (lit.indexOf(id) < 0) lit.push(id); }); });
     d.light(r.mastered ? lit : []);
@@ -290,7 +301,7 @@
     function step() {
       var c = p.chain[i];
       var d = show(header(p, idx, practice) + '<div class="fc-card fc-split"><div><p class="fc-muted">Read each fact. Say it to yourself.</p>' + chainSoFar(p, i) +
-        '<p class="fc-fact"><span class="fc-num">' + (i + 1) + '</span>' + esc(c.text) + '</p>' +
+        '<p class="fc-fact"><span class="fc-num">' + (i + 1) + '</span>' + esc(c.text) + '</p>' + code(c.code) +
         '<div class="fc-actions"><button class="fc-btn is-main" id="next">' + (i + 1 < p.chain.length ? 'Next fact' : 'Done') + '</button></div></div>' +
         '<div class="fc-diagram fc-side"></div></div>');
       d.light(c.hl || []);
@@ -308,10 +319,10 @@
       if (parts) {
         body = '<p class="fc-fact fc-fill"><span class="fc-num">' + (i + 1) + '</span>' + parts.map(function (x) {
           return x.type === 'gap' ? '<input class="fc-gap" data-gap="' + esc(x.gap) + '" size="' + Math.max(6, x.gap.length + 2) + '" autocomplete="off" spellcheck="false" aria-label="Gap ' + (x.n + 1) + '">' : esc(x.text);
-        }).join('') + '</p>';
+        }).join('') + '</p>' + code(c.code);
       } else {
         body = '<p class="fc-muted">Fact ' + (i + 1) + ' of ' + p.chain.length + '. Type the whole fact.</p>' +
-          '<textarea class="fc-line fc-enter" id="line" rows="2" autocomplete="off" spellcheck="false" aria-label="Fact ' + (i + 1) + '"></textarea>';
+          code(c.code) + '<textarea class="fc-line fc-enter" id="line" rows="2" autocomplete="off" spellcheck="false" aria-label="Fact ' + (i + 1) + '"></textarea>';
       }
       var d = show(header(p, idx, practice) + '<div class="fc-card fc-split"><div>' +
         '<p class="fc-muted">' + (parts ? 'Type the missing words.' : 'Write the next fact in the chain.') + '</p>' + chainSoFar(p, i) + body +
@@ -460,7 +471,7 @@
     function step() {
       var s = items[i];
       show(header(p, idx, practice) + '<div class="fc-card"><p class="fc-muted">Mistake ' + (i + 1) + ' of ' + items.length + '. One word or phrase is wrong. Type the right word.</p>' +
-        '<p class="fc-fact">' + esc(s.wrong) + '</p>' +
+        '<p class="fc-fact">' + esc(s.wrong) + '</p>' + code(s.code) +
         '<input class="fc-input" id="ans" autocomplete="off" spellcheck="false" aria-label="The right word">' +
         '<div class="fc-actions"><button class="fc-btn is-main" id="check">Check</button></div><div id="out"></div></div>');
       $('check').onclick = function () {
@@ -499,7 +510,7 @@
       var q = byId[pick.qid], n = S.masteredCount(st, qids, 0);
       show(header(p, idx, practice) + '<div class="fc-top fc-sub-top"><span><b>' + n + '</b> of ' + qids.length + ' mastered</span>' +
         '<span class="fc-bar" aria-hidden="true"><i style="width:' + Math.round(n / qids.length * 100) + '%"></i></span></div>' +
-        '<div class="fc-card"><p class="fc-fact">' + esc(q.q) + '</p>' +
+        '<div class="fc-card"><p class="fc-fact">' + esc(q.q) + '</p>' + code(q.code) +
         '<input class="fc-input" id="ans" autocomplete="off" spellcheck="false" aria-label="Your answer">' +
         '<div class="fc-actions"><button class="fc-btn is-main" id="check">Check</button><span class="fc-muted" id="wait"></span></div><div id="out"></div></div>');
       $('check').onclick = function () {
@@ -533,13 +544,13 @@
   function finished(p, practice) {
     var r = rec(p), trip = p.chain.some(function (c) { return (c.hl || []).indexOf('addressBus') >= 0; }) && p.chain.some(function (c) { return (c.hl || []).indexOf('dataBus') >= 0; });
     var d = show('<div class="fc-card"><h1>' + esc(p.title) + ': ' + (practice ? 'done' : 'mastered') + '</h1>' +
-      '<p>' + (practice ? 'You went through the whole chain again.' : 'You know the whole chain. Watch it run on the CPU.') + '</p>' +
+      '<p>' + (practice ? 'You went through the whole chain again.' : hasCpu() ? 'You know the whole chain. Watch it run on the CPU.' : 'You know the whole chain.') + '</p>' +
       '<div class="fc-diagram fc-small"></div>' +
       '<div class="fc-actions"><button class="fc-btn is-main" id="light">Lightning round</button>' +
-      '<button class="fc-btn" id="play">Play it again</button>' + (onePack ? '' : '<button class="fc-btn" id="back">Back to your CPU</button>') + '</div></div>');
+      (hasCpu() ? '<button class="fc-btn" id="play">Play it again</button>' : '') + (onePack ? '' : '<button class="fc-btn" id="back">' + backText() + '</button>') + '</div></div>');
     function play() { if (trip) d.trip(); else d.replay(p.chain); }
     play();
-    $('play').onclick = play;
+    if ($('play')) $('play').onclick = play;
     $('light').onclick = function () { lightning(p); };
     if ($('back')) $('back').onclick = home;
     if (!r.mastered) $('light').hidden = true;
@@ -559,7 +570,7 @@
       function step() {
         var q = queue[0];
         show('<div class="fc-top"><span><b>Lightning</b></span><span>' + queue.length + ' left</span><span class="fc-clock" id="clock">' + time(Date.now() - start) + '</span></div>' +
-          '<div class="fc-card"><p class="fc-fact">' + esc(q.q) + '</p><input class="fc-input" id="ans" autocomplete="off" spellcheck="false" aria-label="Your answer">' +
+          '<div class="fc-card"><p class="fc-fact">' + esc(q.q) + '</p>' + code(q.code) + '<input class="fc-input" id="ans" autocomplete="off" spellcheck="false" aria-label="Your answer">' +
           '<div class="fc-actions"><button class="fc-btn is-main" id="check">Go</button></div><div id="out"></div></div>');
         $('check').onclick = function () {
           var a = $('ans');

@@ -86,7 +86,7 @@ ok(res.finished && n === 6, 'quick-fire all right needs 6 answers, got ' + n);
 
 // Every real pack
 const dir = path.join(ROOT, 'FactChain', 'packs');
-const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.js')) : [];
+const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.js') && f !== 'index.js') : [];
 for (const f of files) {
   const ctx = { window: {} };
   vm.createContext(ctx);
@@ -106,6 +106,78 @@ for (const f of files) {
   });
   (p.spot || []).forEach((s, i) => { if (s.model) ok(L.hasAny(s.model, s.fix), `${id} spot ${i + 1} model fails its fix`); });
   console.log(`${id}: ${p.chain.length} lines, ${(p.quick || []).length} quick, ${(p.spot || []).length} spot`);
+}
+
+// ---------------------------------------------------------------- Data Bridge fact rounds (FactChain/js/rounds.js)
+const FR = require('../FactChain/js/rounds.js');
+let seed = 7;
+const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+const big = { id: 'big', title: 'Big', chain: Array.from({ length: 8 }, (_, i) => ({ text: `Fact number ${i} is about word${i}.`, gaps: [`word${i}`, 'about'] })),
+  quick: Array.from({ length: 6 }, (_, i) => ({ id: 'q' + i, q: 'Q' + i, accept: ['answer' + i] })),
+  spot: Array.from({ length: 5 }, (_, i) => ({ wrong: 'Wrong ' + i, fix: ['fix' + i], model: 'fix' + i })) };
+ok(FR.stagesFor(big).join() === 'gap0,gap1,gap2,order,spot,quick,recall', 'all stages');
+ok(FR.stagesFor({ chain: big.chain }).join() === 'gap0,gap1,gap2,order,recall', 'stages skip missing spot and quick');
+ok(FR.stageFor(big, 1) === 'gap0' && FR.stageFor(big, 7) === 'recall' && FR.stageFor(big, 8) === 'gap0', 'stages cycle with the round');
+for (const st of FR.STAGES) {
+  const r = FR.build(big, st, rnd);
+  ok(r.items.length >= 1 && r.items.length <= 5, st + ' has 1 to 5 items');
+}
+const g0 = FR.build(big, 'gap0', rnd);
+ok(g0.items.length === 4 && g0.items.every((it, k) => k === 0 || it.line === g0.items[k - 1].line + 1), 'gap items are lines next to each other');
+const it0 = g0.items[0];
+ok(FR.markGap(big, it0, ['word' + it0.line]).right && !FR.markGap(big, it0, ['nope']).right, 'gap marking by logic.js');
+const g2 = { kind: 'gap', k: 2, line: 3, w: 1 };
+ok(FR.markGap(big, g2, 'fact 3 is about word3').right && !FR.markGap(big, g2, 'word3').right, 'whole line marking');
+ok(FR.cueLine(big, 0) === null && FR.cueLine(big, 3) === big.chain[2], 'cue line');
+const ord = FR.build(big, 'order', rnd).items[0];
+ok(ord.start.some((v, k) => v !== k), 'order starts shuffled');
+ok(FR.markOrder(ord, ord.lines.slice()).right && !FR.markOrder(ord, ord.lines.slice().reverse()).right, 'order marking');
+ok(FR.markSpot(big, { i: 2 }, 'fix2') && !FR.markSpot(big, { i: 2 }, 'fix3'), 'spot marking');
+ok(FR.markQuick(big, { i: 1 }, 'answer1') && !FR.markQuick(big, { i: 1 }, 'answer2'), 'quick marking');
+const rc = FR.markRecall(big, { kind: 'recall', need: 3, w: 3 }, 'fact 1 about word1\nfact 2 about word2\nsomething else');
+ok(rc.count === 2 && rc.unmatched.join() === 'something else', 'recall counts found facts');
+const bodies = FR.recallAiBodies(big, { need: 3 }, rc);
+ok(bodies.length && bodies.every((b) => b.body.drillId === 'factchain-big' && /^line\d+$/.test(b.body.cardId) && b.body.answer === 'something else'), 'recall Haiku bodies');
+ok(FR.aiBody(big, { kind: 'quick', i: 0 }, 'x').cardId === 'q0', 'quick card id is the Fact Chain one');
+ok(FR.aiBody(big, { kind: 'gap', k: 0, line: 4 }, 'x').cardId === 'line5', 'gap card id');
+ok(FR.aiBody(big, { kind: 'order', lines: [0] }, 'x') === null, 'order never goes to Haiku');
+// Learn: a missed item swapped for a new one of the same kind, never one already in the round
+const qr = FR.build(big, 'quick', rnd);
+for (let i = 0; i < 20; i++) {
+  const n = FR.swap(big, qr, 0, rnd);
+  ok(n.kind === 'quick' && !qr.items.some((x) => x.i === n.i), 'swap gives a new quick item');
+}
+const again = FR.again(qr, rnd);
+ok(again.length === qr.items.length && again.map((x) => x.i).sort().join() === qr.items.map((x) => x.i).sort().join(), 'Play redo keeps the same items');
+// Coins: the first pass pays per unit; a clean redo pays half for the ones missed
+const rate = FR.rate(120, 4);
+ok(FR.firstPay(rate, 3) === 90 && FR.redoPay(rate, 1) === 15 && FR.firstPay(rate, 4) === 120, 'coin rule');
+// Topics and packs
+const idx = { groups: { g1: { title: 'Group', year: 'Year 8', packs: ['big', 'missing'] } } };
+const tps = FR.topics(idx, { big });
+ok(tps.length === 1 && tps[0].setId === 'facts:big' && tps[0].year === 'Year 8' && tps[0].unit === 'Fact Chain', 'a missing pack is skipped');
+ok(FR.packsFor(idx, { big }, 'facts:g1').length === 1 && FR.packsFor(idx, { big }, 'facts:big')[0] === big, 'packs for a topic');
+ok(FR.isFacts('facts:g1') && !FR.isFacts('y8-logic'), 'fact topic ids');
+// The registry: both groups, and a note for any listed pack whose file is not there yet
+{
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(fs.readFileSync(path.join(dir, 'index.js'), 'utf8'), ctx);
+  const groups = ctx.window.FACT_CHAIN_INDEX.groups;
+  for (const g of Object.keys(groups)) for (const id of groups[g].packs) {
+    if (!fs.existsSync(path.join(dir, id + '.js'))) console.log(`note: index lists ${id} (group ${g}) but the file is not there yet`);
+  }
+  ok(groups['y10-3-1'] && groups['y8-term1b'], 'index has the Year 10 and Year 8 groups');
+}
+// Every real pack builds every round, and any code field is a list of lines
+for (const f of files) {
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(fs.readFileSync(path.join(dir, f), 'utf8'), ctx);
+  const p = ctx.window.FACT_CHAIN_PACKS[f.replace(/\.js$/, '')];
+  if (!p || L.packProblems(p).length) continue;
+  for (let n = 1; n <= 10; n++) { const r = FR.build(p, FR.stageFor(p, n), rnd); ok(r.items.length > 0, `${p.id} round ${n} builds`); }
+  [p.chain, p.quick || [], p.spot || []].forEach((list) => list.forEach((x) => { if (x.code != null) ok(Array.isArray(x.code) && x.code.every((l) => typeof l === 'string'), `${p.id} code is a list of lines`); }));
 }
 
 console.log(`${checks - fails} of ${checks} checks passed`);

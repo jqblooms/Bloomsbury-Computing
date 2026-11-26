@@ -89,3 +89,11 @@ p { line-height: 1.5; margin: 0 0 10px; }
 @keyframes fc-tick { 50% { fill: var(--accent); } }
 @media (prefers-reduced-motion: reduce) { .fc-packet, .fc-part rect, .fc-bar > i { transition: none; } .fc-cpu.is-booting #fc-clock rect { animation: none; } }
 @media (max-width: 520px) { #app { padding: 12px 16px 30px; } .fc-card { padding: 14px; } .fc-fact { font-size: 1.1rem; } }
+/* No CPU diagram (packs without parts, such as Year 8): one column, and a simple row of packs as the progress picture. */
+.fc-split.is-single { grid-template-columns: 1fr; }
+.fc-progress { display: flex; gap: 8px; margin: 8px 0 4px; }
+.fc-progress i { flex: 1 1 0; height: 14px; border-radius: 7px; background: var(--line); }
+.fc-progress i.is-open { background: var(--brand-soft-strong); }
+.fc-progress i.is-done { background: var(--good); }
+.fc-code { margin: 0 0 14px; max-width: 100%; overflow-x: auto; }
+.fc-code .eq-code { font-size: 16px; }

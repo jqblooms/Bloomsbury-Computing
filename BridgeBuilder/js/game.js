@@ -7,7 +7,10 @@
   'use strict';
   var Ph = window.BBPhys;
   var P = new URLSearchParams(location.search);
-  var WANT_SET = P.get('set') || P.get('mode') || '';
+  // ?facts=<group or pack> starts on Fact Chain packs (topic id facts:<id>, js/facts.js) for lesson embeds.
+  var WANT_SET = P.get('facts') ? 'facts:' + P.get('facts') : P.get('set') || P.get('mode') || '';
+  var F = window.BBFacts;
+  function factTopic() { return !!(F && F.isFacts(setId)); }
   var GOAL = Math.max(1, parseInt(P.get('goal'), 10) || 3);
   var KEY = 'bc-databridge-v1:';
   var W = 960, H = 540, SC = 30, TOP_Y = 7;   // 30 pixels per square; the top of the board is y = 7
@@ -71,7 +74,7 @@
     var before = !!load('done:' + setId, false);
     var head = done ? 'Finished.' : before ? 'Finished on an earlier visit.' : 'Not finished yet.';
     var line = ' Best: crossed ' + (S.best || 0) + ' of ' + ROUNDS + ' rounds. Now on round ' + S.round + '. Marks ' + S.stats.marks + ' of ' + S.stats.max + ' in ' + S.stats.rounds + ' exam rounds.';
-    guard.post({ type: 'BC_APP_RESULT', questionId: 'data-bridge-' + setId, label: 'Data Bridge: ' + (setTitle || setId),
+    guard.post({ type: 'BC_APP_RESULT', questionId: 'data-bridge-' + setId.replace(/:/g, '-'), label: 'Data Bridge: ' + (setTitle || setId),
       summary: head + line + (S.stats.log.length ? ' ' + S.stats.log.slice(-10).join(' ') : ''), complete: done || before });
   }
 
@@ -93,8 +96,12 @@
   function showStart() {
     sim = null; setHud(false);
     $('screen').innerHTML = '<div class="bb-card bb-start"><p class="bb-lead">Loading...</p></div>';
-    call(function () { return api().sets(); }).then(function (list) {
-      sets = (list || []).filter(function (s) { return s && s.setId; });
+    // Exam topics, then the Fact Chain packs (grouped under "Fact Chain" in each year).
+    Promise.all([call(function () { return api().sets(); }).catch(function (e) { return { error: e }; }),
+      F ? F.init(window.BB_VERSION || '1').catch(function () { return []; }) : Promise.resolve([])]).then(function (res) {
+      var list = res[0] && res[0].error ? [] : res[0];
+      if (res[0] && res[0].error && !res[1].length) throw res[0].error;
+      sets = (list || []).concat(res[1] || []).filter(function (s) { return s && s.setId; });
       if (!sets.length) throw new Error('No question topics yet.');
       if (!setId || !sets.some(function (s) { return s.setId === setId; })) setId = sets[0].setId;
       drawStart();   // a preset topic is only the default choice; every topic stays on the start screen
@@ -105,7 +112,7 @@
   }
 
   function drawStart() {
-    if (api().warm) api().warm(setId);
+    if (api().warm && !factTopic()) api().warm(setId);
     var cur = sets.filter(function (s) { return s.setId === setId; })[0];
     setTitle = cur ? (cur.title || cur.setId) : setId;
     var saved = load(gameKey(), null), wasOld = !!(saved && saved.v === 1);
@@ -114,7 +121,7 @@
     var best = load(bestKey(), 0);
     var h = '<div class="bb-card bb-start"><div class="bb-start-art"><canvas id="startArt" width="480" height="150"></canvas></div>' +
       '<h1>Data Bridge</h1>' +
-      '<p class="bb-lead">Build a bridge so the data truck can cross from one server rack to the next. Answer exam questions to earn coins for the bridge.</p>' +
+      '<p class="bb-lead">Build a bridge so the data truck can cross from one server rack to the next. ' + (factTopic() ? 'Learn the facts to earn coins for the bridge.' : 'Answer exam questions to earn coins for the bridge.') + '</p>' +
       // Grouped by year, then unit (shared/exam-game-client.js); a flat list if the client has no picker.
       '<p class="bb-label">Pick a topic</p>' + (api().topicPicker ? api().topicPicker(sets, setId, { pillClass: 'bb-pill' }) :
         '<div class="bb-choice-row">' + sets.map(function (s) {
@@ -125,7 +132,7 @@
       '<button class="bb-pill' + (LEARN ? ' is-on' : '') + '" data-mode="learn" aria-pressed="' + LEARN + '">Learn</button></div>' +
       '<p class="bb-mode-note">' + (LEARN
         ? 'Learn mode: see a worked example and ask the AI for help at any time. Help is free. A wrong answer? Try again or get a new question. Learn mode does not finish the game for your lesson.'
-        : 'Play mode: answer exam questions on your own to earn coins. This counts for your lesson.') + '</p>' +
+        : factTopic() ? 'Play mode: answer on your own to earn coins. This counts for your lesson.' : 'Play mode: answer exam questions on your own to earn coins. This counts for your lesson.') + '</p>' +
       (wasOld ? '<p class="bb-label">Data Bridge has new levels, so your saved game starts again from round 1.</p>' : '') +
       (best ? '<p class="bb-label">Your best: crossed ' + best + ' of ' + ROUNDS + ' rounds</p>' : '');
     if (saved) {
@@ -514,6 +521,16 @@
     S.phase = 'exam'; LV = Ph.level(S.round);
     if (!resuming || !S.exam) S.exam = { n: S.round, qs: null, rate: 0, pool: 0, paid: 0, intro: true, items: null };
     save(); setHud(true); ctx = null; sim = null;
+    if (factTopic()) {   // a Fact Chain pack: one short fact activity instead of the exam question (js/facts.js)
+      if (S.exam && !S.exam.facts) S.exam = null;
+      if (!F.start(factCtx(), setId)) {
+        $('screen').innerHTML = '<div class="bb-card bb-q"><p class="bb-lead">These facts did not load. Check your connection.</p>' +
+          '<div class="bb-start-go"><button class="bc-btn" id="retry">Try again</button></div></div>';
+        $('retry').onclick = function () { startRound(true); };
+      }
+      return;
+    }
+    if (S.exam && S.exam.facts) S.exam = { n: S.round, qs: null, rate: 0, pool: 0, paid: 0, intro: true, items: null };
     var r = S.exam;
     if (r.qs) { showRound(); return; }
     $('screen').innerHTML = '<div class="bb-card bb-q"><p class="bb-lead">Loading a question...</p></div>';
@@ -535,6 +552,18 @@
     });
   }
 
+  // What a fact round needs from the game (js/facts.js).
+  function factCtx() {
+    return { S: S, LV: LV, learn: LEARN, stub: standalone(), screen: $('screen'), roundLine: roundLine(Ph.level(S.round)), save: save,
+      pay: function (n) { S.coins += n; save(); updateHud(); coinPop(n); },
+      finish: function (res) {
+        S.stats.marks += res.right; S.stats.max += res.total; S.stats.rounds++;
+        S.stats.log.push('Facts ' + S.round + ': ' + res.right + ' of ' + res.total + ' right first time.');
+        S.exam = null; S.design = null;
+        enterBuild(); postResult();
+        toast(res.paid ? 'You earned ' + res.paid + ' coins. Now build your bridge.' : 'No coins this round. Build with what you have.');
+      } };
+  }
   function roundTotal() { return S.exam.qs.reduce(function (a, q) { return a + q.marks; }, 0); }
   // "1 question, 3 marks" (an older saved round may still have more questions)
   function roundSize() {

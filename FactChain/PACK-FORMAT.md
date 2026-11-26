@@ -37,6 +37,17 @@ window.FACT_CHAIN_PACKS['y10-fde'] = {
 };
 ```
 
+## Optional fields (Year 8 and other packs without the CPU)
+- `group`: the group id the pack belongs to (also listed in `packs/index.js`).
+- `part` and `hl` are optional. A group whose packs have no `part` shows no CPU diagram: the app hides it and shows a simple row of packs as the progress picture, and "Build your CPU" and the Lightning bus trip are left out.
+- `code`: a list of program lines (Cambridge pseudocode, DECLARE before use), e.g. `code: ['DECLARE Age : INTEGER', 'Age <- 13']`, on a chain line, a quick-fire question or a spot item. It is shown under the text as the site's exam code block (shared/exam-question.js `.eq-code`), in Fact Chain and in Data Bridge. Answers are never symbols alone: logic.js ignores `< > =`, so take operator answers in words.
+
+## The registry: `packs/index.js`
+`window.FACT_CHAIN_INDEX.groups` lists every group: `{ title, year, packs: [ids in order] }`. The Fact Chain app (`?group=<id>`) and Data Bridge read it. A new pack needs its id there, and the shell's `FactChain.gs` `FACT_GROUPS` must list the same group and packs (progress is saved per group). A listed pack whose file is missing is skipped.
+
+## In Data Bridge
+Data Bridge's topic picker lists every loaded pack, and each group as "All ... facts", under "Fact Chain" in the pack's year. `BridgeBuilder/index.html?facts=<group or pack>` starts on them (lesson embeds). Each Data Bridge round is one short activity from the pack (`js/rounds.js`): Fill the gaps (1 gap, then 2), Write the fact, Put it in order, Spot the mistake, Quick-fire, From memory, cycling as the rounds go up. Card ids for the Haiku check: quick `id`, `line<n>`, `spot<n>`.
+
 ## Rules for content
 - **Source:** every fact comes from a real 0478 mark scheme. The extract is `C:\Users\Bloomsbury\Desktop\0478 Past Papers\extract\` (by-topic.md, papers/*.md). The shell's `ExamPapers.gs` `y10-unit3-1-exam` schemes and the Y10 Exam Game sets (`ExamGameSetY10*.gs`, `ExamGameSetY11Arch*.gs`) hold the same. Use the wording examiners give marks for.
 - **No copying the exam:** never copy a question from `y10-unit3-1-exam` as a quick-fire question. Teach the facts its mark scheme rewards, in your own one-line questions.
@@ -46,6 +57,9 @@ window.FACT_CHAIN_PACKS['y10-fde'] = {
 
 ## Diagram ids (the CPU diagram in the engine)
 `cpu, pc, mar, mdr, cir, acc, alu, cu, clock, cache, core, addressBus, dataBus, controlBus, ram, sensor, adc, actuator, device`
+
+## Packs for Year 8 Term 1b (group `y8-term1b`, app `y8-fact-chain`)
+`y8-libraries-types`, `y8-conditions-logic`.
 
 ## Packs for the Year 10 Unit 3.1 exam (group `y10-3-1`)
 1. `y10-cpu-parts`: the CPU's role, ALU, CU, registers and what each holds (PC, MAR, MDR, CIR, ACC), what a register is.
