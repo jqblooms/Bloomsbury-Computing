@@ -67,7 +67,8 @@ ok(r2.found.join() === 'true,true,false,true', 'recall finds facts in sentences 
 
 // Order shuffle is never right
 for (let i = 0; i < 50; i++) ok(L.shuffleOrder(4).some((v, k) => v !== k), 'shuffle differs');
-ok(L.rounds(fde).join() === 'see,gap0,gap1,gap2,order,recall,spot,quick', 'rounds');
+ok(L.rounds(fde).join() === 'see,gap0,gap1,gap2,recall,spot,quick', 'rounds: no order without a real sequence');
+ok(L.rounds(Object.assign({}, fde, { sequences: [[0, 1, 2]] })).join() === 'see,gap0,gap1,gap2,order,recall,spot,quick', 'rounds: order for a real sequence');
 ok(L.packProblems(fde).length === 0, 'sample pack is valid');
 ok(L.packProblems({ id: 'x', chain: [{ text: 'a b', gaps: ['c'] }, { text: 'd', gaps: ['d'] }] }).length === 1, 'gap not in text found');
 
@@ -114,9 +115,11 @@ let seed = 7;
 const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 const big = { id: 'big', title: 'Big', chain: Array.from({ length: 8 }, (_, i) => ({ text: `Fact number ${i} is about word${i}.`, gaps: [`word${i}`, 'about'] })),
   quick: Array.from({ length: 6 }, (_, i) => ({ id: 'q' + i, q: 'Q' + i, accept: ['answer' + i] })),
-  spot: Array.from({ length: 5 }, (_, i) => ({ wrong: 'Wrong ' + i, fix: ['fix' + i], model: 'fix' + i })) };
+  spot: Array.from({ length: 5 }, (_, i) => ({ wrong: 'Wrong ' + i, fix: ['fix' + i], model: 'fix' + i })), sequences: [[1, 2, 4, 6, 7]] };
 ok(FR.stagesFor(big).join() === 'gap0,gap1,gap2,order,spot,quick,recall', 'all stages');
-ok(FR.stagesFor({ chain: big.chain }).join() === 'gap0,gap1,gap2,order,recall', 'stages skip missing spot and quick');
+ok(FR.stagesFor({ chain: big.chain, sequences: big.sequences }).join() === 'gap0,gap1,gap2,order,recall', 'stages skip missing spot and quick');
+ok(FR.stagesFor({ chain: big.chain }).join() === 'gap0,gap1,gap2,recall', 'no order stage without a real sequence');
+ok(FR.build(big, 'order', rnd).items.every((it) => it.lines.every((l) => big.sequences[0].includes(l)) && it.lines.every((l, k) => k === 0 || big.sequences[0].indexOf(l) === big.sequences[0].indexOf(it.lines[k - 1]) + 1)), 'order items are runs of the sequence');
 ok(FR.stageFor(big, 1) === 'gap0' && FR.stageFor(big, 7) === 'recall' && FR.stageFor(big, 8) === 'gap0', 'stages cycle with the round');
 for (const st of FR.STAGES) {
   const r = FR.build(big, st, rnd);

@@ -68,3 +68,6 @@ Data Bridge's topic picker lists every loaded pack, and each group as "All ... f
 4. `y10-instruction-sets`: instruction set definition, opcode and operand at the level taught.
 5. `y10-embedded`: embedded system definition and features (dedicated function, microprocessor, not reprogrammable by the user), examples, not a general purpose computer.
 6. `y10-control`: a microprocessor with a sensor controlling a device, in the order mark schemes reward: sensor takes readings, sent to the microprocessor (ADC if analogue), compared with a stored value or range, signal sent to the actuator or output, continuous loop. Cover the parking-space light and the air-conditioner examples as general patterns, with different devices from the exam's.
+
+## Order rounds only for real sequences
+James 2026-11-26: facts with no order are never put in order. A pack may give `sequences: [[chain index, ...], ...]`, each list in its true order (at least 3 steps). The Put it in order round, in the Fact Chain app and in Data Bridge, uses only these; a pack without `sequences` has no order round. Leave out any step whose timing varies between sources (for example the PC increment in the fetch stage).

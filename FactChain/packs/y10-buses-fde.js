@@ -5,6 +5,9 @@ window.FACT_CHAIN_PACKS['y10-buses-fde'] = {
   year: 'Year 10',
   part: 'addressBus',
   intro: 'What each bus carries, then the fetch stage step by step, then decode and execute.',
+  // Real sequences only (put in order): PC to MAR, address bus to RAM, data bus to MDR, MDR to CIR, decode, execute.
+  // Left out: the read signal and the PC increment, whose timing varies between sources.
+  sequences: [[4, 5, 7, 8, 11, 12]],
   chain: [
     { text: 'The address bus carries addresses one way, from the CPU to memory.',
       gaps: ['addresses', 'one way', 'CPU to memory'],

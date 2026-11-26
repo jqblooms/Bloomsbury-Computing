@@ -367,13 +367,15 @@
   }
 
   // 3. Put it in order: drag the lines, or use the Up and Down buttons.
+  // Only a real sequence (pack.sequences) is ever put in order; a pack with two takes them in turn.
   function order(p, idx, practice, done) {
-    var cur = L.shuffleOrder(p.chain.length), dragFrom = -1;
+    var seqs = L.sequences(p), si = 0, seq = seqs[0];
+    var cur = L.shuffleOrder(seq.length), dragFrom = -1;
     function draw(marked) {
       show(header(p, idx, practice) + '<div class="fc-card"><p>Put the facts in the right order. Drag a fact, or use Up and Down.</p>' +
         '<ol class="fc-order" id="list">' + cur.map(function (ci, pos) {
           var mark = marked ? (ci === pos ? ' is-right' : ' is-wrong') : '';
-          return '<li class="fc-item' + mark + '" draggable="' + (!marked) + '" data-pos="' + pos + '"><span class="fc-item-text">' + esc(p.chain[ci].text) + '</span>' +
+          return '<li class="fc-item' + mark + '" draggable="' + (!marked) + '" data-pos="' + pos + '"><span class="fc-item-text">' + esc(p.chain[seq[ci]].text) + '</span>' +
             (marked ? '' : '<span class="fc-move"><button class="fc-mini" data-up="' + pos + '" aria-label="Move up"' + (pos ? '' : ' disabled') + '>Up</button>' +
               '<button class="fc-mini" data-down="' + pos + '" aria-label="Move down"' + (pos < cur.length - 1 ? '' : ' disabled') + '>Down</button></span>') + '</li>';
         }).join('') + '</ol><div id="out"></div>' +
@@ -412,12 +414,12 @@
       if (!wrong) {
         $('out').innerHTML = '<div class="fc-result is-right"><p class="fc-mark">Every fact is in the right place.</p></div>' +
           '<div class="fc-actions"><button class="fc-btn is-main" id="next">Next</button></div>';
-        $('next').onclick = done;
+        $('next').onclick = function () { si++; if (si < seqs.length) { seq = seqs[si]; cur = L.shuffleOrder(seq.length); draw(); } else done(); };
       } else {
         $('out').innerHTML = '<div class="fc-result is-wrong"><p class="fc-mark">' + wrong + ' facts are in the wrong place. This is the right order:</p>' +
-          '<ol class="fc-chain">' + p.chain.map(function (c) { return '<li>' + esc(c.text) + '</li>'; }).join('') + '</ol></div>' +
+          '<ol class="fc-chain">' + seq.map(function (ci) { return '<li>' + esc(p.chain[ci].text) + '</li>'; }).join('') + '</ol></div>' +
           '<div class="fc-actions"><button class="fc-btn is-main" id="next">Try again</button></div>';
-        $('next').onclick = function () { cur = L.shuffleOrder(p.chain.length); draw(); };
+        $('next').onclick = function () { si = 0; seq = seqs[0]; cur = L.shuffleOrder(seq.length); draw(); };
       }
       postHeight();
     }

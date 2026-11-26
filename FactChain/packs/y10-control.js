@@ -5,6 +5,8 @@ window.FACT_CHAIN_PACKS['y10-control'] = {
   year: 'Year 10',
   part: 'sensor',
   intro: 'How a microprocessor uses a sensor and an actuator to control a device, step by step.',
+  // Real sequence only (put in order): reading, ADC, to the microprocessor, compare, signal, actuator.
+  sequences: [[0, 1, 2, 3, 5, 6]],
   chain: [
     { text: 'The sensor takes readings continuously.',
       gaps: ['continuously', 'readings'],

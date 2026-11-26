@@ -127,8 +127,18 @@
   }
 
   // The rounds of a pack, in order. Spot and quick only when the pack has them.
+  // The real sequences in a pack (James 2026-11-26: no ordering for facts that have no order): pack.sequences is a
+  // list of chain index lists, each in its true order, at least 3 long. Only these are ever put in order.
+  function sequences(pack) {
+    var n = pack && pack.chain ? pack.chain.length : 0;
+    return (pack && Array.isArray(pack.sequences) ? pack.sequences : []).filter(function (s) {
+      return Array.isArray(s) && s.length >= 3 && s.every(function (i) { return i === Math.floor(i) && i >= 0 && i < n; });
+    });
+  }
   function rounds(pack) {
-    var r = ['see', 'gap0', 'gap1', 'gap2', 'order', 'recall'];
+    var r = ['see', 'gap0', 'gap1', 'gap2'];
+    if (sequences(pack).length) r.push('order');
+    r.push('recall');
     if (pack.spot && pack.spot.length) r.push('spot');
     if (pack.quick && pack.quick.length) r.push('quick');
     return r;
@@ -179,7 +189,7 @@
 
   var api = { norm: norm, words: words, oneEdit: oneEdit, wordMatch: wordMatch, hasPhrase: hasPhrase, hasAny: hasAny,
     gapAccepts: gapAccepts, gapRight: gapRight, lineFound: lineFound, blanks: blanks, recall: recall, shuffle: shuffle,
-    shuffleOrder: shuffleOrder, rounds: rounds, packProblems: packProblems, factsIn: factsIn, create: create, repair: repair,
+    shuffleOrder: shuffleOrder, rounds: rounds, sequences: sequences, packProblems: packProblems, factsIn: factsIn, create: create, repair: repair,
     packRec: packRec, progress: progress };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.FactChainLogic = api;

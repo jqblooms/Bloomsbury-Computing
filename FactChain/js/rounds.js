@@ -32,7 +32,7 @@
   function stagesFor(pack) {
     var n = pack && pack.chain ? pack.chain.length : 0;
     return STAGES.filter(function (s) {
-      if (s === 'order') return n >= 3;
+      if (s === 'order') return L.sequences(pack).length > 0;
       if (s === 'spot') return !!(pack.spot && pack.spot.length);
       if (s === 'quick') return !!(pack.quick && pack.quick.length);
       return n >= 1;
@@ -65,13 +65,11 @@
       var k = Number(stage.slice(3));
       windowAt(n, k === 2 ? 3 : 4, rnd).forEach(function (i) { items.push({ kind: 'gap', k: k, line: i, w: 1 }); });
     } else if (stage === 'order') {
-      var size = Math.min(4, n), count = n >= 6 ? 2 : 1, used = {};
-      for (var c = 0; c < count; c++) {
-        var lines, tries = 0;
-        do { lines = windowAt(n, size, rnd); tries++; } while (used[lines[0]] && tries < 10);
-        used[lines[0]] = 1;
+      // Only a real sequence (pack.sequences), a run of up to 4 of its steps; one item per sequence.
+      L.sequences(pack).forEach(function (seq) {
+        var lines = windowAt(seq.length, 4, rnd).map(function (j) { return seq[j]; });
         items.push({ kind: 'order', lines: lines, start: L.shuffleOrder(lines.length, rnd), w: 1 });
-      }
+      });
     } else if (stage === 'spot') {
       sample(pack.spot.length, 4, rnd).forEach(function (i) { items.push({ kind: 'spot', i: i, w: 1 }); });
     } else if (stage === 'quick') {
@@ -95,9 +93,13 @@
     else if (it.kind === 'quick') pool = range(pack.quick.length).map(function (i) { return { kind: 'quick', i: i, w: 1 }; });
     else if (it.kind === 'order') {
       var size = it.lines.length;
-      pool = range(pack.chain.length - size + 1).map(function (s) {
-        var lines = range(size).map(function (j) { return s + j; });
-        return { kind: 'order', lines: lines, start: L.shuffleOrder(size, rnd), w: 1 };
+      pool = [];
+      L.sequences(pack).forEach(function (seq) {
+        if (seq.length < size) return;
+        range(seq.length - size + 1).forEach(function (s) {
+          var lines = range(size).map(function (j) { return seq[s + j]; });
+          pool.push({ kind: 'order', lines: lines, start: L.shuffleOrder(size, rnd), w: 1 });
+        });
       });
     }
     pool = pool.filter(function (x) { return !taken[key(x)]; });
@@ -138,7 +140,7 @@
   }
   // order: answer is the chain indexes in the order the student put them. Answers { right, wrong }.
   function markOrder(it, answer) {
-    var sorted = it.lines.slice().sort(function (a, b) { return a - b; }), wrong = 0;
+    var sorted = it.lines.slice(), wrong = 0;   // it.lines is in its true order (a run of a pack.sequences list)
     sorted.forEach(function (v, k) { if ((answer || [])[k] !== v) wrong++; });
     return { right: !wrong, wrong: wrong };
   }
