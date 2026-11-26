@@ -1,0 +1,101 @@
+/* Data Bridge 3D: site theme chrome (shared/bc-theme.css tokens) over the 3D world. Card, question, fact and feedback
+   styles come from ../BridgeBuilder/style.css (the bb- classes), so the rounds look the same as the site Data Bridge. */
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+.b3-stage { position: fixed; inset: 0; overflow: hidden; }
+#view { position: absolute; inset: 0; }
+#view canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.b3-loading { position: absolute; inset: 0; display: grid; place-items: center; background: var(--bg); color: var(--ink-soft); font: 500 18px var(--font-body); z-index: 30; }
+
+/* top bar */
+.b3-top { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 8px 12px; background: color-mix(in srgb, var(--bg) 82%, transparent); border-bottom: 1px solid var(--line); }
+.b3-top .bb-brand { font-size: 18px; }
+.b3-spacer { flex: 1; }
+.b3-top .bb-stat { min-height: 30px; }
+.b3-fs-btn { min-height: 32px; }
+.b3-pop { position: absolute; left: 50%; top: -2px; transform: translateX(-50%); white-space: nowrap; color: var(--accent);
+  font: 800 16px var(--font-display); pointer-events: none; animation: b3-rise 1.4s ease-out forwards; }
+.b3-pop.is-bad { color: var(--bad); }
+@keyframes b3-rise { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, 30px); } }
+
+/* the side panel: start screen, exam and fact rounds, the result card */
+.b3-panel { position: absolute; z-index: 9; top: 60px; left: 12px; max-height: calc(100% - 72px); width: min(600px, calc(100% - 24px)); overflow: auto;
+  border-radius: var(--radius-lg); box-shadow: 0 12px 40px rgba(0, 0, 0, .45); }
+.b3-panel .bb-card { box-sizing: border-box; }
+.b3-panel .bb-start { max-width: none; }
+.b3-keys { margin-top: 22px; }
+.b3-result.is-good { border-color: var(--good-line); }
+.b3-result.is-bad { border-color: var(--bad-line); }
+
+/* the phase banner, the note, the help line, the action button */
+.banner { position: absolute; top: 66px; left: 50%; transform: translateX(-50%); z-index: 6; pointer-events: none; display: flex; align-items: center; gap: 12px;
+  padding: 8px 20px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line-strong); color: var(--ink); box-shadow: 0 6px 20px rgba(0, 0, 0, .35); }
+.banner .bt { font: 800 22px var(--font-display); }
+.banner .cd { display: inline-grid; place-items: center; min-width: 42px; height: 42px; border-radius: 50%; background: var(--warn); color: #241a00; font: 800 24px var(--font-display); }
+.banner.build { border-color: var(--brand); color: var(--brand-dark); }
+.banner.board { border-color: var(--warn-line); background: color-mix(in srgb, var(--warn) 18%, var(--surface-2)); }
+.banner.drive { border-color: var(--good-line); color: var(--good); }
+.banner.pop { animation: b3-pop .35s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes b3-pop { from { transform: translate(-50%, -12px) scale(.9); opacity: 0; } }
+.note { position: absolute; top: 128px; left: 50%; transform: translateX(-50%); z-index: 7; max-width: min(600px, 90%); text-align: center;
+  padding: 10px 18px; border-radius: var(--radius-lg); background: var(--surface-3); border: 1px solid var(--brand); color: var(--ink); font: 600 17px var(--font-body);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .35); }
+.note.pop { animation: b3-pop .35s cubic-bezier(.3, 1.6, .5, 1); }
+.tip { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 5; max-width: min(760px, 92%); text-align: center; pointer-events: none;
+  padding: 9px 18px 8px; border-radius: var(--radius-lg); background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line-strong); color: var(--ink); }
+.tip .main { font: 500 16px/1.4 var(--font-body); }
+.tip .keys { font: 500 12px var(--font-body); color: var(--muted); margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
+.tip b { color: var(--warn); }
+.key { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 8px; box-sizing: border-box; border-radius: var(--radius);
+  background: var(--ink); color: var(--bg); font: 700 15px var(--font-body); box-shadow: inset 0 -3px 0 var(--muted); }
+.act { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 6; display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 20px 8px 9px; border-radius: 999px; border: 1px solid var(--brand); background: var(--brand-solid); color: #fff; font: 700 17px var(--font-display); cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .4); }
+.act:hover { filter: brightness(1.1); }
+.act:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+
+/* the ride's traffic light */
+.hold { position: absolute; left: 50%; top: 36%; transform: translate(-50%, -50%); z-index: 6; pointer-events: none; text-align: center; display: grid; justify-items: center; gap: 8px;
+  padding: 12px 20px; border-radius: var(--radius-lg); background: color-mix(in srgb, var(--surface) 88%, transparent); border: 1px solid var(--line-strong); }
+.hold .tl { display: inline-flex; gap: 10px; background: #0b0d11; border: 2px solid var(--line-strong); border-radius: 22px; padding: 8px 14px; }
+.hold .tl i { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-4); }
+.hold .tl i.g.on { background: #4cd07d; box-shadow: 0 0 18px #4cd07d; }
+.hold .tl i.a.on { background: #ffc233; box-shadow: 0 0 18px #ffc233; }
+.hold .tl i.r.on { background: #ff4d4d; box-shadow: 0 0 24px #ff4d4d; animation: b3-pulse .35s ease-in-out infinite alternate; }
+@keyframes b3-pulse { to { transform: scale(1.12); } }
+.hold .word { font: 800 34px var(--font-display); }
+.hold[data-light="red"] .word { color: var(--bad); }
+.hold[data-light="amber"] .word { color: var(--warn); }
+.hold[data-light="green"] .word { color: var(--good); }
+.hold .rule { font: 500 15px var(--font-body); color: var(--ink-soft); }
+.hold .rule b { color: var(--bad); }
+.hold.bump .word { animation: b3-shake .5s ease-in-out infinite; }
+@keyframes b3-shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@media (prefers-reduced-motion: reduce) { .hold .tl i.r.on, .hold.bump .word { animation: none; } }
+
+/* the 3D build mode tool bar (build3d.js) */
+.b3b { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;
+  max-width: calc(100% - 24px); box-sizing: border-box; padding: 8px 10px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line-strong);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .4); color: var(--ink); font: 500 15px var(--font-body); user-select: none; }
+.b3b .grp { display: flex; gap: 6px; align-items: center; }
+.b3b button { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 12px; border-radius: var(--radius); cursor: pointer;
+  background: var(--surface-2); border: 1px solid var(--line-strong); color: var(--ink); font: 500 15px var(--font-body); white-space: nowrap; }
+.b3b button:hover { background: var(--surface-3); }
+.b3b button.on { background: var(--brand-soft-strong); border-color: var(--brand); color: var(--brand-dark); }
+.b3b button:disabled { opacity: .45; cursor: default; }
+.b3b button i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.b3b button small { color: var(--muted); font-size: 12px; }
+.b3b button.go { background: var(--brand-solid); border-color: var(--brand-solid); color: #fff; font-weight: 700; padding: 0 18px; }
+.b3b button.go:hover { filter: brightness(1.1); }
+.b3b .money { padding: 0 6px; color: var(--ink-soft); white-space: nowrap; }
+.b3b .money b { color: var(--ink); font-size: 17px; }
+.b3b .money b.poor { color: var(--warn); }
+.b3b-msg { position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 8; padding: 8px 16px; border-radius: 999px; pointer-events: none;
+  background: var(--surface-3); border: 1px solid var(--line-strong); color: var(--ink); font: 500 16px var(--font-body); transition: opacity .3s; white-space: nowrap; }
+.b3b-help { position: absolute; left: 12px; top: 62px; z-index: 7; padding: 8px 12px; border-radius: var(--radius); pointer-events: none;
+  background: color-mix(in srgb, var(--surface) 88%, transparent); border: 1px solid var(--line); color: var(--ink-soft); font: 500 13px/1.5 var(--font-body); }
+@media (max-width: 900px) { .b3b-help { display: none; } .b3b button small { display: none; } }
+
+/* full screen inside the site: the page already fills the frame; the button only tells the parent */
+html.b3-fs .b3-fs-btn { border-color: var(--brand); }

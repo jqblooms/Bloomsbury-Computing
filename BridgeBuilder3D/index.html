@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Bridge 3D</title>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+<script>
+  // Data Bridge 3D: the site Data Bridge (BridgeBuilder/) as a single-player 3D game. Every script and style URL carries
+  // ?v=<bcv>. The site's own Data Bridge files (levels, physics, art, facts, style) load from ../BridgeBuilder/ so they
+  // stay in sync. three.js r170 is vendored in lib/. The import map gives every module its ?v= too.
+  (function () {
+    var p = new URLSearchParams(location.search), v = encodeURIComponent(p.get('bcv') || '20261126b3d1');
+    if (p.get('embed') === '1') document.documentElement.classList.add('is-embed');
+    window.BB_VERSION = decodeURIComponent(v);
+    document.write('<link rel="stylesheet" href="../BridgeBuilder/style.css?v=' + v + '">');
+    document.write('<link rel="stylesheet" href="app.css?v=' + v + '">');
+    var imports = { three: './lib/three.module.min.js?v=' + v, './lib/blob.js': './lib/blob.js?v=' + v };
+    ['main', 'rounds', 'util', 'world', 'terrain', 'props', 'cart', 'beams', 'fx', 'ride', 'player', 'hud', 'build3d'].forEach(function (n) {
+      imports['./js/' + n + '.js'] = './js/' + n + '.js?v=' + v;
+    });
+    document.write('<script type="importmap">' + JSON.stringify({ imports: imports }) + '<\/script>');
+  })();
+</script>
+</head>
+<body>
+<div class="b3-stage" id="stage">
+  <div id="view"></div>
+  <header class="b3-top">
+    <div class="bb-brand">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M2 16h20M4 16l4-6 4 6 4-6 4 6M8 10h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><rect x="2" y="16" width="3" height="6" fill="currentColor"/><rect x="19" y="16" width="3" height="6" fill="currentColor"/></svg>
+      <span>Data Bridge 3D</span>
+    </div>
+    <div class="bb-hud" id="hud" hidden>
+      <span class="bb-stat bb-learn-tag" id="hudMode" title="Learn mode: worked examples and AI help are free. It does not count as finishing the game." hidden>Learn mode</span>
+      <span class="bb-stat" title="Round">Round <b id="hudRound">1</b> of <b id="hudRounds">10</b></span>
+      <span class="bb-stat bb-coins" title="Coins" id="hudCoinsWrap"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8v8M9.5 10h4a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3h4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><b id="hudCoins">0</b></span>
+    </div>
+    <span class="b3-spacer"></span>
+    <button type="button" class="bc-btn is-outline b3-fs-btn" id="fsBtn">Full screen</button>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+  <div class="note" id="note" role="status" aria-live="polite" hidden></div>
+  <div class="hold" id="hold" hidden></div>
+  <button class="act" id="act" type="button" hidden></button>
+  <div class="tip" id="tip" hidden></div>
+  <aside class="b3-panel" id="panel" aria-label="Question"><div id="screen"></div></aside>
+  <div class="b3-loading" id="loading">Loading Data Bridge 3D...</div>
+</div>
+<script>
+  (function () {
+    var v = encodeURIComponent(window.BB_VERSION);
+    var files = ['../shared/bc-clicker.js', '../shared/exam-game-client.js', '../shared/answer-box.js', '../shared/exam-question.js', '../shared/exam-help.js'];
+    for (var i = 2; i <= 6; i++) files.push('../BridgeBuilder/js/levels/pack-' + i + '.js');
+    files = files.concat(['../BridgeBuilder/js/physics.js', '../BridgeBuilder/js/art.js', '../BridgeBuilder/js/solutions.js',
+      '../Drills/ai-check.js', '../FactChain/packs/index.js', '../FactChain/js/logic.js', '../FactChain/js/rounds.js', '../BridgeBuilder/js/facts.js']);
+    files.forEach(function (f) { document.write('<script src="' + f + '?v=' + v + '"><' + '/script>'); });
+  })();
+</script>
+<script type="module">
+  import('./js/main.js').catch(function (e) {
+    var m = document.getElementById('loading');
+    if (m) m.textContent = 'This computer could not start the 3D game. Use Data Bridge instead.';
+    console.error(e);
+  });
+</script>
+<script>
+  if (window.parent !== window) { try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: 640 }, '*'); } catch (e) {} }
+</script>
+</body>
+</html>
