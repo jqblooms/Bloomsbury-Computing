@@ -11195,6 +11195,377 @@
    ]
   },
   {
+   "setId": "y11-arch-cpu",
+   "title": "CPU and FDE Cycle: More Past Paper Parts",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [
+    {
+     "qid": "y11ac-26j11-2ai",
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 2(a)(i)\nA smartphone has a quad-core 2.4 GHz processor.\nThe processor performs the fetch-decode-execute (FDE) cycle.\nThe first register used in the FDE cycle stores the location in random access memory (RAM) of the next instruction.\nIdentify the name of this register.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2026, Question 2(a)(i)\nA smartphone has a quad-core 2.4 GHz processor.\nThe processor performs the fetch-decode-execute (FDE) cycle.\nThe first register used in the FDE cycle stores the location in random access memory (RAM) of the next instruction.\nIdentify the name of this register."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-25j11-5b",
+     "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(b)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nIdentify the component in the CPU that is responsible for decoding an instruction.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, June 2025, Question 5(b)\nData is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.\nIdentify the component in the CPU that is responsible for decoding an instruction."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-23n13-3d",
+     "text": "Cambridge IGCSE 0478/13, November 2023, Question 3(d)\nA computer has a central processing unit (CPU).\nThe CPU has a component that carries out all calculations and logical operations.\nState the name of this component.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2023, Question 3(d)\nA computer has a central processing unit (CPU).\nThe CPU has a component that carries out all calculations and logical operations.\nState the name of this component."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-21n11-6b",
+     "text": "Cambridge IGCSE 0478/11, November 2021, Question 6(b)\nIdentify the component in the CPU that carries out calculations.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2021, Question 6(b)\nIdentify the component in the CPU that carries out calculations."
+      },
+      {
+       "type": "lines",
+       "rows": 1
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-25m12-3b",
+     "text": "Cambridge IGCSE 0478/12, March 2025, Question 3(b)\nA computer has a central processing unit (CPU), memory and secondary storage.\nState the purpose of the CPU in the computer.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2025, Question 3(b)\nA computer has a central processing unit (CPU), memory and secondary storage.\nState the purpose of the CPU in the computer."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-26j12-2a",
+     "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(a)\nA computer has a central processing unit (CPU).\nState the role of the CPU.\n[1]",
+     "marks": 1,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(a)\nA computer has a central processing unit (CPU).\nState the role of the CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 2
+      },
+      {
+       "type": "para",
+       "text": "[1]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-24j13-8a",
+     "text": "Cambridge IGCSE 0478/13, June 2024, Question 8(a)\nA student has a computer that has a central processing unit (CPU).\nDescribe the role of the CPU in the computer.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2024, Question 8(a)\nA student has a computer that has a central processing unit (CPU).\nDescribe the role of the CPU in the computer."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-26j12-2b",
+     "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(b)\nA computer has a central processing unit (CPU).\nThe memory address register (MAR) and the memory data register (MDR) are two registers built into the CPU.\nGive two other registers that are built into the CPU.\n1 ........\n2 ........\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(b)\nA computer has a central processing unit (CPU).\nThe memory address register (MAR) and the memory data register (MDR) are two registers built into the CPU.\nGive two other registers that are built into the CPU."
+      },
+      {
+       "type": "line",
+       "label": "1"
+      },
+      {
+       "type": "line",
+       "label": "2"
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-24n11-5a",
+     "text": "Cambridge IGCSE 0478/11, November 2024, Question 5(a)\nA central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle.\nGive the name of two registers that are used in the fetch stage of the cycle.\n1 ........\n2 ........\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2024, Question 5(a)\nA central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle.\nGive the name of two registers that are used in the fetch stage of the cycle."
+      },
+      {
+       "type": "line",
+       "label": "1"
+      },
+      {
+       "type": "line",
+       "label": "2"
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-23n11-1eii",
+     "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(e)(ii)\nA student uses a computer and several hardware devices to complete his schoolwork.\nThe computer has a central processing unit (CPU).\nThe CPU contains registers including the memory data register (MDR).\nIdentify three other registers contained in the CPU.\n1 ........\n2 ........\n3 ........\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2023, Question 1(e)(ii)\nA student uses a computer and several hardware devices to complete his schoolwork.\nThe computer has a central processing unit (CPU).\nThe CPU contains registers including the memory data register (MDR).\nIdentify three other registers contained in the CPU."
+      },
+      {
+       "type": "line",
+       "label": "1"
+      },
+      {
+       "type": "line",
+       "label": "2"
+      },
+      {
+       "type": "line",
+       "label": "3"
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-25j13-3b",
+     "text": "Cambridge IGCSE 0478/13, June 2025, Question 3(b)\nA computer with a Von Neumann architecture has several hardware components.\nIdentify three registers that are used in the fetch stage of the fetch-decode-execute (FDE) cycle.\n1 ........\n2 ........\n3 ........\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2025, Question 3(b)\nA computer with a Von Neumann architecture has several hardware components.\nIdentify three registers that are used in the fetch stage of the fetch-decode-execute (FDE) cycle."
+      },
+      {
+       "type": "line",
+       "label": "1"
+      },
+      {
+       "type": "line",
+       "label": "2"
+      },
+      {
+       "type": "line",
+       "label": "3"
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-22j13-5bii",
+     "text": "Cambridge IGCSE 0478/13, June 2022, Question 5(b)(ii)\nHarriet has a computer that is based on a Von Neumann model for a computer system.\nThe computer has a central processing unit (CPU).\nThe memory address register (MAR) is one component built into the CPU.\nDescribe the purpose of the MAR in the CPU.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, June 2022, Question 5(b)(ii)\nHarriet has a computer that is based on a Von Neumann model for a computer system.\nThe computer has a central processing unit (CPU).\nThe memory address register (MAR) is one component built into the CPU.\nDescribe the purpose of the MAR in the CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-26j12-2c",
+     "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(c)\nA computer has a central processing unit (CPU).\nThe memory address register (MAR) and the memory data register (MDR) are two registers built into the CPU.\nA value is fetched from random access memory (RAM) to the CPU.\nExplain how the MAR and MDR are used in this process.\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, June 2026, Question 2(c)\nA computer has a central processing unit (CPU).\nThe memory address register (MAR) and the memory data register (MDR) are two registers built into the CPU.\nA value is fetched from random access memory (RAM) to the CPU.\nExplain how the MAR and MDR are used in this process."
+      },
+      {
+       "type": "lines",
+       "rows": 6
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ac-25n13-2bi",
+     "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(b)(i)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nThe CPU has a control unit (CU).\nDescribe the role of the CU in the CPU.\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/13, November 2025, Question 2(b)(i)\nA computer with a Von Neumann architecture has a central processing unit (CPU) that carries out the fetch-decode-execute (FDE) cycle.\nThe CPU has a control unit (CU).\nDescribe the role of the CU in the CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 6
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "setId": "y11-arch-perf",
+   "title": "CPU Performance: More Past Paper Parts",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [
+    {
+     "qid": "y11ap-24n11-5e",
+     "text": "Cambridge IGCSE 0478/11, November 2024, Question 5(e)\nA central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle.\nA user changes their CPU from one with a dual core and a clock speed of 2.4 GHz to one with a dual core and a clock speed of 3.5 GHz.\nExplain the effect this change will have on the performance of the CPU.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/11, November 2024, Question 5(e)\nA central processing unit (CPU) performs the fetch-decode-execute (FDE) cycle.\nA user changes their CPU from one with a dual core and a clock speed of 2.4 GHz to one with a dual core and a clock speed of 3.5 GHz.\nExplain the effect this change will have on the performance of the CPU."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ap-25m12-3ci",
+     "text": "Cambridge IGCSE 0478/12, March 2025, Question 3(c)(i)\nA computer has a central processing unit (CPU), memory and secondary storage.\nComputer A has a 2.1 GHz quad-core processor.\nComputer B has a 2.5GHz dual-core processor.\nComputer C has a 5.2GHz single-core processor.\nIdentify which computer is most likely to execute more instructions simultaneously.\nJustify your answer.\nComputer ........\nJustification\n[3]",
+     "marks": 3,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2025, Question 3(c)(i)\nA computer has a central processing unit (CPU), memory and secondary storage.\nComputer A has a 2.1 GHz quad-core processor.\nComputer B has a 2.5GHz dual-core processor.\nComputer C has a 5.2GHz single-core processor.\nIdentify which computer is most likely to execute more instructions simultaneously.\nJustify your answer."
+      },
+      {
+       "type": "line",
+       "label": "Computer"
+      },
+      {
+       "type": "para",
+       "text": "Justification"
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[3]"
+      }
+     ]
+    },
+    {
+     "qid": "y11ap-25m12-3cii",
+     "text": "Cambridge IGCSE 0478/12, March 2025, Question 3(c)(ii)\nA computer has a central processing unit (CPU), memory and secondary storage.\nComputer A has a 2.1 GHz quad-core processor.\nComputer B has a 2.5GHz dual-core processor.\nComputer C has a 5.2GHz single-core processor.\nExplain why Computer C can execute more instructions per second than Computer B.\n[2]",
+     "marks": 2,
+     "blocks": [
+      {
+       "type": "para",
+       "text": "Cambridge IGCSE 0478/12, March 2025, Question 3(c)(ii)\nA computer has a central processing unit (CPU), memory and secondary storage.\nComputer A has a 2.1 GHz quad-core processor.\nComputer B has a 2.5GHz dual-core processor.\nComputer C has a 5.2GHz single-core processor.\nExplain why Computer C can execute more instructions per second than Computer B."
+      },
+      {
+       "type": "lines",
+       "rows": 4
+      },
+      {
+       "type": "para",
+       "text": "[2]"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "setId": "y10-unit3-1-practice",
    "title": "Unit 3.1 Revision: All Topics",
    "year": "Year 10",
@@ -11606,6 +11977,160 @@
     "y7t-own-casewhy",
     "y7t-own-typo",
     "y7t-own-typowhy"
+   ]
+  },
+  {
+   "setId": "y11-arch-1",
+   "title": "Most Asked 1",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10c-25n13-2a",
+    "y11ac-26j11-2ai",
+    "y10c-23n11-1c",
+    "y11ac-25j11-5b",
+    "y11ac-23n13-3d",
+    "y11ac-25m12-3b",
+    "y10i-23n12-3c",
+    "y10i-24j12-5b",
+    "y10e-24n11-6a",
+    "y10p-23n12-3ai"
+   ]
+  },
+  {
+   "setId": "y11-arch-2",
+   "title": "Most Asked 2",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y11ac-21n11-6b",
+    "y11ac-26j12-2a",
+    "y10i-26j13-3c",
+    "y10i-25m12-3d",
+    "y10p-23j13-2a",
+    "y10p-23n11-1d",
+    "y10p-26j12-2d",
+    "y11ac-26j12-2b",
+    "y11ac-24n11-5a",
+    "y10e-23n12-4a"
+   ]
+  },
+  {
+   "setId": "y11-arch-3",
+   "title": "Most Asked 3",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10p-25n12-4b",
+    "y10p-23n12-3aii",
+    "y11ap-24n11-5e",
+    "y10p-23j13-2b",
+    "y10p-24m12-2bii",
+    "y10p-23n13-3b",
+    "y10p-24m12-2biii",
+    "y10e-25n11-1g",
+    "y10e-25n12-7d",
+    "y10c-23j13-2ci"
+   ]
+  },
+  {
+   "setId": "y11-arch-4",
+   "title": "Most Asked 4",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10e-25n13-1f",
+    "y10e-25m12-4b",
+    "y10e-24n12-4e",
+    "y10e-25j12-4b",
+    "y10p-26j11-2b",
+    "y11ac-24j13-8a",
+    "y10c-21m12-8bi",
+    "y10c-23n12-3b",
+    "y11ac-22j13-5bii",
+    "y10c-23n11-1ei"
+   ]
+  },
+  {
+   "setId": "y11-arch-5",
+   "title": "Most Asked 5",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y11ac-23n11-1eii",
+    "y11ac-25j13-3b",
+    "y10c-22j11-2a",
+    "y10p-25j11-5c",
+    "y11ap-25m12-3ci",
+    "y11ap-25m12-3cii",
+    "y11ac-26j12-2c",
+    "y11ac-25n13-2bi",
+    "y10c-22n11-2a",
+    "y10p-25n12-4c"
+   ]
+  },
+  {
+   "setId": "y11-arch-most-asked",
+   "title": "Computer Architecture: Most Asked",
+   "year": "Year 11",
+   "unit": "3.1 Computer Architecture",
+   "questions": [],
+   "qids": [
+    "y10c-25n13-2a",
+    "y11ac-26j11-2ai",
+    "y10c-23n11-1c",
+    "y11ac-25j11-5b",
+    "y11ac-23n13-3d",
+    "y11ac-25m12-3b",
+    "y10i-23n12-3c",
+    "y10i-24j12-5b",
+    "y10e-24n11-6a",
+    "y10p-23n12-3ai",
+    "y11ac-21n11-6b",
+    "y11ac-26j12-2a",
+    "y10i-26j13-3c",
+    "y10i-25m12-3d",
+    "y10p-23j13-2a",
+    "y10p-23n11-1d",
+    "y10p-26j12-2d",
+    "y11ac-26j12-2b",
+    "y11ac-24n11-5a",
+    "y10e-23n12-4a",
+    "y10p-25n12-4b",
+    "y10p-23n12-3aii",
+    "y11ap-24n11-5e",
+    "y10p-23j13-2b",
+    "y10p-24m12-2bii",
+    "y10p-23n13-3b",
+    "y10p-24m12-2biii",
+    "y10e-25n11-1g",
+    "y10e-25n12-7d",
+    "y10c-23j13-2ci",
+    "y10e-25n13-1f",
+    "y10e-25m12-4b",
+    "y10e-24n12-4e",
+    "y10e-25j12-4b",
+    "y10p-26j11-2b",
+    "y11ac-24j13-8a",
+    "y10c-21m12-8bi",
+    "y10c-23n12-3b",
+    "y11ac-22j13-5bii",
+    "y10c-23n11-1ei",
+    "y11ac-23n11-1eii",
+    "y11ac-25j13-3b",
+    "y10c-22j11-2a",
+    "y10p-25j11-5c",
+    "y11ap-25m12-3ci",
+    "y11ap-25m12-3cii",
+    "y11ac-26j12-2c",
+    "y11ac-25n13-2bi",
+    "y10c-22n11-2a",
+    "y10p-25n12-4c"
    ]
   }
  ]
