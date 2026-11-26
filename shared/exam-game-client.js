@@ -388,9 +388,10 @@
     },
     // "I need help" on one question (the shell's slide help: Haiku, three questions per question, never the answer).
     // helpGet -> { ok, available, perSlide, left, turns: [{ q, a }] }; help -> { ok, reply, left, turns } | { ok: false, message, left? }
-    helpGet: function (qid) { return request('helpGet', { qid: String(qid || '') }); },
-    help: function (qid, question, answer) {
-      return request('help', { qid: String(qid || ''), question: String(question || '').slice(0, 300), answer: String(answer == null ? '' : answer).slice(0, 300) });
+    // learn: Data Bridge Learn mode, where the help teaches and may give the answer (ten questions per question).
+    helpGet: function (qid, learn) { return request('helpGet', { qid: String(qid || ''), learn: !!learn }); },
+    help: function (qid, question, answer, learn) {
+      return request('help', { qid: String(qid || ''), question: String(question || '').slice(0, 300), answer: String(answer == null ? '' : answer).slice(0, 300), learn: !!learn });
     },
     // A worked example for Learn mode: a similar but different question from the set with its model answer.
     // -> { qid, text, blocks?, marks, model, fallback?, count } | null (nothing safe to show). skip: qids already shown.

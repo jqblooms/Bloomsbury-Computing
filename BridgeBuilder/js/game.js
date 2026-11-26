@@ -635,7 +635,10 @@
     var it = S.exam.items[i];
     if (TM || !window.BCExamHelp || !$('help' + i)) return;
     window.BCExamHelp.mount($('help' + i), { qid: S.exam.qs[i].qid, label: LEARN ? 'Ask the AI for help (free)' : 'I need help',
-      answer: function () { return it.marked || it.answer || ''; } });
+      answer: function () { return it.marked || it.answer || ''; },
+      // Learn: the help teaches and may name the answer (the server's learn help, ten questions per question).
+      api: LEARN && window.ExamGame ? { helpGet: function (q) { return window.ExamGame.helpGet(q, true); },
+        help: function (q, s, a) { return window.ExamGame.help(q, s, a, true); } } : undefined });
   }
   function payNow() { var r = S.exam; return Math.max(0, r.pool - (LEARN ? r.base || 0 : 0)); }
 
