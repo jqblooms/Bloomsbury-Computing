@@ -242,6 +242,10 @@ steps.push({ id: 'recap', label: 'Check Your Notes: The CPU',
 // ---------------------------------------------------------------- The CPU and its parts
 // 0478/11 November 2022 Q2(c): one from ALU; any two from: to temporarily store data; it stores the result of interim
 // calculations.
+// Fact Chain (James 2026-11-26): the facts above as short chains, learned in fading rounds (pages FactChain/).
+steps.push(embed('fact-chain', 'Fact Chain: Learn the Facts', 'y10-fact-chain', 'Fact Chain: Learn the Facts',
+  mins(5) + 'Learn the facts on the CPU, the buses and the FDE cycle in short rounds. A mistake only brings the fact back. Your progress is saved, so you can finish at home.',
+  ['Why write a fact from memory, and not read it again?', 'Bringing a fact back from memory makes it stronger. Reading it again feels easy but is soon forgotten.'], 'packs=y10-cpu-parts,y10-buses-fde'));
 steps.push(selfMarked('exam-acc', 'The CPU: The Accumulator', 'The CPU: The Accumulator',
   mins(4) + cite('0478/11, November 2022, Question 2(c)') + ' Phil has a computer that is designed using the Von Neumann model. The computer has a central processing unit (CPU).', [
     written('acc', 'Identify the component within the CPU that the accumulator is built into and describe the purpose of the accumulator.', 3,
@@ -308,11 +312,11 @@ steps.push(checkStep('practice', 'Practice: Quick Exam Questions', 'Practice: Qu
   ], ['Why give the full name of a component, not a word such as "register" or "unit"?', 'Many parts share those words. Only the full name, or its letters, tells the examiner which part you mean.']));
 
 steps.push(embed('plenary', 'Plenary: The CPU and FDE Cycle Exam Drill', 'drill-y10-3-1-r', 'Plenary: The CPU and FDE Cycle Exam Drill',
-  mins(5) + 'Real exam questions on the CPU, the registers, the buses and the FDE cycle. Get each one right three times in a row. Your progress is saved.',
+  mins(4) + 'Real exam questions on the CPU, the registers, the buses and the FDE cycle. Get each one right three times in a row. Your progress is saved.',
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
 steps.push({ id: 'paper', label: 'Practice Paper: The Fetch-Decode-Execute Cycle', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l4-paper', buttonId: `${P}-open-paper`,
   content: '<h2 class="lesson-h2">Practice Paper: The Fetch-Decode-Execute Cycle</h2>' + why('Why do a whole paper, and not only single questions?', 'In the exam you must choose what to write with no help. A paper shows which marks you still lose.') +
-    `<p class="lesson-lead">${mins(10)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
+    `<p class="lesson-lead">${mins(6)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
     `<p><button type="button" class="donow-btn" id="${P}-open-paper">Open the practice paper</button></p>` });
 bridgeSteps('y10-cpu', 'the CPU and the FDE cycle');
 
@@ -398,6 +402,10 @@ steps.push({ id: 'recap', label: 'Check Your Notes: Performance, Instruction Set
 
 // ---------------------------------------------------------------- Performance
 // 0478/11 June 2025 Q5(c). Three from.
+// Fact Chain (James 2026-11-26): the facts above as short chains, learned in fading rounds (pages FactChain/).
+steps.push(embed('fact-chain', 'Fact Chain: Learn the Facts', 'y10-fact-chain', 'Fact Chain: Learn the Facts',
+  mins(5) + 'Learn the facts on performance, instruction sets and embedded systems in short rounds. A mistake only brings the fact back. Your progress is saved, so you can finish at home.',
+  ['Why write a fact from memory, and not read it again?', 'Bringing a fact back from memory makes it stronger. Reading it again feels easy but is soon forgotten.'], 'packs=y10-performance,y10-instruction-sets,y10-embedded,y10-control'));
 steps.push(selfMarked('exam-clock', 'Performance: Clock Speed', 'Performance: Clock Speed',
   mins(4) + cite('0478/11, June 2025, Question 5(c)') + ' Data is processed by the central processing unit (CPU) in a computer that has a Von Neumann architecture.', [
     written('clock', 'Explain how the clock speed can affect the performance of a CPU.', 3,
@@ -456,11 +464,11 @@ steps.push(fixStep('fix-watch', 'Embedded Systems: Fix the Answer', '0478/12, No
   ['Why is the size of a device not a good reason in this kind of question?', 'Small devices can be general purpose, such as a smartphone. So size alone cannot decide it.']));
 
 steps.push(embed('plenary', 'Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill', 'drill-y10-3-1-r2', 'Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill',
-  mins(5) + 'Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.',
+  mins(4) + 'Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.',
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
 steps.push({ id: 'paper', label: 'Practice Paper: CPU Performance', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l5-paper', buttonId: `${P}-open-paper`,
   content: '<h2 class="lesson-h2">Practice Paper: CPU Performance</h2>' + why('Why do a whole paper, and not only single questions?', 'In the exam you must choose what to write with no help. A paper shows which marks you still lose.') +
-    `<p class="lesson-lead">${mins(10)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
+    `<p class="lesson-lead">${mins(6)}Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p>` +
     `<p><button type="button" class="donow-btn" id="${P}-open-paper">Open the practice paper</button></p>` });
 bridgeSteps('y10-unit3-1-practice', 'every topic in the Unit 3.1 exam');
 
@@ -740,8 +748,8 @@ for (const L of [L1, L2]) {
 }
 // Minutes: Do Now 7, title 1, the slides below, Data Bridge 1 + 6. Each lesson fits 55.
 const MINUTES = {
-  'y10-3-1-r': { 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'info-cpu': 2, 'notes-cpu': 3, 'info-parts': 2, 'notes-parts': 3, 'info-buses': 2, 'notes-buses': 3, 'info-fde': 2, 'notes-fde': 3, 'exam-acc': 4, 'exam-bus': 4, plenary: 5, paper: 10, 'how-to-play': 1, game: 3 },
-  'y10-3-1-r2': { 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'info-perf': 2, 'notes-perf': 3, 'info-isa': 2, 'notes-isa': 3, 'info-embedded': 2, 'notes-embedded': 3, 'info-gp': 2, 'notes-gp': 3, 'exam-clock': 4, 'exam-atm': 4, plenary: 5, paper: 10, 'how-to-play': 1, game: 3 },
+  'y10-3-1-r': { 'do-now': 4, 'do-now-2': 3, 'do-now-ext': 0, title: 1, 'info-cpu': 2, 'notes-cpu': 3, 'info-parts': 2, 'notes-parts': 3, 'info-buses': 2, 'notes-buses': 3, 'info-fde': 2, 'notes-fde': 3, 'fact-chain': 5, 'exam-acc': 4, 'exam-bus': 4, plenary: 4, paper: 6, 'how-to-play': 1, game: 3 },
+  'y10-3-1-r2': { 'do-now': 2, 'do-now-cache': 2, 'do-now-3': 3, 'do-now-ext': 0, title: 1, 'info-perf': 2, 'notes-perf': 3, 'info-isa': 2, 'notes-isa': 3, 'info-embedded': 2, 'notes-embedded': 3, 'info-gp': 2, 'notes-gp': 3, 'fact-chain': 5, 'exam-clock': 4, 'exam-atm': 4, plenary: 4, paper: 6, 'how-to-play': 1, game: 3 },
 };
 for (const L of [L1, L2]) {
   const m = MINUTES[L.id];

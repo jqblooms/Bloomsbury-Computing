@@ -167,6 +167,15 @@
    "content": "<h2 class=\"lesson-h2\">Make Your Notes: General Purpose Computers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why compare in a table?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A table puts each difference on one row, so you can see it and learn it fast.</p></div></details><p class=\"lesson-lead\"><strong>3 minutes. What to do:</strong> open your notes (the pen icon at the top). Write the heading, then answer each question in your own words. Use the slide before. Keep it short.</p><div style=\"border-left:6px solid var(--brand);background:var(--surface-2);border-radius:8px;padding:8px 16px;margin:8px 0;font-size:20px\"><b>Heading: General purpose or embedded?</b><ol style=\"margin:6px 0 0;line-height:1.55\"><li>What is a general purpose computer? Give two examples.</li><li>Make a table: general purpose computer compared with embedded system.</li><li>Is a smartphone embedded? Why?</li></ol></div>"
   },
   {
+   "id": "fact-chain",
+   "label": "Fact Chain: Learn the Facts",
+   "type": "embedded-app",
+   "appId": "y10-fact-chain",
+   "embedContainerId": "y10-31r2-fact-chain",
+   "content": "<h2 class=\"lesson-h2\">Fact Chain: Learn the Facts</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write a fact from memory, and not read it again?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Bringing a fact back from memory makes it stronger. Reading it again feels easy but is soon forgotten.</p></div></details><p class=\"lesson-lead\"><strong>5 minutes.</strong> Learn the facts on performance, instruction sets and embedded systems in short rounds. A mistake only brings the fact back. Your progress is saved, so you can finish at home.</p><div id=\"y10-31r2-fact-chain\"></div>",
+   "embedQuery": "packs=y10-performance,y10-instruction-sets,y10-embedded,y10-control"
+  },
+  {
    "id": "exam-clock",
    "label": "Performance: Clock Speed",
    "type": "self-marked-response",
@@ -219,7 +228,7 @@
    "type": "embedded-app",
    "appId": "drill-y10-3-1-r2",
    "embedContainerId": "y10-31r2-plenary",
-   "content": "<h2 class=\"lesson-h2\">Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do questions keep coming back until you get them right three times in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right once can be luck. Three times in a row shows that you really know it.</p></div></details><p class=\"lesson-lead\"><strong>5 minutes.</strong> Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.</p><div id=\"y10-31r2-plenary\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Plenary: Performance, Instruction Sets and Embedded Systems Exam Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do questions keep coming back until you get them right three times in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right once can be luck. Three times in a row shows that you really know it.</p></div></details><p class=\"lesson-lead\"><strong>4 minutes.</strong> Real exam questions on CPU performance, instruction sets and embedded systems. Get each one right three times in a row. Your progress is saved.</p><div id=\"y10-31r2-plenary\"></div>"
   },
   {
    "id": "paper",
@@ -228,7 +237,7 @@
    "appId": "exampaper",
    "appQuery": "paper=y10-3-1-l5-paper",
    "buttonId": "y10-31r2-open-paper",
-   "content": "<h2 class=\"lesson-h2\">Practice Paper: CPU Performance</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do a whole paper, and not only single questions?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>In the exam you must choose what to write with no help. A paper shows which marks you still lose.</p></div></details><p class=\"lesson-lead\"><strong>10 minutes.</strong> Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y10-31r2-open-paper\">Open the practice paper</button></p>"
+   "content": "<h2 class=\"lesson-h2\">Practice Paper: CPU Performance</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do a whole paper, and not only single questions?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>In the exam you must choose what to write with no help. A paper shows which marks you still lose.</p></div></details><p class=\"lesson-lead\"><strong>6 minutes.</strong> Open the practice paper. Use your notes. Answer every question, then press Submit paper. You get all your marks at once.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y10-31r2-open-paper\">Open the practice paper</button></p>"
   },
   {
    "id": "how-to-play",

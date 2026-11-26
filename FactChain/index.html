@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fact Chain</title>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+<script>
+  (function () {
+    var p = new URLSearchParams(location.search), v = p.get('bcv') || '20261126fc1';
+    if (p.get('embed') === '1') document.documentElement.classList.add('is-embed');
+    document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(v) + '">');
+    window.FC_VERSION = v;
+  })();
+</script>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<script>
+  (function (v) {
+    ['../Drills/ai-check.js', '../MasterySets/js/scheduler.js', 'js/logic.js', 'js/cpu.js', 'js/app.js'].forEach(function (s) {
+      document.write('<script src="' + s + '?v=' + v + '"><\/script>');
+    });
+  })(encodeURIComponent(window.FC_VERSION));
+</script>
+</body>
+</html>
