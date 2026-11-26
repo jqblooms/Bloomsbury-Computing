@@ -29,7 +29,7 @@ NetLab3D.
   after a mistake; Learn mode (worked example, free help, Try a new question, own save and best); Fact Chain rounds through
   `BBFacts.start(ctx, topic)`, redo until clean, only a clean pass builds. Coins, never baht.
 - Each gap: question (side panel) -> build in 3D (`js/build3d.js`, the site's `Ph.beamProblem` and costs) -> Send the cart
-  -> ALL ABOARD (10 s, cut to 3 s once you stand in the cart; at 0 you are put in the cart) -> ride. With no beams and fewer
+  -> ALL ABOARD (5 s, cut to 3 s once you stand in the cart; at 0 you are put in the cart) -> ride. With no beams and fewer
   than 3 coins, Send gives a new question instead.
 - The ride (`js/ride.js`): a traffic light, GREEN relax, AMBER a bump is coming, RED hold Space. Not holding at a bump
   throws you off: that costs `Penalty(pool)` = pool x 10% to the nearest 5, at least 10. Holding on over a crossing pays

@@ -1,6 +1,6 @@
 // Data Bridge 3D (single player): the site Data Bridge in the 3D world of the party server's team game. One player,
 // one lane, no server. Each gap: QUESTION (the site's exam or fact round, in the side panel: rounds.js) -> BUILD (3D
-// build mode: build3d.js) -> ALL ABOARD (10 s to hop into the cart) -> RIDE (the traffic light: hold Space on RED
+// build mode: build3d.js) -> ALL ABOARD (5 s to hop into the cart) -> RIDE (the traffic light: hold Space on RED
 // through each bump; ride.js) -> result (the site's coin rule Ph.afterTest, plus the 3D ride rule: falling off costs
 // Penalty(pool), holding on all the way over a crossing pays HoldBonus(pool), as in the party server's LobbyBridge3D.cs).
 // Game logic and timers run on setInterval (the site preloads apps in a hidden iframe where requestAnimationFrame never
@@ -23,7 +23,7 @@ import { createRounds } from './rounds.js';
 const $ = id => document.getElementById(id);
 const P = new URLSearchParams(location.search);
 const KEY = 'bc-databridge3d-v1:';
-const BOARD_MS = 10000, BOARD_IN_MS = 3000;     // ALL ABOARD: 10 s, cut to 3 s once you are in the cart
+const BOARD_MS = 5000, BOARD_IN_MS = 3000;      // ALL ABOARD: 5 s (James 2026-11-26), cut to 3 s once you are in the cart
 const RIDE_MAX_MS = 55000;
 const Penalty = pool => Math.max(10, Math.round(pool * 0.1 / 5) * 5);
 const HoldBonus = pool => Math.max(5, Math.round(Penalty(pool) / 2 / 5) * 5);
