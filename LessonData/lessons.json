@@ -27,7 +27,8 @@
             "y6-3-1-iconnect",
             "y6-3-2-iroute",
             "y6-3-3-itrace",
-            "y6-3-4-isearch"
+            "y6-3-4-isearch",
+            "y6-3-r"
           ]
         }
       ]
@@ -184,7 +185,8 @@
           "title": "Pseudocode and Software Development",
           "lessons": [
             "y9-3-1-pseudocode",
-            "y9-3-2-loops"
+            "y9-3-2-loops",
+            "y9-3-r"
           ]
         },
         {
